@@ -1,0 +1,30 @@
+[project]
+name = "agtrail-knowledge-base"
+version = "0.1.0"
+description = "Crop knowledge base, schema, and validation tooling for AgTrail's workflow/validation engine."
+requires-python = ">=3.10"
+dependencies = [
+    "jsonschema>=4.21",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+]
+api = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[project.scripts]
+agtrail-engine = "engine.cli:main"
+
+[tool.setuptools]
+packages = ["engine", "api"]
+# knowledge_base/ and scenarios/ are data, not Python code -- they're read at
+# runtime via paths relative to the project root (see engine/loader.py), not
+# imported as packages, so they're deliberately excluded here.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

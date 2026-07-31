@@ -1,0 +1,9 @@
+{
+  "crop_id": "cocoa",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2025-01-01" },
+    { "operation_id": "nursery_establishment", "date": "2025-01-15" },
+    { "operation_id": "transplanting", "date": "2025-06-01" }
+  ],
+  "new_operation": { "operation_id": "harvest", "date": "2026-11-30" }
+}

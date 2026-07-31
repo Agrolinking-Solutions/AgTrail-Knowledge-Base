@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agtrail-crop-knowledge-base.schema.json",
+  "title": "AgTrail Crop Knowledge Base Entry",
+  "description": "Canonical structure for a single crop's entry in the Agricultural Knowledge Base. Every crop file (e.g. maize.json, cocoa.json) must conform to this shape. This is what the Workflow Engine loads at runtime -- it is the 'truth' the validation engine checks farmer-submitted operations against.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "growth_stages",
+    "operations",
+    "workflow",
+    "validation_rules",
+    "soil_requirements",
+    "weather_preferences",
+    "diseases",
+    "pests",
+    "version_history"
+  ],
+  "properties": {
+
+    "metadata": {
+      "type": "object",
+      "description": "Basic identity of the crop. This is the record the farmer-facing dropdown reads from.",
+      "required": ["crop_id", "name", "scientific_name", "category", "crop_cycle_type", "typical_duration_days", "regions", "current_version"],
+      "properties": {
+        "crop_id": { "type": "string", "description": "Stable machine key, e.g. 'maize'. Never changes once assigned." },
+        "name": { "type": "string" },
+        "scientific_name": { "type": "string" },
+        "category": { "type": "string", "enum": ["cereal", "tuber", "legume", "cash_crop", "vegetable", "tree_crop", "spice", "fruit"] },
+        "crop_cycle_type": { "type": "string", "enum": ["annual", "biennial", "perennial"], "description": "Determines whether the workflow loops (perennial crops repeat harvest cycles) or terminates (annual crops end at harvest/storage)." },
+        "typical_duration_days": { "type": "integer", "description": "Days from planting to first harvest under normal conditions." },
+        "regions": {
+          "type": "array",
+          "description": "Regions this specific parameter set is validated for. A crop may have multiple region-specific variants layered on top of this base file (see regional_overrides).",
+          "items": { "type": "string" }
+        },
+        "current_version": { "type": "string", "description": "Must match the latest entry in version_history.version" }
+      }
+    },
+
+    "growth_stages": {
+      "type": "array",
+      "description": "The biological phases the crop passes through. Distinct from 'operations' (what the farmer DOES) -- this is what the PLANT is doing. AI recommendations reference this to say things like 'your maize is in the vegetative stage.'",
+      "items": {
+        "type": "object",
+        "required": ["stage_id", "name", "starts_day_after_planting", "ends_day_after_planting", "description"],
+        "properties": {
+          "stage_id": { "type": "string" },
+          "name": { "type": "string" },
+          "starts_day_after_planting": { "type": "integer" },
+          "ends_day_after_planting": { "type": "integer" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+
+    "operations": {
+      "type": "array",
+      "description": "Master catalogue of every operation type that can exist for this crop. The workflow array below sequences these; this array just defines what each one IS.",
+      "items": {
+        "type": "object",
+        "required": ["operation_id", "name", "category", "requires_evidence", "can_repeat"],
+        "properties": {
+          "operation_id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string", "enum": ["land_prep", "planting", "input_application", "crop_management", "pest_disease_control", "harvest", "post_harvest"] },
+          "description": { "type": "string" },
+          "requires_evidence": { "type": "boolean", "description": "If true, farmer must attach photo/GPS to log this operation (feeds the traceability/fraud layer)." },
+          "can_repeat": { "type": "boolean", "description": "False for one-time operations like land clearing or harvest-of-annual-crop. True for weeding, fertilizer rounds, spraying, etc." },
+          "optional": { "type": "boolean", "default": false, "description": "If true, workflow engine warns but does not block when skipped." }
+        }
+      }
+    },
+
+    "workflow": {
+      "type": "array",
+      "description": "The ordered sequence of operations for this crop. This is the field that answers 'what step comes next'. step_number defines default order; dependencies below define the actual enforceable logic (a step can depend on a non-adjacent earlier step).",
+      "items": {
+        "type": "object",
+        "required": ["step_number", "operation_id", "required"],
+        "properties": {
+          "step_number": { "type": "integer" },
+          "operation_id": { "type": "string", "description": "Must match an operation_id in the operations array." },
+          "required": { "type": "boolean" },
+          "repeat_until": { "type": ["string", "null"], "description": "Optional: operation_id of the step that ends a repeating operation's window, e.g. weeding repeats until 'harvest'. Null/omitted means the operation repeats indefinitely (e.g. cocoa's seasonal harvest)." }
+        }
+      }
+    },
+
+    "validation_rules": {
+      "type": "array",
+      "description": "The enforceable rules the Validation Engine runs on every farmer-submitted operation record. This is the piece that answers Victor's original question: what blocks vs. what warns, and what the legal time windows are.",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "operation_id", "severity", "condition"],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "operation_id": { "type": "string", "description": "The operation this rule constrains." },
+          "depends_on_operation_id": { "type": ["string", "null"], "description": "The prerequisite operation, if any." },
+          "min_days_after_dependency": { "type": ["integer", "null"] },
+          "max_days_after_dependency": { "type": ["integer", "null"] },
+          "can_repeat": { "type": "boolean" },
+          "allow_backdate": { "type": "boolean", "default": false, "description": "Whether an operation's logged date may be earlier than the date it was actually submitted. Per the original discussion: generally false for anything that would let a farmer retroactively insert a step out of order." },
+          "severity": { "type": "string", "enum": ["block", "warning"], "description": "block = red / rejected outright. warning = yellow / allowed through but flagged." },
+          "condition": { "type": "string", "description": "Human-readable statement of the rule, for audit/debug logs and for surfacing to the farmer as an error/warning message." },
+          "source": { "type": "string", "description": "Where this specific interval/threshold came from (e.g. 'IITA Guide to Maize Production in Northern Nigeria, 2020'). Optional but strongly recommended -- an unsourced timing rule is a guess, not a validated constraint." }
+        }
+      }
+    },
+
+    "soil_requirements": {
+      "type": "object",
+      "properties": {
+        "ph_min": { "type": "number" },
+        "ph_max": { "type": "number" },
+        "texture": { "type": "array", "items": { "type": "string" } },
+        "drainage": { "type": "string" },
+        "nitrogen_needs": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    },
+
+    "weather_preferences": {
+      "type": "object",
+      "properties": {
+        "rainfall_mm_min_cycle": { "type": "integer" },
+        "rainfall_mm_max_cycle": { "type": "integer" },
+        "temp_c_min": { "type": "number" },
+        "temp_c_max": { "type": "number" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "diseases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "risk_stage_ids", "symptoms", "management"],
+        "properties": {
+          "name": { "type": "string" },
+          "risk_stage_ids": { "type": "array", "items": { "type": "string" }, "description": "Which growth_stages this disease is most likely to strike during." },
+          "symptoms": { "type": "string" },
+          "management": { "type": "string" },
+          "confidence": { "type": "number", "description": "0-1, how reliable this entry is." },
+          "source": { "type": "string" }
+        }
+      }
+    },
+
+    "pests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "risk_stage_ids", "symptoms", "management"],
+        "properties": {
+          "name": { "type": "string" },
+          "risk_stage_ids": { "type": "array", "items": { "type": "string" } },
+          "symptoms": { "type": "string" },
+          "management": { "type": "string" },
+          "confidence": { "type": "number" },
+          "source": { "type": "string" }
+        }
+      }
+    },
+
+    "yield_model": {
+      "type": "object",
+      "description": "Optional at first -- fill in once historical farm data exists. Placeholder now so the schema doesn't need to change later.",
+      "properties": {
+        "expected_yield_per_hectare": { "type": "string" },
+        "unit": { "type": "string" },
+        "factors": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "number" }
+      }
+    },
+
+    "regional_overrides": {
+      "type": "array",
+      "description": "Optional. Lets a region tweak specific fields (e.g. planting window, intervals) without duplicating the whole crop file. Convention: overrides.validation_rules is a list of partial patches, each identified by rule_id, applied over the base validation_rules entry with the matching id (only the fields present in the patch are overridden; everything else is inherited from the base rule). The Workflow Engine should apply the matching region's override when the farm's region is known, and fall back to the base rule otherwise. See maize.json for a worked example (Guinea vs Sudan savanna fertilizer timing).",
+      "items": {
+        "type": "object",
+        "required": ["region", "overrides"],
+        "properties": {
+          "region": { "type": "string" },
+          "overrides": { "type": "object", "description": "Partial patch applied over the base crop file for this region." }
+        }
+      }
+    },
+
+    "version_history": {
+      "type": "array",
+      "description": "Never overwrite a version -- append. Farms already using an old version keep using it; new farms get the latest. See README for governance process.",
+      "items": {
+        "type": "object",
+        "required": ["version", "date", "changed_by", "summary"],
+        "properties": {
+          "version": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "changed_by": { "type": "string" },
+          "summary": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    }
+  }
+}

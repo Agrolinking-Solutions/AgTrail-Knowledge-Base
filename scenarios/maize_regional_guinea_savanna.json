@@ -1,0 +1,11 @@
+{
+  "crop_id": "maize",
+  "region": "Nigeria - Guinea Savanna",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2026-04-01" },
+    { "operation_id": "land_preparation", "date": "2026-04-10" },
+    { "operation_id": "planting", "date": "2026-04-15" },
+    { "operation_id": "first_fertilizer", "date": "2026-04-20" }
+  ],
+  "new_operation": { "operation_id": "second_fertilizer", "date": "2026-05-10" }
+}

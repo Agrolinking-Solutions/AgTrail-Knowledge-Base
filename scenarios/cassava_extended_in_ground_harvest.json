@@ -1,0 +1,9 @@
+{
+  "crop_id": "cassava",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2025-01-01" },
+    { "operation_id": "land_preparation", "date": "2025-01-20" },
+    { "operation_id": "planting", "date": "2025-02-01" }
+  ],
+  "new_operation": { "operation_id": "harvest", "date": "2026-06-01" }
+}

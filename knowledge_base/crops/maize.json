@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "crop_id": "maize",
+    "name": "Maize",
+    "scientific_name": "Zea mays",
+    "category": "cereal",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 105,
+    "regions": ["Nigeria - Guinea Savanna", "Nigeria - Sudan Savanna"],
+    "current_version": "1.2.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination", "name": "Germination", "starts_day_after_planting": 0, "ends_day_after_planting": 7, "description": "Seed imbibes water and radicle emerges." },
+    { "stage_id": "seedling", "name": "Seedling / V-stage establishment", "starts_day_after_planting": 8, "ends_day_after_planting": 20, "description": "Emergence through early leaf development." },
+    { "stage_id": "vegetative", "name": "Vegetative growth", "starts_day_after_planting": 21, "ends_day_after_planting": 50, "description": "Rapid leaf and stalk growth, highest nutrient demand." },
+    { "stage_id": "tasseling_silking", "name": "Tasseling / Silking", "starts_day_after_planting": 51, "ends_day_after_planting": 65, "description": "Reproductive stage, most drought-sensitive period." },
+    { "stage_id": "grain_fill", "name": "Grain filling", "starts_day_after_planting": 66, "ends_day_after_planting": 95, "description": "Kernel development, milk to dough stage." },
+    { "stage_id": "maturity", "name": "Physiological maturity", "starts_day_after_planting": 96, "ends_day_after_planting": 105, "description": "Black layer formation, ready for harvest." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing/harrowing and ridging/bed formation.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Sowing of maize seed.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing failed stands.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "first_fertilizer", "name": "First Fertilizer Application (Basal)", "category": "input_application", "description": "NPK basal application.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual/chemical weed control.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "second_fertilizer", "name": "Second Fertilizer Application (Top-dress)", "category": "input_application", "description": "Urea top-dressing at vegetative stage.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "pest_scouting", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Fall armyworm and other pest management.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Cob harvesting.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "drying", "name": "Drying", "category": "post_harvest", "description": "Field or platform drying to safe moisture content.", "requires_evidence": false, "can_repeat": false },
+    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Shelling and storage/bagging.", "requires_evidence": false, "can_repeat": false }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "gap_filling", "required": false },
+    { "step_number": 5, "operation_id": "first_fertilizer", "required": true },
+    { "step_number": 6, "operation_id": "weeding_1", "required": true, "repeat_until": "harvest" },
+    { "step_number": 7, "operation_id": "second_fertilizer", "required": true },
+    { "step_number": 8, "operation_id": "weeding_2", "required": false, "repeat_until": "harvest" },
+    { "step_number": 9, "operation_id": "pest_scouting", "required": false, "repeat_until": "harvest" },
+    { "step_number": 10, "operation_id": "harvest", "required": true },
+    { "step_number": 11, "operation_id": "drying", "required": true },
+    { "step_number": 12, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "maize_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing, and should not be logged more than 30 days after it."
+    },
+    {
+      "rule_id": "maize_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before land preparation is completed, and must occur within 14 days of it (soil loses tilth/moisture advantage after that)."
+    },
+    {
+      "rule_id": "maize_r3", "operation_id": "first_fertilizer", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Basal NPK (e.g. 15:15:15) should be applied at planting or within the first 1-2 weeks after planting.",
+      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020; corroborated by Seed Co Nigeria agronomic guidance"
+    },
+    {
+      "rule_id": "maize_r4", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "First manual weeding is recommended at 2 weeks after planting (earlier, from 2-3 weeks, if Imperata cylindrica is a problem).",
+      "source": "Farmwarehouse / IITA extension guidance, Step by Step Maize Production in Nigeria"
+    },
+    {
+      "rule_id": "maize_r5", "operation_id": "second_fertilizer", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Base/umbrella window (21-35 days) covering all regions in this file. The precise window differs by zone -- see regional_overrides: Guinea savanna is 28-35 days, Sudan savanna (extra-early varieties) is 21-28 days. Engines should apply the regional_overrides patch for maize_r5 when the farm's region is known, and fall back to this wider umbrella only when region is unknown.",
+      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+    },
+    {
+      "rule_id": "maize_r6", "operation_id": "weeding_2", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 28, "max_days_after_dependency": 35, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Second manual weeding is recommended 4-5 weeks after planting.",
+      "source": "Farmwarehouse / IITA extension guidance, Step by Step Maize Production in Nigeria"
+    },
+    {
+      "rule_id": "maize_r7", "operation_id": "pest_scouting", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Fall Armyworm control is most effective when insecticide is applied weekly during the first 3 weeks after planting; scouting/control logged well outside this window is flagged since FAW damage compounds quickly if missed early.",
+      "source": "Farmwarehouse, Step by Step Maize Production in Nigeria (Ampligo/Emacot application schedule)"
+    },
+    {
+      "rule_id": "maize_r8", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 80, "max_days_after_dependency": 150, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 80 days after planting (physiologically impossible even for the earliest-maturing hybrids) or after 150 days (implausible for all but the latest-maturing varieties; almost certainly a data error at this range).",
+      "source": "Cross-referenced: Ghana MOFA Maize Production Guide (90-115 days), IITA/USAID Nigeria manuals (early/medium/late maturity classes), FAO regional guide (130-160 days for late varieties, though this is unusually long and treated as an upper bound rather than the norm)"
+    },
+    {
+      "rule_id": "maize_r8b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 90, "max_days_after_dependency": 120, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "90-120 days covers the typical medium-maturity hybrid grown across Nigerian Guinea/Sudan savanna zones. Harvest logged inside the hard block range (80-150 days) but outside this typical window is flagged so the farmer can confirm their variety's maturity class rather than being blocked outright.",
+      "source": "IITA maturity-class guidance, cross-checked against Ghana MOFA (90-115 days)"
+    },
+    {
+      "rule_id": "maize_r9", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first."
+    },
+    {
+      "rule_id": "maize_r10", "operation_id": "drying", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 10, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Drying should begin promptly after harvest to bring grain to a safe storage moisture content and avoid mold/storage pest (grain weevil) infestation; the field-drying/harvest guidance from Feed the Future's manual notes maize is typically harvested close to physiological maturity and then requires deliberate drying, not left to dry indefinitely on the stalk.",
+      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020 (storage pest section); Feed the Future Manual for Maize Farming"
+    },
+    {
+      "rule_id": "maize_r11", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 7.0,
+    "texture": ["sandy loam", "loam", "clay loam"],
+    "drainage": "well-drained",
+    "nitrogen_needs": "high"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 500,
+    "rainfall_mm_max_cycle": 800,
+    "temp_c_min": 18,
+    "temp_c_max": 33,
+    "notes": "Sensitive to moisture stress during tasseling/silking; waterlogging is harmful at all stages."
+  },
+
+  "diseases": [
+    { "name": "Maize Streak Virus", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Chlorotic streaking along leaf veins, stunted growth.", "management": "Use resistant/tolerant varieties (e.g. ZPBSR, DMR-LSRW streak-resistant hybrids), control leafhopper vectors, plant early with the onset of rains.", "confidence": 0.85, "source": "IITA / USAID, Growing Maize in Nigeria" },
+    { "name": "Maize Leaf Blight", "risk_stage_ids": ["vegetative", "tasseling_silking"], "symptoms": "Elongated grey-brown lesions on leaves.", "management": "Crop rotation, resistant varieties, fungicide if severe.", "confidence": 0.65, "source": "General extension guidance - less specifically documented in the Nigeria-specific sources reviewed so far; flagged for agronomist follow-up" }
+  ],
+
+  "pests": [
+    { "name": "Fall Armyworm (FAW)", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Ragged leaf feeding, sawdust-like frass in the whorl; larvae light green to dark brown with longitudinal stripes.", "management": "Scout from emergence; approved insecticides (e.g. Ampligo, Emacot) applied once per week for the first 3 weeks after planting are effective in Nigeria. FAW affects 350+ plant species and is one of the most destructive invasive pests in the region.", "confidence": 0.9, "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020; Farmwarehouse, Step by Step Maize Production in Nigeria" },
+    { "name": "Striga (Striga hermonthica)", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Parasitic weed attaching to maize roots; visible purple-flowered weed emergence, severe stunting and yield loss even before the weed itself is visible above ground.", "management": "Resistant/tolerant hybrids, crop rotation with non-host (trap) crops, balanced soil fertility (Striga is worse on depleted soils), timely weeding before Striga seed-set.", "confidence": 0.9, "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020 - noted as a major constraint (up to 74% infestation in the northern Guinea savanna, 30-60% of yield losses attributed to it)" },
+    { "name": "Stem Borer", "risk_stage_ids": ["vegetative", "tasseling_silking"], "symptoms": "Bore holes in stalk, dead heart in young plants.", "management": "Field sanitation, timely planting, targeted insecticide application.", "confidence": 0.6, "source": "General extension guidance - not yet cross-checked against a Nigeria-specific primary source; flagged for agronomist follow-up" }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "1.2 - 3.5",
+    "unit": "tonnes",
+    "factors": ["variety maturity class", "fertilizer regime adherence (basal + top-dress timing)", "Striga pressure", "Fall Armyworm control timing", "rainfall / planting date adherence", "soil organic matter"],
+    "confidence": 0.7,
+    "notes": "1.2-2.0 t/ha reflects typical unoptimized smallholder yields; 2.5-3.5 t/ha (up to ~3+ t/ha) reflects recommended-practice yields in Northern Nigeria per IITA. Treat the top of this range as achievable-with-good-management rather than typical."
+  },
+
+  "regional_overrides": [
+    {
+      "region": "Nigeria - Guinea Savanna",
+      "overrides": {
+        "validation_rules": [
+          {
+            "rule_id": "maize_r5",
+            "min_days_after_dependency": 28,
+            "max_days_after_dependency": 35,
+            "condition": "Nitrogen top-dress (urea) applied 4-5 weeks after planting -- Guinea savanna zone window.",
+            "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+          }
+        ]
+      }
+    },
+    {
+      "region": "Nigeria - Sudan Savanna",
+      "overrides": {
+        "validation_rules": [
+          {
+            "rule_id": "maize_r5",
+            "min_days_after_dependency": 21,
+            "max_days_after_dependency": 28,
+            "condition": "Nitrogen top-dress (urea) applied 3-4 weeks after planting for extra-early varieties -- Sudan savanna zone window (shorter than Guinea savanna because extra-early varieties are typically grown here).",
+            "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+          }
+        ]
+      }
+    }
+  ],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-24",
+      "changed_by": "AgTrail Knowledge Base - initial draft",
+      "summary": "Initial structured template built from general agronomic references. NOT yet validated by an agronomist - treat all intervals/thresholds as provisional.",
+      "source": "Draft / general references (FAO, IITA public guidance) - pending expert review"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-07-25",
+      "changed_by": "AgTrail Knowledge Base - sourced revision pass",
+      "summary": "Replaced provisional intervals with numbers cross-checked against named published sources: fertilizer timing (basal 0-14 days, top-dress 21-35 days after planting), weeding schedule (14-21 and 28-35 days), Fall Armyworm spray window (0-21 days), and harvest window split into a hard block range (80-150 days, covering all maturity classes) plus a narrower warning range (90-120 days, typical medium-maturity varieties). Added Striga as a pest entry per IITA's emphasis on it as a major constraint. Every validation_rule and diseases/pests entry now carries a 'source' field. This is still NOT a substitute for an agronomist's sign-off -- it is a materially stronger draft, not a validated final version. Two entries (Maize Leaf Blight, Stem Borer) are explicitly flagged as weaker sources needing follow-up.",
+      "source": "IITA - Guide to Maize Production in Northern Nigeria (2020); IITA/USAID - Growing Maize in Nigeria; Farmwarehouse - Step by Step Maize Production in Nigeria; Seed Co Nigeria - Good Agronomic Practices for Maize Farming; Ghana MOFA - Guide to Maize Production; Feed the Future Innovation Lab - Manual for Maize Farming"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-07-26",
+      "changed_by": "AgTrail Knowledge Base - regional split",
+      "summary": "Split the second_fertilizer (top-dress) timing rule by region rather than leaving one merged 21-35 day window: IITA's source actually gives Guinea savanna zones 28-35 days and Sudan savanna (extra-early varieties) 21-28 days -- these had been incorrectly averaged into a single range in v1.1.0. Base rule maize_r5 is now documented as a fallback umbrella for when region is unknown; regional_overrides carries the precise per-zone window. This is the first crop file to actually use regional_overrides, so it also establishes the convention: overrides.validation_rules is a list of partial patches keyed by rule_id, applied over the base rule of the same id.",
+      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+    }
+  ]
+}

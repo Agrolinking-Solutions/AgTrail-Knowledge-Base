@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "crop_id": "cassava",
+    "name": "Cassava",
+    "scientific_name": "Manihot esculenta",
+    "category": "tuber",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 365,
+    "regions": ["Nigeria - Southwest", "Nigeria - South-South", "Nigeria - Middle Belt"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "sprouting", "name": "Sprouting", "starts_day_after_planting": 0, "ends_day_after_planting": 30, "description": "Stem cuttings sprout shoots and initial roots." },
+    { "stage_id": "establishment", "name": "Establishment", "starts_day_after_planting": 31, "ends_day_after_planting": 90, "description": "Canopy and root system development; the critical weed-competition window falls here." },
+    { "stage_id": "canopy_bulking", "name": "Canopy closure & root bulking", "starts_day_after_planting": 91, "ends_day_after_planting": 270, "description": "Full canopy closure suppresses weeds naturally; storage roots bulk with starch." },
+    { "stage_id": "maturity_storage", "name": "Maturity / in-ground storage", "starts_day_after_planting": 271, "ends_day_after_planting": 550, "description": "Roots are harvestable from here onward. Unlike a grain crop, cassava has no sharp maturity cutoff -- well-bred varieties can remain in the ground storing starch for 12-15+ months, which is why this crop's harvest validation rule (below) intentionally has no hard maximum." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation (Ridging/Mounding)", "category": "land_prep", "description": "Ridging or mounding -- cassava is almost always grown on ridges/mounds in Nigeria for root development and drainage.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting (Stem Cuttings)", "category": "planting", "description": "Sowing of stem cuttings (not seed).", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing cuttings that failed to sprout.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual or chemical weed control during the critical early competition period.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "fertilizer_application", "name": "Fertilizer Application", "category": "input_application", "description": "NPK basal application; cassava is more fertility-tolerant than cereals so this is often optional on fertile soils.", "requires_evidence": true, "can_repeat": true, "optional": true },
+    { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control before canopy closure suppresses weeds naturally.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Cassava mosaic disease and mealybug monitoring/management.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Root lifting. Timing is flexible relative to a grain crop -- see validation_rules.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "processing", "name": "Processing (Peeling/Grating/Garri or Fufu production)", "category": "post_harvest", "description": "Fresh roots deteriorate rapidly and must be processed quickly.", "requires_evidence": false, "can_repeat": false },
+    { "operation_id": "storage", "name": "Storage (Processed Product)", "category": "post_harvest", "description": "Storage of dried/processed product (garri, flour); fresh roots are not stored -- see processing rule.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "gap_filling", "required": false },
+    { "step_number": 5, "operation_id": "weeding_1", "required": true, "repeat_until": null },
+    { "step_number": 6, "operation_id": "fertilizer_application", "required": false, "repeat_until": null },
+    { "step_number": 7, "operation_id": "weeding_2", "required": true, "repeat_until": null },
+    { "step_number": 8, "operation_id": "pest_disease_control", "required": false, "repeat_until": "harvest" },
+    { "step_number": 9, "operation_id": "harvest", "required": true },
+    { "step_number": 10, "operation_id": "processing", "required": true },
+    { "step_number": 11, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "cassava_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation (ridging/mounding) cannot be logged before land clearing.",
+      "source": "General cassava extension guidance -- NOT tied to a Nigeria-cassava-specific source with a stated day interval; the 45-day upper bound is a reasonable default carried over from the maize template, not independently verified. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "cassava_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before ridges/mounds are formed.",
+      "source": "General cassava extension guidance -- interval not independently sourced; flagged for agronomist review, same caveat as cassava_r1."
+    },
+    {
+      "rule_id": "cassava_r3", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21, "max_days_after_dependency": 28, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "First weeding recommended around 3-4 weeks after planting -- early weeding is critical since weed competition in the first 8-12 weeks causes the largest cassava yield losses of any single production constraint (up to 80% yield loss unmanaged).",
+      "source": "NAERLS, Cassava - Production, Processing and Utilization in Nigeria; FarmPays 2025 Cassava Production Guide"
+    },
+    {
+      "rule_id": "cassava_r4", "operation_id": "fertilizer_application", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 28, "max_days_after_dependency": 56, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Sources disagree on exact timing: a peer-reviewed IITA field trial applied NPK 15:15:15 at 4 weeks after planting (28 days), while a farmer-facing production guide recommends 8 weeks after planting (56 days). Rather than picking one, this rule treats 4-8 WAP as the plausible window and flags outliers; this discrepancy should be resolved by an agronomist, not silently averaged.",
+      "source": "PMC8505754 (IITA field trial, 400 kg/ha NPK 15:15:15 at 4 WAP); FarmPays 2025 Cassava Production Guide (8 WAP)"
+    },
+    {
+      "rule_id": "cassava_r5", "operation_id": "weeding_2", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 56, "max_days_after_dependency": 84, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Second weeding recommended 8-12 weeks after planting; this closes out the 'critical period of weed interference' (8-12 WAP) after which canopy closure begins suppressing weeds naturally.",
+      "source": "NAERLS, Cassava - Production, Processing and Utilization in Nigeria; PMC8505754 (12 WAP critical period)"
+    },
+    {
+      "rule_id": "cassava_r6", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 240, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 240 days (8 months) after planting -- roots have not meaningfully bulked before this. Deliberately NO hard maximum: this is the key structural difference from an annual grain crop. Well-adapted cassava varieties can remain viable in the ground storing starch for 12-15+ months without a mandatory harvest cutoff, so the engine should not reject a late harvest the way it would for maize.",
+      "source": "IITA, A comprehensive training module on competitive cassava production (roots 'store well in the ground for 12-15 months' listed as a desirable variety trait); FarmPays 2025 (9-15 months typical harvest window)"
+    },
+    {
+      "rule_id": "cassava_r6b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 270, "max_days_after_dependency": 450, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "270-450 days (9-15 months) is the typical harvest window across varieties. Harvest logged inside the hard block range (240+ days) but outside this window is flagged so the farmer can confirm variety/market readiness rather than being blocked -- e.g. very early harvest for a fresh/vegetable market, or deliberately extended in-ground storage.",
+      "source": "FarmPays 2025 Cassava Production Guide; corroborated by a 12-month-after-planting harvest timing used in the IITA/PMC8505754 field trial"
+    },
+    {
+      "rule_id": "cassava_r7", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template (a single terminal root-lifting event). Note: real cassava harvesting is sometimes staggered/partial across a field over weeks -- this is a simplification flagged for review once the workflow engine needs to support partial harvests."
+    },
+    {
+      "rule_id": "cassava_r8", "operation_id": "processing", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Fresh roots deteriorate rapidly (physiological post-harvest deterioration begins within 24-48 hours) and should be processed within 48 hours of harvest to prevent spoilage. Warning rather than block because delayed processing is a real (if costly) farmer choice, not an impossible/fraudulent record.",
+      "source": "IITA/USAID, Growing Cassava in Nigeria ('process the roots as soon as they are harvested and not later than 48 hours'); FarmPays 2025 ('convert to gari, flour, starch within 48 hours to prevent spoilage')"
+    },
+    {
+      "rule_id": "cassava_r9", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": ["sandy loam", "loam"],
+    "drainage": "well-drained (ridges/mounds specifically used to improve drainage and root formation)",
+    "nitrogen_needs": "low"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1000,
+    "rainfall_mm_max_cycle": 1500,
+    "temp_c_min": 25,
+    "temp_c_max": 29,
+    "notes": "More drought-tolerant than cereal crops like maize; this is a large part of why it's grown across a wider range of Nigerian agroecologies. Rainfall figures here are general and not cross-checked against a Nigeria-cassava-specific source -- flagged for review."
+  },
+
+  "diseases": [
+    { "name": "Cassava Mosaic Disease (CMD)", "risk_stage_ids": ["sprouting", "establishment", "canopy_bulking"], "symptoms": "Mosaic/mottled yellow-green pattern on leaves, leaf distortion, stunted growth.", "management": "Use certified disease-free planting cuttings, rogue (remove) infected plants, control whitefly vector, plant CMD-resistant varieties from IITA/NRCRI.", "confidence": 0.9, "source": "Wikifarmer, Major Pests and Diseases of Cassava; APSnet, Cassava Mosaic Disease review -- described as the primary cassava disease threat in Nigeria, causing 20-90% yield loss depending on severity and variety susceptibility" },
+    { "name": "Cassava Brown Streak Disease (CBSD)", "risk_stage_ids": ["canopy_bulking", "maturity_storage"], "symptoms": "Brown streaking on stems, necrotic root rot (often invisible until harvest).", "management": "Use certified clean planting material; avoid moving cuttings from affected regions.", "confidence": 0.3, "source": "One source (Wikifarmer) lists this as a major Nigerian cassava disease, but CBSD is more established as an East/Southern African problem and its presence/severity in Nigeria specifically is not corroborated by the other sources reviewed here. Treat this entry as unverified and confirm with an agronomist or plant pathologist before using it to drive farmer-facing alerts -- an incorrect CBSD alert could cause farmers to needlessly destroy healthy plants." }
+  ],
+
+  "pests": [
+    { "name": "Cassava Mealybug (Phenacoccus manihoti)", "risk_stage_ids": ["establishment", "canopy_bulking"], "symptoms": "Stunted, bunched 'rosette' shoot tips, leaf curling and yellowing, honeydew/sooty mold.", "management": "Biological control using the parasitoid wasp Anagyrus lopezi has been highly effective at continental scale in Africa (one of IITA's best-documented biocontrol successes); avoid broad-spectrum insecticides that kill the parasitoid.", "confidence": 0.8, "source": "General IITA biocontrol program knowledge -- worth confirming current status/availability of Anagyrus lopezi release programs with IITA directly rather than assuming universal availability" },
+    { "name": "Whitefly (Bemisia tabaci)", "risk_stage_ids": ["sprouting", "establishment", "canopy_bulking"], "symptoms": "Direct feeding damage is minor; primary importance is as the vector transmitting Cassava Mosaic Disease.", "management": "Use CMD-resistant varieties (reduces whitefly's practical impact even without directly controlling the insect), remove volunteer/infected plants that serve as inoculum sources.", "confidence": 0.85, "source": "Wikifarmer; APSnet Cassava Mosaic Disease review" }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "10 - 15 (typical smallholder), up to 25+ (improved management/mechanization)",
+    "unit": "tonnes fresh roots",
+    "factors": ["variety", "weed control timing (single largest factor)", "CMD pressure / planting material health", "soil fertility", "harvest timing relative to market readiness"],
+    "confidence": 0.6,
+    "notes": "Nigeria is the world's largest cassava producer by volume but yields per hectare are roughly half of leading Asian producers -- poor weed management is cited as a principal cause. The 25+ t/ha figure is an achievable target with mechanization/improved practice, not a typical farm yield."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-26",
+      "changed_by": "AgTrail Knowledge Base - third crop template",
+      "summary": "Initial cassava file, built specifically to stress-test the schema's ability to represent an OPEN-ENDED harvest window (no forced max_days_after_dependency) rather than the tight block ranges used for maize and cocoa's minimum-age gate. Every validation_rule and diseases/pests entry carries a source field. Two rules (cassava_r1, cassava_r2 -- land prep and planting timing) are explicitly flagged as unsourced defaults carried over from the maize template rather than independently verified. Cassava Brown Streak Disease entry is deliberately low-confidence and flagged as possibly inapplicable to Nigeria -- included for completeness of the single source found, not because it's confirmed reliable. Not yet reviewed by an agronomist.",
+      "source": "IITA - A comprehensive training module on competitive cassava production; IITA/USAID - Growing Cassava in Nigeria; NAERLS - Cassava Production, Processing and Utilization in Nigeria; FarmPays 2025 - Cassava Production in Nigeria; PMC8505754 - Increasing cassava root yield through appropriate weed management; Wikifarmer - Major Pests and Diseases of Cassava"
+    }
+  ]
+}
