@@ -4,6 +4,10 @@ Crop knowledge base, schema, and validation tooling for AgTrail's Workflow & Val
 
 This project is the data layer discussed with the tech team: every crop is a structured JSON file (not free text, not hardcoded app logic) that the backend loads at runtime to know what operations exist, what order they go in, and what timing/sequence rules to enforce.
 
+**The API is live and deployed:** `https://agtrail-api.onrender.com`
+
+Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. Note: it's on Render's free tier, so if nobody's hit it in the last 15 minutes it takes 30 to 50 seconds to wake back up on the first request. That's expected, not a bug.
+
 ## Project layout
 
 ```
@@ -106,6 +110,10 @@ Without tags, the engine can't distinguish which entry belongs to which crop and
 
 ## Running the API
 
+**Live, deployed version:** `https://agtrail-api.onrender.com` — try `/docs` directly in a browser, nothing to install. Deployed via Render using `render.yaml` in the project root; pushing to `main` triggers a redeploy automatically.
+
+**Running it locally instead:**
+
 ```bash
 uvicorn api.main:app --reload
 ```
@@ -188,4 +196,4 @@ One more thing worth knowing: "overdue" in a suggestion is relative to whichever
 - [ ] Resolve flagged uncertainties: maize (Leaf Blight, Stem Borer sourcing), cassava (land prep/planting interval sourcing, CBSD presence in Nigeria unconfirmed), cocoa (yield figures, the 18-month bearing claim, a candidate regional_overrides split for fertilizer by soil zone that CRIN's own literature mentions but doesn't give exact numbers for)
 - [ ] Fourth crop candidate: something with multiple harvests per season within one planting cycle (e.g. a leafy vegetable) or an intercropped system
 - [ ] Recurrence modeling for suggestions (repeat-interval operations like weeding_2, and cocoa's seasonal harvest cycle)
-- [ ] Deploy the API somewhere it's actually reachable, rather than only running locally
+- [x] API deployed and live at `https://agtrail-api.onrender.com`, via Render's free tier using `render.yaml`. Verified end to end against the real deployed instance, not just locally: all endpoints, all documented error codes (400, 404, 422), confirmed working through the live `/docs` page.
