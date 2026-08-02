@@ -6,7 +6,7 @@ This project is the data layer discussed with the tech team: every crop is a str
 
 **The API is live and deployed:** `https://agtrail-api.onrender.com`
 
-Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. A scheduled GitHub Action (`.github/workflows/keep-alive.yml`) pings it every 10 minutes to prevent Render's free tier from spinning down, so cold starts shouldn't normally happen. If GitHub Actions is ever disabled or the repo goes quiet for a long stretch, the service falls back to its normal free-tier behavior, a 30 to 50 second wake-up on the first request after 15 minutes idle, that's expected, not a bug.
+Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. An UptimeRobot monitor pings `/health` every 5 minutes to prevent Render's free tier from spinning down, so cold starts shouldn't normally happen. A GitHub Actions workflow (`.github/workflows/keep-alive.yml`) originally did this job instead, but was switched off its schedule: a private repo only gets 2,000 free Actions minutes a month, and pinging every 10 minutes would have used roughly 4,300, meaning it would have silently stopped partway through most months. UptimeRobot doesn't have that limit and also gives actual uptime monitoring as a bonus. The workflow file is kept as a manual-trigger backup only.
 
 ## Project layout
 
