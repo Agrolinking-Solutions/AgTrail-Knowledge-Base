@@ -1,0 +1,34 @@
+name: Keep API Awake
+
+# Render's free tier spins down a web service after 15 minutes with no
+# traffic, causing a 30-60 second cold start on the next real request.
+# This workflow pings the health check endpoint every 10 minutes, which is
+# comfortably inside that 15 minute window, so the service never actually
+# goes to sleep during normal hours.
+#
+# This does not fix cold starts, it prevents them from happening at all
+# by keeping the service continuously warm. If GitHub ever stops running
+# this (e.g. the repo goes 60+ days with zero activity, which disables
+# scheduled workflows automatically), the service will just fall back to
+# its normal cold-start behavior rather than breaking anything.
+
+on:
+  schedule:
+    # Every 10 minutes. GitHub Actions cron timing can drift by a few
+    # minutes under load, 10 minutes leaves comfortable margin under
+    # Render's 15 minute sleep threshold.
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}  # lets anyone trigger this manually from the Actions tab, useful for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://agtrail-api.onrender.com/health)
+          echo "Response code: $response"
+          if [ "$response" != "200" ]; then
+            echo "Health check did not return 200, service may be down or redeploying."
+            exit 1
+          fi

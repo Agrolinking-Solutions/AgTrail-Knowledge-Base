@@ -6,7 +6,7 @@ This project is the data layer discussed with the tech team: every crop is a str
 
 **The API is live and deployed:** `https://agtrail-api.onrender.com`
 
-Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. Note: it's on Render's free tier, so if nobody's hit it in the last 15 minutes it takes 30 to 50 seconds to wake back up on the first request. That's expected, not a bug.
+Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. A scheduled GitHub Action (`.github/workflows/keep-alive.yml`) pings it every 10 minutes to prevent Render's free tier from spinning down, so cold starts shouldn't normally happen. If GitHub Actions is ever disabled or the repo goes quiet for a long stretch, the service falls back to its normal free-tier behavior, a 30 to 50 second wake-up on the first request after 15 minutes idle, that's expected, not a bug.
 
 ## Project layout
 
