@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "crop_id": "rice",
+    "name": "Rice (Lowland/Transplanted)",
+    "scientific_name": "Oryza sativa",
+    "category": "cereal",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 140,
+    "regions": ["Nigeria - Niger State (Badeggi/Edozhigi)", "Nigeria - Kwara State", "Nigeria - Sokoto/irrigated schemes"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -28, "ends_day_after_planting": 0, "description": "Pre-sprouted seed broadcast on a puddled nursery bed, kept moist then gradually flooded as seedlings grow. Day 0 is transplanting, not seed sowing." },
+    { "stage_id": "vegetative_tillering", "name": "Vegetative growth / tillering", "starts_day_after_planting": 0, "ends_day_after_planting": 45, "description": "Establishment and tiller production after transplanting." },
+    { "stage_id": "reproductive", "name": "Reproductive stage (panicle initiation to flowering)", "starts_day_after_planting": 46, "ends_day_after_planting": 75, "description": "Panicle initiation through flowering. Most varieties take roughly 60-65 days from panicle initiation to harvest, though this stage's exact start varies by variety duration class." },
+    { "stage_id": "ripening", "name": "Ripening / maturity", "starts_day_after_planting": 76, "ends_day_after_planting": 160, "description": "Grain fill and ripening. The field should be drained 7-10 days before harvest. Wide day range here reflects genuine variety duration spread (short, medium, and long duration classes), not imprecision." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation (Puddling, Leveling, Bunding)", "category": "land_prep", "description": "Puddling and leveling the field, constructing bunds and drainage canals to hold flood water.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sprouting seed (36-48 hours soaking) then broadcasting onto a puddled nursery bed.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "first_fertilizer", "name": "Basal Fertilizer (NPK, pre-transplanting)", "category": "input_application", "description": "NPK puddled into the soil before transplanting -- unlike most other crops in this knowledge base, this happens BEFORE the plant goes into the field, not after.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Uprooting nursery seedlings and transplanting into the puddled, flooded field. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "water_management", "name": "Water Management (Flooding)", "category": "crop_management", "description": "Maintaining flood depth: roughly 3cm initially after transplanting, gradually increased to 5-10cm as plants grow. Logged periodically as a management check, not a one-time event.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual weeding, using a hoe rather than a cutlass.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "second_fertilizer", "name": "Second Fertilizer (Urea top-dress)", "category": "input_application", "description": "Urea broadcast application after transplanting.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control, later in the vegetative stage.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "RYMV, rice blast, and bacterial leaf blight monitoring; rodent, termite, and stem borer/armyworm control.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "field_draining", "name": "Field Draining", "category": "crop_management", "description": "Draining standing water from the field ahead of harvest to firm up the ground for harvesting.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Grain harvesting once color changes from green to golden/straw colored.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "drying", "name": "Drying", "category": "post_harvest", "description": "Sun-drying paddy to safe milling moisture content.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Storage of dried paddy or milled rice.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "nursery_establishment", "required": true },
+    { "step_number": 4, "operation_id": "first_fertilizer", "required": true },
+    { "step_number": 5, "operation_id": "transplanting", "required": true },
+    { "step_number": 6, "operation_id": "water_management", "required": false, "repeat_until": "field_draining" },
+    { "step_number": 7, "operation_id": "weeding_1", "required": true, "repeat_until": null },
+    { "step_number": 8, "operation_id": "second_fertilizer", "required": true },
+    { "step_number": 9, "operation_id": "weeding_2", "required": false, "repeat_until": null },
+    { "step_number": 10, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
+    { "step_number": 11, "operation_id": "field_draining", "required": false },
+    { "step_number": 12, "operation_id": "harvest", "required": true },
+    { "step_number": 13, "operation_id": "drying", "required": false },
+    { "step_number": 14, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "rice_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation (puddling, leveling, bunding) cannot be logged before land clearing.",
+      "source": "General extension guidance, interval not independently sourced for rice specifically. Flagged for review, same caveat as similar rules in other crop files."
+    },
+    {
+      "rule_id": "rice_r2", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "The nursery should be located close to the main field and is typically started while the main field is still being prepared. Large gaps flagged but not blocked.",
+      "source": "Training Manual for Rice Production in Nigeria (nursery located close to main field); interval itself not precisely stated, flagged for review"
+    },
+    {
+      "rule_id": "rice_r3", "operation_id": "first_fertilizer", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Unlike most crops in this knowledge base, basal fertilizer for transplanted rice is puddled into the soil BEFORE transplanting, not after. This rule anchors it to land preparation instead of transplanting for that reason. 200kg/ha of NPK 15:15:15 is the sourced rate.",
+      "source": "Olamide Irojah, How to Start a Rice Farm in Nigeria (Medium/Agtech Blog): '200kg/ha of NPK 15:15:15 should be carefully puddled into the soil prior to transplanting'"
+    },
+    {
+      "rule_id": "rice_r4", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 7, "max_days_after_dependency": 28, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Block range of 7-28 days reflects the actual range tested in a Nigerian field trial across seedling transplanting ages. One general guide states transplanting simply 'starts after 21 days,' which is treated below as the typical case rather than the only valid one.",
+      "source": "Data on effect of variety, seedling transplanting age and nitrogen fertilizer rates on growth performance of rice in Southern Guinea Savannah, Nigeria (ages tested: 7, 14, 21, 28 days after sowing); Bennicle Investment, Rice Farming & Production in Nigeria ('transplanting starts after 21 days')"
+    },
+    {
+      "rule_id": "rice_r4b", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 18, "max_days_after_dependency": 24, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "18-24 days is the typical window, centered on the commonly cited 21-day figure. Transplanting inside the hard block range above but outside this window is flagged rather than rejected.",
+      "source": "Bennicle Investment, Rice Farming & Production in Nigeria"
+    },
+    {
+      "rule_id": "rice_r5", "operation_id": "weeding_1", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "First weeding recommended 2-3 weeks after sowing/crop appearance. Note: the source phrasing says 'after appearance/sowing,' not explicitly 'after transplanting' -- this rule assumes those are close enough to treat as equivalent for a transplanted system, which has not been independently confirmed and is flagged here honestly.",
+      "source": "Olamide Irojah, How to Start a Rice Farm in Nigeria; Farmwarehouse, Step by Step Rice Production in Nigeria (both give 2-3 weeks for first weeding)"
+    },
+    {
+      "rule_id": "rice_r6", "operation_id": "second_fertilizer", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 25, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Urea top-dress (100kg/ha) broadcast around 30 days after transplanting, specifically for the transplanted method. Other sources cite different windows (35-55 days, or 6-7 weeks after sowing) but those refer to the direct-seeded method, which this crop file does not model as the primary path -- flagged so the discrepancy isn't silently hidden.",
+      "source": "Olamide Irojah, How to Start a Rice Farm in Nigeria (30 days after transplanting, transplanted method specifically)"
+    },
+    {
+      "rule_id": "rice_r7", "operation_id": "weeding_2", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 35, "max_days_after_dependency": 49, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Second weeding recommended 5-6 weeks (Medium source) or 6-7 weeks (Farmwarehouse source) after sowing/appearance -- the two sources disagree, so this rule spans the combined range rather than picking one.",
+      "source": "Olamide Irojah, How to Start a Rice Farm in Nigeria (6-7 weeks); Farmwarehouse, Step by Step Rice Production in Nigeria (5-6 weeks)"
+    },
+    {
+      "rule_id": "rice_r8", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 70, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "This is a derived estimate, not a directly sourced figure, and that distinction matters. Variety duration classes are commonly quoted from SOWING: short duration 100-120 days, medium 120-140 days, long duration 160+ days. Converting to days-after-TRANSPLANTING (this file's day-zero) by subtracting a roughly 21-day nursery period gives approximately 79-99, 99-119, and 139+ days respectively. The 70-day floor here is deliberately more conservative than that conversion to leave margin for the estimate's own uncertainty. No upper block: long-duration varieties push well past 140 days after transplanting, and the spread across variety classes is wide enough that a confident hard ceiling was not set.",
+      "source": "Agricincome Hub, Rice Farming in Nigeria: A Comprehensive Guide for Beginners (variety duration classes, days after sowing); conversion to days-after-transplanting is this file's own estimate, not independently sourced -- flagged for review"
+    },
+    {
+      "rule_id": "rice_r8b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 79, "max_days_after_dependency": 119, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "79-119 days after transplanting is the estimated typical window for short-to-medium duration varieties, the most commonly grown classes. Same conversion caveat as rice_r8 applies -- this is derived, not directly sourced.",
+      "source": "Same as rice_r8, derived estimate"
+    },
+    {
+      "rule_id": "rice_r9", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first."
+    },
+    {
+      "rule_id": "rice_r10", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": ["clay", "clay loam"],
+    "drainage": "poorly-drained by design -- lowland/transplanted rice is deliberately grown in puddled, flooded conditions, the opposite of the well-drained preference in every other crop file here",
+    "nitrogen_needs": "high"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1200,
+    "rainfall_mm_max_cycle": 1800,
+    "temp_c_min": 22,
+    "temp_c_max": 32,
+    "notes": "This file models lowland/transplanted, flood-irrigated rice specifically. Upland rice and Fadama (residual-moisture) rice are grown very differently in Nigeria and would need their own regional_overrides or even a separate crop file rather than being forced into this one -- flagged as a real gap, not filled in here."
+  },
+
+  "diseases": [
+    { "name": "Rice Yellow Mottle Virus (RYMV)", "risk_stage_ids": ["vegetative_tillering", "reproductive"], "symptoms": "Yellow-green oblong to linear spots on young leaves, expanding into yellow/orange streaks parallel to leaf veins; mottled and twisted new leaves; stunted growth, reduced tillering, poor panicle emergence, spikelet sterility.", "management": "Resistant cultivars are the primary defense; control of insect vectors (several beetle species), sanitation, and integrated pest management. No cure once infected. Early-stage infection causes the worst losses.", "confidence": 0.9, "source": "A 2021 Kwara State, Nigeria field survey found RYMV incidence ranging 37-48% and severity 50-62% across four local government areas; a separate Nigeria-specific study (Onwughalu et al., 2011) reported yield losses above 90% in susceptible cultivars including FARO 29. IRRI Rice Knowledge Bank and a 2026 peer-reviewed review both confirm the 10-100% yield loss range depending on infection timing and variety susceptibility." },
+    { "name": "Rice Blast", "risk_stage_ids": ["vegetative_tillering", "reproductive"], "symptoms": "Lesions on leaves, stems, and panicles.", "management": "Resistant varieties, balanced nitrogen (excess nitrogen worsens blast severity), field sanitation.", "confidence": 0.65, "source": "Named as a major rice constraint (caused by Magnaporthe oryzae) in a 2026 peer-reviewed RYMV review, but not independently cross-checked against a Nigeria-specific primary source in this pass. Flagged for follow-up." },
+    { "name": "Bacterial Leaf Blight", "risk_stage_ids": ["vegetative_tillering", "reproductive"], "symptoms": "Leaf blighting.", "management": "Resistant varieties, avoid excess nitrogen, clean irrigation water.", "confidence": 0.6, "source": "Named as a major rice constraint (caused by Xanthomonas oryzae pv. oryzae) in the same review as Rice Blast above; same caveat -- not independently cross-checked against a Nigeria-specific primary source." }
+  ],
+
+  "pests": [
+    { "name": "Rodents", "risk_stage_ids": ["vegetative_tillering", "reproductive", "ripening"], "symptoms": "Direct feeding damage on stems and grain.", "management": "Physical control (traps) rather than chemical, since rodenticide use around a food/water-heavy paddy environment carries its own risks.", "confidence": 0.6, "source": "Bennicle Investment, Rice Farming & Production in Nigeria -- the source also named a specific rodenticide brand, which is deliberately not repeated here since brand-specific pesticide recommendations age quickly and should be checked against current approved product lists rather than carried forward from an older source." },
+    { "name": "Termites", "risk_stage_ids": ["vegetative_tillering"], "symptoms": "Damage to stems and roots.", "management": "Field sanitation, resistant varieties where available.", "confidence": 0.5, "source": "Bennicle Investment, Rice Farming & Production in Nigeria -- same caveat as Rodents above: the source's specific named product is not repeated here and should not be assumed current or approved." },
+    { "name": "Armyworm", "risk_stage_ids": ["vegetative_tillering"], "symptoms": "Leaf feeding damage, can strip plants rapidly in outbreak conditions.", "management": "Early scouting is critical given how fast armyworm outbreaks spread; approved insecticides should be selected from a current, locally approved product list rather than an older recommendation.", "confidence": 0.5, "source": "Bennicle Investment, Rice Farming & Production in Nigeria -- same caveat as above: the specific product named in this source is old enough (an organochlorine class product now restricted in many jurisdictions) that it is deliberately excluded rather than repeated as current guidance." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "2.5 - 4.0",
+    "unit": "tonnes",
+    "factors": ["variety duration class", "transplanting age adherence", "nitrogen fertilizer rate and timing", "water management consistency", "RYMV pressure"],
+    "confidence": 0.6,
+    "notes": "Nigeria is the largest rice-producing country in West Africa (roughly 3 million tonnes annually) but is simultaneously the world's largest rice importer, since domestic consumption (around 6 million tonnes) far outstrips production. Commercial farming remains a small share of total production."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-02",
+      "changed_by": "AgTrail Knowledge Base - fifth crop template",
+      "summary": "First crop file to model paddy water management (flooding) as an explicit operation, and the first cereal crop built with a nursery-then-transplant lifecycle rather than direct seeding, unlike maize's direct planting. Deliberately scoped to lowland/transplanted rice only -- upland and Fadama rice are grown differently in Nigeria and are explicitly flagged as not covered by this file rather than silently conflated with it. Several rules carry a genuine reference-point caveat: some sourced timings are stated as days after sowing/appearance rather than confirmed as days after transplanting specifically, and the harvest window is a derived estimate converting sowing-based variety duration classes into days-after-transplanting, not a directly sourced figure. A specific old pesticide brand named in one source (an organochlorine, now restricted in many places) was deliberately excluded rather than carried forward as current guidance. Not yet reviewed by an agronomist.",
+      "source": "Olamide Irojah, How to Start a Rice Farm in Nigeria (Medium/Agtech Blog); Training Manual for Rice Production in Nigeria (NET); Agricincome Hub, Rice Farming in Nigeria: A Comprehensive Guide for Beginners; Afrimash, Rice Farming In Nigeria: Harvesting And Processing Techniques; Bennicle Investment, Rice Farming & Production in Nigeria; Farmwarehouse, Step by Step Rice Production in Nigeria; Data on effect of variety, seedling transplanting age and nitrogen fertilizer rates on growth performance of rice in Southern Guinea Savannah, Nigeria; Rice Yellow Mottle Virus incidence/severity field survey, Kwara State, Nigeria (2021); Rice Yellow Mottle Virus (RYMV): A Review (2026, peer-reviewed); IRRI Rice Knowledge Bank"
+    }
+  ]
+}

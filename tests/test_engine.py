@@ -287,3 +287,104 @@ def test_optional_operation_absent_from_history_does_not_wrongly_block():
         new_operation={"operation_id": "weeding_1", "date": "2026-01-25"},
     )
     assert not report.blocked
+
+
+def test_tomato_harvest_can_genuinely_repeat():
+    """
+    Tomato was built specifically to test a shape none of the other three
+    crops cover: a harvest operation that repeats many times within ONE
+    planting cycle, not once (maize/cassava) and not across separate
+    multi-year seasons (cocoa). A second harvest pick a week after the
+    first should pass cleanly, with no once-only rule blocking it.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "transplanting", "date": "2026-02-01"},
+        {"operation_id": "first_fertilizer", "date": "2026-02-05"},
+        {"operation_id": "weeding_1", "date": "2026-02-15"},
+        {"operation_id": "second_fertilizer", "date": "2026-03-05"},
+        {"operation_id": "pest_disease_control", "date": "2026-02-10"},
+        {"operation_id": "harvest", "date": "2026-04-05"},
+    ]
+    report = validate_operation(
+        crop_id="tomato",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-04-12"},
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_tomato_harvest_too_early_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "transplanting", "date": "2026-02-01"},
+    ]
+    report = validate_operation(
+        crop_id="tomato",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-03-01"},  # 28 days after transplanting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "tomato_r7" for i in report.blocking_issues)
+
+
+def test_rice_harvest_in_typical_window_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "first_fertilizer", "date": "2026-01-20"},
+        {"operation_id": "transplanting", "date": "2026-01-26"},
+    ]
+    report = validate_operation(
+        crop_id="rice",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-05-06"},  # ~100 days after transplanting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_rice_harvest_too_early_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "first_fertilizer", "date": "2026-01-20"},
+        {"operation_id": "transplanting", "date": "2026-01-26"},
+    ]
+    report = validate_operation(
+        crop_id="rice",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-03-17"},  # ~50 days after transplanting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "rice_r8" for i in report.blocking_issues)
+
+
+def test_rice_late_harvest_for_long_duration_variety_is_not_blocked():
+    """
+    Rice's harvest rule deliberately has no upper block, since long duration
+    varieties genuinely take well over 140 days after transplanting. A
+    harvest at ~150 days should pass, but still get flagged as outside the
+    typical short/medium duration window as a warning, not a rejection.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "first_fertilizer", "date": "2026-01-20"},
+        {"operation_id": "transplanting", "date": "2026-01-26"},
+    ]
+    report = validate_operation(
+        crop_id="rice",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-06-25"},  # ~150 days after transplanting
+    )
+    assert not report.blocked
+    assert any(i.rule_id == "rice_r8b" for i in report.warnings)

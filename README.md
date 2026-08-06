@@ -17,7 +17,9 @@ agtrail-knowledge-base/
 │   └── crops/
 │       ├── maize.json       # template: annual/staple crop
 │       ├── cocoa.json       # template: perennial/tree crop
-│       └── cassava.json     # template: annual root crop, open-ended harvest window
+│       ├── cassava.json     # template: annual root crop, open-ended harvest window
+│       ├── tomato.json      # template: repeating harvest within one planting cycle
+│       └── rice.json        # template: paddy/flooded water management, nursery-to-transplant cereal
 ├── engine/
 │   ├── loader.py            # loads a crop file, applies regional_overrides patches
 │   ├── history.py           # shared FarmOperation parsing + crop-scoping (used by validator and suggestions)
@@ -194,6 +196,8 @@ One more thing worth knowing: "overdue" in a suggestion is relative to whichever
 - [x] Suggestions layer (`engine/suggestions.py` + `POST /suggestions`) — answers "what's due next and by when," built on the same workflow and timing data validation already uses. Deliberately scoped to v1: only the next required not-yet-logged step, no recurrence modeling yet (documented as a real, intentional gap, not an oversight). Also prompted a small refactor: history parsing and crop-scoping logic was pulled out of `validator.py` into a shared `engine/history.py` so both validation and suggestions use the exact same logic rather than two copies that could quietly drift apart. 44 tests passing total.
 - [ ] No agronomist currently available — data is sourced from published references (IITA, NAERLS, CRIN, etc.) but not field-verified. Plan is to keep building on sourced data while pursuing an informal reviewer (extension officer, university contact, experienced farmers) in parallel
 - [ ] Resolve flagged uncertainties: maize (Leaf Blight, Stem Borer sourcing), cassava (land prep/planting interval sourcing, CBSD presence in Nigeria unconfirmed), cocoa (yield figures, the 18-month bearing claim, a candidate regional_overrides split for fertilizer by soil zone that CRIN's own literature mentions but doesn't give exact numbers for)
-- [ ] Fourth crop candidate: something with multiple harvests per season within one planting cycle (e.g. a leafy vegetable) or an intercropped system
+- [x] Fourth crop: Tomato, sourced. First crop to test a genuinely repeating harvest within one planting cycle (no once-only rule on the harvest operation), unlike maize/cassava's single terminal harvest or cocoa's separate multi-year seasons. Includes a properly sourced Tuta absoluta pest entry (over 80% documented crop loss in Nigeria, a 2015 national price crisis).
+- [x] Fifth crop: Rice (lowland/transplanted), sourced. First crop to model paddy water management (flooding) as an explicit operation, and the first cereal with a nursery-to-transplant lifecycle. Harvest window uses a clearly flagged derived estimate (converting sowing-based variety duration classes to days-after-transplanting) rather than a directly sourced figure. Deliberately scoped to lowland/transplanted rice only; upland and Fadama rice are explicitly flagged as not covered.
+- [ ] Remaining crops toward the original 10: soybean, sesame, ginger, pepper, yam
 - [ ] Recurrence modeling for suggestions (repeat-interval operations like weeding_2, and cocoa's seasonal harvest cycle)
 - [x] API deployed and live at `https://agtrail-api.onrender.com`, via Render's free tier using `render.yaml`. Verified end to end against the real deployed instance, not just locally: all endpoints, all documented error codes (400, 404, 422), confirmed working through the live `/docs` page.

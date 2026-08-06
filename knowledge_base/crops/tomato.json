@@ -1,0 +1,158 @@
+{
+  "metadata": {
+    "crop_id": "tomato",
+    "name": "Tomato",
+    "scientific_name": "Solanum lycopersicum",
+    "category": "vegetable",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 120,
+    "regions": ["Nigeria - Northern (major production zone)", "Nigeria - nationwide (smallholder cultivation)"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -35, "ends_day_after_planting": 0, "description": "Seeds sown in a nursery bed, germinating in 5-7 days, grown for 3-5 weeks before transplanting. Day 0 is transplanting, not seed sowing." },
+    { "stage_id": "establishment", "name": "Establishment / vegetative growth", "starts_day_after_planting": 0, "ends_day_after_planting": 30, "description": "Root establishment and vegetative growth after transplanting." },
+    { "stage_id": "flowering", "name": "Flowering", "starts_day_after_planting": 31, "ends_day_after_planting": 50, "description": "Flower set begins; calcium demand rises sharply during this stage." },
+    { "stage_id": "fruiting_harvest", "name": "Fruiting and harvest", "starts_day_after_planting": 51, "ends_day_after_planting": 120, "description": "Fruit development and repeated harvest picking. Unlike a grain crop with one terminal harvest, tomato is picked repeatedly over several weeks as fruit ripens in successive flushes." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing, bed formation, ridging.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sowing seed in nursery beds or trays.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Moving seedlings from nursery to the field. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "staking", "name": "Staking", "category": "crop_management", "description": "Installing stakes/trellis to support plants and keep fruit off the ground.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "first_fertilizer", "name": "First Fertilizer (NPK, vegetative growth)", "category": "input_application", "description": "Basal NPK application to support vegetative growth.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual or chemical weed control.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "second_fertilizer", "name": "Second Fertilizer (Calcium, flowering)", "category": "input_application", "description": "Calcium nitrate application timed to flowering; low calcium at this stage is linked to blossom end rot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "third_fertilizer", "name": "Third Fertilizer (Potassium, fruiting)", "category": "input_application", "description": "Potassium-focused application to support fruit development.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "pruning", "name": "Pruning", "category": "crop_management", "description": "Removing lower leaves and suckers to direct energy to fruit production.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Tuta absoluta (tomato leafminer) monitoring and control is the priority; also covers bacterial and fungal wilt management.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "harvest", "name": "Harvest (Picking)", "category": "harvest", "description": "Fruit picking. Unlike an annual grain crop, this REPEATS many times across several weeks as successive fruit flushes ripen -- there is no single terminal harvest event.", "requires_evidence": true, "can_repeat": true },
+    { "operation_id": "post_harvest_handling", "name": "Post-Harvest Handling", "category": "post_harvest", "description": "Sorting and rapid sale/processing -- fresh tomato is highly perishable and does not store.", "requires_evidence": false, "can_repeat": true, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "nursery_establishment", "required": true },
+    { "step_number": 4, "operation_id": "transplanting", "required": true },
+    { "step_number": 5, "operation_id": "staking", "required": false },
+    { "step_number": 6, "operation_id": "first_fertilizer", "required": true },
+    { "step_number": 7, "operation_id": "weeding_1", "required": true, "repeat_until": "harvest" },
+    { "step_number": 8, "operation_id": "second_fertilizer", "required": true },
+    { "step_number": 9, "operation_id": "third_fertilizer", "required": false },
+    { "step_number": 10, "operation_id": "pruning", "required": false, "repeat_until": null },
+    { "step_number": 11, "operation_id": "pest_disease_control", "required": true, "repeat_until": null },
+    { "step_number": 12, "operation_id": "harvest", "required": true, "repeat_until": null },
+    { "step_number": 13, "operation_id": "post_harvest_handling", "required": false, "repeat_until": null }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "tomato_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing.",
+      "source": "General extension guidance, interval not independently sourced for tomato specifically. Flagged for review, same caveat as similar rules in other crop files."
+    },
+    {
+      "rule_id": "tomato_r2", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Nursery is normally started around the time land clearing/preparation begins, since it runs for several weeks while the main field is prepared in parallel. Large gaps are flagged but not blocked.",
+      "source": "General cross-reference with cocoa's nursery pattern; not independently sourced for tomato timing specifically."
+    },
+    {
+      "rule_id": "tomato_r3", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 21, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Sources genuinely disagree on nursery duration: one says seedlings above 24 days old (roughly 3.5 weeks) are ready once 8-10cm tall with 4-5 true leaves; another specifies preparing the nursery bed for about 5 weeks. Rather than pick one, this rule spans the combined range, 21 to 35 days, as the block boundary.",
+      "source": "Farmsquare, 13 Ultimate Tomato Farming Tips In Nigeria (24+ days, 8-10cm); Steemit, How to Start Tomato Farming in Nigeria (5 week nursery bed period); Skyline E-Learning guide (transplant after 3-4 weeks at 4-5 leaves)"
+    },
+    {
+      "rule_id": "tomato_r4", "operation_id": "first_fertilizer", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Basal NPK (e.g. 15:15:15) supports early vegetative growth and is typically applied at or shortly after transplanting.",
+      "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria (NPK 15:15:15 for growth stage, general timing)"
+    },
+    {
+      "rule_id": "tomato_r5", "operation_id": "weeding_1", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "First weeding recommended 2-3 weeks after transplanting.",
+      "source": "General extension guidance carried over from the maize/cassava weeding pattern -- not independently sourced for tomato specifically. Flagged for review."
+    },
+    {
+      "rule_id": "tomato_r6", "operation_id": "second_fertilizer", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 28, "max_days_after_dependency": 42, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Calcium nitrate is applied around flowering; low calcium at this stage is specifically linked to blossom end rot. Window estimated from the flowering growth stage (roughly 31-50 days after transplanting) rather than a directly stated interval -- flagged as an estimate pending a firmer source.",
+      "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria (calcium nitrate 'for flowering' -- stage named but exact day range not given in the source, estimated against the flowering growth stage window)"
+    },
+    {
+      "rule_id": "tomato_r7", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 55, "max_days_after_dependency": 110, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Block range covers the full spread of maturity classes: very early maturing varieties under 70 days, through late maturing varieties over 100 days after transplanting. A harvest logged before 55 days is blocked as physiologically implausible for any known variety class. Unlike maize or cassava, there is deliberately NO rule limiting harvest to a single occurrence -- tomato is picked repeatedly across many weeks as successive fruit flushes ripen, and can_repeat is true on both the operation and this rule.",
+      "source": "Multiple corroborating hybrid tomato variety patents (USPTO plant patent filings) defining maturity classes: very early under 70 days, early 70-80, mid-early 80-90, intermediate 90-100, late over 100 days after transplanting"
+    },
+    {
+      "rule_id": "tomato_r7b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 60, "max_days_after_dependency": 90, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "60-90 days after transplanting is the typical window across the most commonly grown maturity classes (early through mid-early). A first harvest inside the hard block range above but outside this window is flagged so the variety's maturity class can be confirmed, rather than being blocked outright.",
+      "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria ('60-90 days after transplanting'), cross-checked against the mid-early maturity class (80-90 days) in the patent filings above"
+    },
+    {
+      "rule_id": "tomato_r8", "operation_id": "pest_disease_control", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 90, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Tuta absoluta (tomato leafminer) is severe enough in Nigeria to warrant scouting from early growth through most of the fruiting period, not just a narrow window. A 2015 outbreak destroyed over 80% of tomato fields in affected regions and caused a roughly twentyfold spike in tomato prices nationally.",
+      "source": "Biological Invasion of Tomato Leaf Miner, Tuta absoluta (Meyrick) in Nigeria: Problems and Management Strategies Optimization: A Review (over 80% yield loss recorded, Nigeria's tomato production area is 541,800 ha with smallholders managing 90% of it); Invasive Species Council evidence note on Tuta absoluta impacts in Africa (2015 Nigeria price crisis, government emergency declaration)"
+    },
+    {
+      "rule_id": "tomato_r9", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 6.0,
+    "ph_max": 6.8,
+    "texture": ["loam", "sandy loam"],
+    "drainage": "well-drained -- tomato tolerates dry conditions with irrigation far better than waterlogging",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 400,
+    "rainfall_mm_max_cycle": 600,
+    "temp_c_min": 20,
+    "temp_c_max": 27,
+    "notes": "Consistent moisture matters more than total rainfall -- commercial Nigerian tomato production increasingly relies on irrigation (including dry-season, drip-irrigated production) rather than purely rain-fed cultivation, per Farmsquare's guide. Waterlogging is poorly tolerated at any stage."
+  },
+
+  "diseases": [
+    { "name": "Bacterial Wilt", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Sudden wilting of the whole plant, often with no yellowing beforehand; a cut stem placed in water shows milky bacterial ooze.", "management": "No cure once infected -- remove and destroy affected plants. Crop rotation (avoid solanaceous crops on the same ground), resistant varieties, avoid working in fields when wet to reduce spread.", "confidence": 0.75, "source": "Cross-referenced from a Tuta absoluta control study (Eswatini) listing bacterial wilt (Ralstonia solanacearum) as a major tomato disease alongside the pest; general management practice, not a Nigeria-specific primary source" },
+    { "name": "Fusarium Wilt", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Yellowing and wilting, often starting on one side of the plant, progressing upward.", "management": "Resistant varieties, crop rotation, avoid overwatering (the fungus thrives in wet, poorly-drained soil).", "confidence": 0.7, "source": "Same source as Bacterial Wilt above (Fusarium oxysporum listed as a major tomato disease); not independently verified against a Nigeria-specific primary source" }
+  ],
+
+  "pests": [
+    { "name": "Tuta absoluta (Tomato Leafminer)", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Larvae mine leaves, stems, and fruit; visible tunneling/blotching on leaves, damaged fruit.", "management": "Integrated Pest Management is the only reliable approach -- the pest has developed resistance to many chemical pesticides. Combines biopesticides, pheromone traps, biological control, and cultural practices (crop rotation, removing crop residue). Early detection matters enormously given how fast it spreads.", "confidence": 0.9, "source": "Multiple corroborating sources: a Nigeria-focused review documenting over 80% yield loss and the pest's 2014 introduction; an Invasive Species Council evidence note documenting Nigeria's 2015 price crisis and government emergency declaration; a 2025 peer-reviewed study (Frontiers in Plant Science) noting Tuta absoluta can cause up to 100% crop loss without intervention" }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "not yet sourced",
+    "unit": "tonnes",
+    "factors": ["variety maturity class", "irrigation consistency", "Tuta absoluta pressure", "staking/pruning practice", "fertilizer timing (especially calcium at flowering)"],
+    "confidence": 0.2,
+    "notes": "Deliberately left unsourced rather than filled with a guess. National-level figures exist (Nigeria produces roughly 1.5 million tonnes of tomato annually per one source), but a genuine per-hectare smallholder yield figure comparable to the maize/cassava/cocoa yield_model entries was not found in this pass and should not be assumed from the national total alone."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-02",
+      "changed_by": "AgTrail Knowledge Base - fourth crop template",
+      "summary": "First crop file built specifically to test a repeating-harvest-within-one-cycle shape, unlike maize/cassava (single terminal harvest) or cocoa (harvest repeats across separate multi-year seasons). Tomato's harvest operation and its validation rules are explicitly can_repeat true with NO once-only rule, reflecting that a single planting is picked many times over several weeks. Every validation_rule and diseases/pests entry carries a source field. Two rules (tomato_r1, tomato_r5 -- land prep timing and first weeding timing) are explicitly flagged as unsourced defaults carried over from other crop templates. The yield model was deliberately left unfilled rather than guessed at. Not yet reviewed by an agronomist.",
+      "source": "Farmsquare - 13 Ultimate Tomato Farming Tips In Nigeria; Skyline E-Learning - Complete Guide to Tomato Farming in Nigeria; Steemit - How to Start Tomato Farming in Nigeria; USPTO hybrid tomato plant patent filings (maturity class definitions); Biological Invasion of Tomato Leaf Miner, Tuta absoluta in Nigeria: Problems and Management Strategies Optimization: A Review; Invasive Species Council evidence note on Tuta absoluta impacts in Africa; Frontiers in Plant Science 2025 (YOLO detection study, Tuta absoluta crop loss figures)"
+    }
+  ]
+}
