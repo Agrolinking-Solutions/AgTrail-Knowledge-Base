@@ -153,13 +153,13 @@ def test_suggestions_overdue():
                 {"operation_id": "land_clearing", "date": "2026-04-01"},
                 {"operation_id": "land_preparation", "date": "2026-04-10"},
             ],
-            "as_of": "2026-05-01",
+            "as_of": "2026-05-15",  # 35 days after land prep; maize_r2's corrected window is 0-30 days
         },
     )
     assert resp.status_code == 200
     body = resp.json()
     assert body["suggestion"]["status"] == "overdue"
-    assert body["suggestion"]["days_overdue"] == 7
+    assert body["suggestion"]["days_overdue"] == 5
 
 
 def test_suggestions_cycle_complete():
@@ -197,3 +197,35 @@ def test_suggestions_bad_as_of_returns_400():
         json={"crop_id": "maize", "history": [], "as_of": "not-a-date"},
     )
     assert resp.status_code == 400
+
+
+def test_validate_yield_normal_range_passes():
+    resp = client.post("/validate-yield", json={"crop_id": "maize", "tonnes_per_hectare": 3.5})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["severity"] == "pass"
+    assert body["is_loss_event"] is False
+
+
+def test_validate_yield_extreme_value_blocks_not_just_warns():
+    resp = client.post("/validate-yield", json={"crop_id": "maize", "tonnes_per_hectare": 15})
+    assert resp.status_code == 200
+    assert resp.json()["severity"] == "block"
+
+
+def test_validate_yield_zero_is_a_loss_event():
+    resp = client.post("/validate-yield", json={"crop_id": "maize", "tonnes_per_hectare": 0})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["is_loss_event"] is True
+    assert body["severity"] == "block"
+
+
+def test_validate_yield_crop_without_data_returns_400():
+    resp = client.post("/validate-yield", json={"crop_id": "cassava", "tonnes_per_hectare": 5})
+    assert resp.status_code == 400
+
+
+def test_validate_yield_unrecognized_crop_returns_404():
+    resp = client.post("/validate-yield", json={"crop_id": "durian", "tonnes_per_hectare": 5})
+    assert resp.status_code == 404

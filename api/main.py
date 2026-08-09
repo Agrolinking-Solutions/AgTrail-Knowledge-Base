@@ -22,6 +22,7 @@ from engine.exceptions import CropNotFoundError, InvalidOperationDataError
 from engine.loader import list_crops
 from engine.suggestions import get_next_steps
 from engine.validator import validate_operation
+from engine.yield_validator import validate_yield
 
 from .schemas import (
     CropsResponse,
@@ -31,6 +32,8 @@ from .schemas import (
     SuggestionsResponse,
     ValidateRequest,
     ValidateResponse,
+    YieldValidateRequest,
+    YieldValidateResponse,
 )
 
 app = FastAPI(
@@ -140,4 +143,29 @@ def suggestions(request: SuggestionsRequest) -> SuggestionsResponse:
         as_of=report.as_of.isoformat(),
         cycle_status=report.cycle_status,
         suggestion=suggestion_out,
+    )
+
+
+@app.post(
+    "/validate-yield",
+    response_model=YieldValidateResponse,
+    responses={
+        400: {"description": "Crop has no yield_validation data yet, or tiers are malformed"},
+        404: {"description": "Unrecognized crop_id"},
+    },
+)
+def validate_yield_endpoint(request: YieldValidateRequest) -> YieldValidateResponse:
+    try:
+        result = validate_yield(request.crop_id, request.tonnes_per_hectare)
+    except CropNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return YieldValidateResponse(
+        crop_id=result.crop_id,
+        tonnes_per_hectare=result.tonnes_per_hectare,
+        severity=result.severity,
+        is_loss_event=result.is_loss_event,
+        message=result.message,
     )

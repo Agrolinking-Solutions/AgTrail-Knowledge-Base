@@ -173,6 +173,31 @@
       }
     },
 
+    "yield_validation": {
+      "type": "object",
+      "description": "A separate validation dimension from validation_rules. validation_rules checks WHEN an operation happened; yield_validation checks HOW MUCH was reported at harvest (tonnes per hectare), independent of timing. Introduced by the AgTrail Master Agronomist & Validator Ruleset (Agrolinking Solutions, July 2026), which specifies a 5-tier structure per crop: a reported yield of exactly 0 must be logged as a distinct Loss/Disaster Event rather than a harvest record; very low but nonzero yield is a warning; a normal range passes; an unusually high yield is a warning; and an implausibly high yield is a hard block, treated as almost certainly a unit typo (e.g. kg entered where tonnes was expected) or an inflated/incorrect area figure, since it approaches or exceeds the crop's known biological ceiling. This assumes the reported area itself is trustworthy -- the source ruleset ties this to GPS-polygon-anchored area rather than self-reported area, which AgTrail does not yet implement; that gap is noted directly in each crop file that has yield_validation populated.",
+      "properties": {
+        "unit": { "type": "string", "description": "e.g. 't/ha' (tonnes per hectare)." },
+        "tiers": {
+          "type": "array",
+          "description": "Evaluated in order; the engine should check each tier and apply the first one whose condition matches the reported value.",
+          "items": {
+            "type": "object",
+            "required": ["condition_type", "severity", "message"],
+            "properties": {
+              "condition_type": { "type": "string", "enum": ["equals_zero", "less_than", "range", "greater_than"] },
+              "min": { "type": ["number", "null"] },
+              "max": { "type": ["number", "null"] },
+              "severity": { "type": "string", "enum": ["block", "warning", "pass"], "description": "Same meaning as validation_rules severity, plus 'pass' for the normal/expected tier, which validation_rules doesn't need since silence already implies pass there." },
+              "is_loss_event": { "type": "boolean", "default": false, "description": "True only for the 0-yield tier: signals this should be redirected to a Loss/Disaster Event record type rather than accepted or rejected as a harvest." },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "source": { "type": "string" }
+      }
+    },
+
     "regional_overrides": {
       "type": "array",
       "description": "Optional. Lets a region tweak specific fields (e.g. planting window, intervals) without duplicating the whole crop file. Convention: overrides.validation_rules is a list of partial patches, each identified by rule_id, applied over the base validation_rules entry with the matching id (only the fields present in the patch are overridden; everything else is inherited from the base rule). The Workflow Engine should apply the matching region's override when the farm's region is known, and fall back to the base rule otherwise. See maize.json for a worked example (Guinea vs Sudan savanna fertilizer timing).",

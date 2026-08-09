@@ -7,7 +7,7 @@
     "crop_cycle_type": "annual",
     "typical_duration_days": 120,
     "regions": ["Nigeria - Northern (major production zone)", "Nigeria - nationwide (smallholder cultivation)"],
-    "current_version": "1.0.0"
+    "current_version": "1.1.0"
   },
 
   "growth_stages": [
@@ -64,9 +64,21 @@
     },
     {
       "rule_id": "tomato_r3", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 15, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block if the nursery is under 15 or over 45 days. Previous version of this file used 21-35 as the block boundary itself, which was too strict, master ruleset uses 21-35 as a narrower WARNING band inside a wider 15-45 day hard block. See tomato_r3b for that narrower typical window.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- supersedes the earlier self-sourced 21-35 day hard block"
+    },
+    {
+      "rule_id": "tomato_r3b", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
       "min_days_after_dependency": 21, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Sources genuinely disagree on nursery duration: one says seedlings above 24 days old (roughly 3.5 weeks) are ready once 8-10cm tall with 4-5 true leaves; another specifies preparing the nursery bed for about 5 weeks. Rather than pick one, this rule spans the combined range, 21 to 35 days, as the block boundary.",
-      "source": "Farmsquare, 13 Ultimate Tomato Farming Tips In Nigeria (24+ days, 8-10cm); Steemit, How to Start Tomato Farming in Nigeria (5 week nursery bed period); Skyline E-Learning guide (transplant after 3-4 weeks at 4-5 leaves)"
+      "severity": "warning", "condition": "21-35 days is the typical window; outside it (but still inside the 15-45 day hard block) risks leggy, root-bound seedlings that yield poorly. This roughly matches what the previous version of this file already had, now correctly demoted from a block to a warning.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026; broadly consistent with Farmsquare and Skyline E-Learning's earlier-cited figures"
+    },
+    {
+      "rule_id": "tomato_r4b", "operation_id": "staking", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: staking should be done by 30 days after transplanting. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent (validation_rules only fire when an operation IS submitted, not when one is missing by a deadline; that kind of reminder belongs to the suggestions layer instead). What this rule CAN enforce: if staking IS logged, flag it as late when it happens after 30 days. Wet-season fruit left unstaked touches soil and rots.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "tomato_r4", "operation_id": "first_fertilizer", "depends_on_operation_id": "transplanting",
@@ -88,15 +100,27 @@
     },
     {
       "rule_id": "tomato_r7", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 55, "max_days_after_dependency": 110, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Block range covers the full spread of maturity classes: very early maturing varieties under 70 days, through late maturing varieties over 100 days after transplanting. A harvest logged before 55 days is blocked as physiologically implausible for any known variety class. Unlike maize or cassava, there is deliberately NO rule limiting harvest to a single occurrence -- tomato is picked repeatedly across many weeks as successive fruit flushes ripen, and can_repeat is true on both the operation and this rule.",
-      "source": "Multiple corroborating hybrid tomato variety patents (USPTO plant patent filings) defining maturity classes: very early under 70 days, early 70-80, mid-early 80-90, intermediate 90-100, late over 100 days after transplanting"
+      "min_days_after_dependency": 45, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block floor moved from 55 to 45 days, field tomato genuinely cannot set and ripen fruit in under 45 days from transplant. No upper block: the master ruleset doesn't specify one, and for an indeterminate multi-harvest crop that keeps fruiting for months, a late pick within the same cycle isn't the same kind of problem as a late single-harvest grain crop. The previous version's invented 110-day upper block is removed. Unlike maize or cassava, there is deliberately no rule limiting harvest to a single occurrence, tomato is picked repeatedly across many weeks, and can_repeat is true on both the operation and this rule.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- supersedes the earlier self-sourced 55-110 day range"
     },
     {
       "rule_id": "tomato_r7b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 60, "max_days_after_dependency": 90, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "60-90 days after transplanting is the typical window across the most commonly grown maturity classes (early through mid-early). A first harvest inside the hard block range above but outside this window is flagged so the variety's maturity class can be confirmed, rather than being blocked outright.",
-      "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria ('60-90 days after transplanting'), cross-checked against the mid-early maturity class (80-90 days) in the patent filings above"
+      "min_days_after_dependency": 50, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "CORRECTED: typical window floor moved from 60 to 50 days per the master ruleset ('flag before 50'). No upper warning either, for the same reason as tomato_r7's removed upper block. The earlier patent-derived maturity class data (very early under 70, through late over 100 days) is retained here as useful background on WHY harvest timing varies by variety, without being treated as an active bound.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026; maturity class background from USPTO hybrid tomato variety patent filings (retained from the earlier version)"
+    },
+    {
+      "rule_id": "tomato_r_postharvest", "operation_id": "post_harvest_handling", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: move harvested fruit to aggregation within 24-48 hours unless entering a cold chain. Checked against the most recent harvest pick, which is the correct behavior for a repeatable harvest operation like tomato's.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "tomato_r_postharvest_block", "operation_id": "post_harvest_handling", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null, "max_days_after_dependency": 3, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "NEW rule: aggregation logged more than 72 hours after harvest is a hard block, unless the farm is explicitly using a cold chain, which this schema does not yet have a field to represent, flagged as a real limitation. Without that distinction, this rule will incorrectly block legitimate cold-chain-delayed handling; treat this as provisional until cold chain status can be captured.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "tomato_r8", "operation_id": "pest_disease_control", "depends_on_operation_id": "transplanting",
@@ -144,6 +168,18 @@
     "notes": "Deliberately left unsourced rather than filled with a guess. National-level figures exist (Nigeria produces roughly 1.5 million tonnes of tomato annually per one source), but a genuine per-hectare smallholder yield figure comparable to the maize/cassava/cocoa yield_model entries was not found in this pass and should not be assumed from the national total alone."
   },
 
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Loss Event (Tuta wipeout or flooding)." },
+      { "condition_type": "less_than", "max": 2.0, "severity": "warning", "message": "Severe failure -- disease or pest-related." },
+      { "condition_type": "range", "min": 2.0, "max": 15.0, "severity": "pass", "message": "Standard open-field smallholder range." },
+      { "condition_type": "greater_than", "min": 15.0, "severity": "warning", "message": "Highly optimized GAP (hybrids, irrigation, staking)." },
+      { "condition_type": "greater_than", "min": 80.0, "severity": "block", "message": "Impossible open-field; only climate-controlled greenhouses reach this." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. Same caveat as maize's yield_validation: assumes reported area is trustworthy, which depends on GPS-polygon-anchored area tracking that AgTrail does not yet implement."
+  },
+
   "regional_overrides": [],
 
   "version_history": [
@@ -153,6 +189,13 @@
       "changed_by": "AgTrail Knowledge Base - fourth crop template",
       "summary": "First crop file built specifically to test a repeating-harvest-within-one-cycle shape, unlike maize/cassava (single terminal harvest) or cocoa (harvest repeats across separate multi-year seasons). Tomato's harvest operation and its validation rules are explicitly can_repeat true with NO once-only rule, reflecting that a single planting is picked many times over several weeks. Every validation_rule and diseases/pests entry carries a source field. Two rules (tomato_r1, tomato_r5 -- land prep timing and first weeding timing) are explicitly flagged as unsourced defaults carried over from other crop templates. The yield model was deliberately left unfilled rather than guessed at. Not yet reviewed by an agronomist.",
       "source": "Farmsquare - 13 Ultimate Tomato Farming Tips In Nigeria; Skyline E-Learning - Complete Guide to Tomato Farming in Nigeria; Steemit - How to Start Tomato Farming in Nigeria; USPTO hybrid tomato plant patent filings (maturity class definitions); Biological Invasion of Tomato Leaf Miner, Tuta absoluta in Nigeria: Problems and Management Strategies Optimization: A Review; Invasive Species Council evidence note on Tuta absoluta impacts in Africa; Frontiers in Plant Science 2025 (YOLO detection study, Tuta absoluta crop loss figures)"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-08-06",
+      "changed_by": "AgTrail Knowledge Base - reconciled against the AgTrail Master Agronomist & Validator Ruleset",
+      "summary": "First agronomist-authored review this file has received. Corrections: (1) nursery-to-transplant timing restructured, the previous version used 21-35 days as the hard block itself; the master ruleset uses a wider 15-45 day hard block with 21-35 as a narrower internal warning band. (2) Added a new staking timing rule, previously staking had no validation rule at all. (3) Harvest floor corrected from 55 to 45 days, and the invented 110-day upper block removed entirely, the master ruleset specifies no upper bound for an indeterminate multi-harvest crop like tomato. (4) Added new post-harvest handling rules (48 hour warning, 72 hour hard block on aggregation delay), which didn't exist before, though the 72 hour block is flagged as provisional since this schema can't yet distinguish cold-chain-delayed handling from ordinary delay. (5) Added a yield_validation section, a new subsystem checking reported harvest tonnes per hectare independent of timing. Not yet reviewed further beyond this reconciliation pass.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
   ]
 }

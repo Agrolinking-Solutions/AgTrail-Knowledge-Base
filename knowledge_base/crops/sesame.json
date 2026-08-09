@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "crop_id": "sesame",
+    "name": "Sesame (Benniseed)",
+    "scientific_name": "Sesamum indicum",
+    "category": "cash_crop",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 105,
+    "regions": ["Nigeria - Middle Belt", "Nigeria - North"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination_seedling", "name": "Germination & Seedling", "starts_day_after_planting": 0, "ends_day_after_planting": 14, "description": "Emergence and early seedling establishment." },
+    { "stage_id": "vegetative_branching", "name": "Vegetative & Branching", "starts_day_after_planting": 15, "ends_day_after_planting": 45, "description": "Vegetative growth and branching." },
+    { "stage_id": "flowering_capsule", "name": "Flowering & Capsule Formation", "starts_day_after_planting": 46, "ends_day_after_planting": 80, "description": "Flowering and capsule (seed pod) development." },
+    { "stage_id": "maturity_ripening", "name": "Maturity & Ripening", "starts_day_after_planting": 81, "ends_day_after_planting": 105, "description": "Capsules ripen from the bottom of the plant upward. Sesame is notoriously prone to seed loss from shattering once capsules dry and pop open, timing the cut correctly matters more here than for most crops." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Work soil to a fine tilth and level well, sesame's tiny seed demands a firm, fine, weed-free seedbed for even, shallow sowing.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Broadcast thinly or drill in 45-60cm rows; sow shallow, 1-2cm deep. Direct seeded, no nursery stage.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "thinning", "name": "Thinning", "category": "crop_management", "description": "Thinning dense stands, which otherwise suppress capsule development.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "first_fertilizer", "name": "Fertilizer (NPK/Urea, early)", "category": "input_application", "description": "Applied early, sesame's weak root system cannot make use of late fertilizer once flowering starts.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "No specific pest or disease was named for sesame in the source document's GAP process flow, unlike maize, tomato, or rice. This is a genuine gap, not an assumption that sesame has no pest or disease pressure, flagged for a dedicated follow-up sourcing pass.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Cutting)", "category": "harvest", "description": "Cut when the lowest capsules turn yellow/brown but before they pop open. Timing is unusually consequential for this crop: a harvest even a few days late can shed roughly half the yield to the soil through shattering.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "post_harvest_handling", "name": "Post-Harvest Handling (Curing & Threshing)", "category": "post_harvest", "description": "Cut plants are stooked/bundled upright to cure, then threshed gently onto a tarpaulin to minimize further shatter loss.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "thinning", "required": false },
+    { "step_number": 5, "operation_id": "first_fertilizer", "required": true },
+    { "step_number": 6, "operation_id": "pest_disease_control", "required": false, "repeat_until": "harvest" },
+    { "step_number": 7, "operation_id": "harvest", "required": true },
+    { "step_number": 8, "operation_id": "post_harvest_handling", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "sesame_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval itself not stated in the source document's GAP flow for sesame specifically, carried over as a reasonable default consistent with other crop files. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific 30-day interval not stated in the sesame section itself"
+    },
+    {
+      "rule_id": "sesame_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before land preparation. Interval itself not explicitly stated for sesame in the source document, carried over as a reasonable default. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific 14-day interval not stated in the sesame section itself"
+    },
+    {
+      "rule_id": "sesame_r3", "operation_id": "thinning", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Thinning should be done by 21 days after planting, dense stands suppress capsule development. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent (validation_rules only fire when an operation IS submitted). What this rule CAN enforce: if thinning IS logged, flag it as late when it happens after 21 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "sesame_r4", "operation_id": "first_fertilizer", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Fertilizer should be applied early; flagged if logged after 30 days after planting. See sesame_r4_floor for the hard block at 45 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "sesame_r4_floor", "operation_id": "first_fertilizer", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if fertilizer is logged after 45 days after planting, sesame's weak root system cannot use late fertilizer once flowering starts.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "sesame_r5", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 75, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 75 days after planting. No stated upper hard block, but see sesame_r5b: a harvest logged after 115 days is flagged, since by that point roughly half the yield can already have shattered onto the soil.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "sesame_r5b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 85, "max_days_after_dependency": 115, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "85-115 days after planting is the typical cutting window. Harvest logged inside the hard block range (75+ days) but outside this window is flagged, either too early (risk of immature capsules) or too late (a 120-day harvest can shed roughly half the yield to shattering).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "sesame_r6", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "texture": [],
+    "drainage": "not sourced from the master ruleset's GAP process flow, which focuses on seedbed fineness (fine, weed-free tilth) rather than soil type or pH. pH, texture, and nitrogen_needs fields deliberately omitted rather than guessed at (nitrogen_needs specifically must be one of low/medium/high per the schema, and we don't have a sourced basis to pick one). Flagged as a real gap needing a dedicated sourcing pass."
+  },
+
+  "weather_preferences": {
+    "notes": "Not sourced from the master ruleset's GAP process flow, which focuses on process timing rather than climate requirements. Rainfall and temperature fields deliberately omitted rather than guessed at. The source does note sesame is grown in the Middle Belt and North. Flagged as a real gap needing a dedicated sourcing pass."
+  },
+
+  "diseases": [],
+
+  "pests": [],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.2 - 0.8 (standard smallholder range), up to 1.0+ with GAP management",
+    "unit": "tonnes",
+    "factors": ["harvest timing precision (shattering loss)", "thinning/stand density", "fertilizer timing", "variety"],
+    "confidence": 0.6,
+    "notes": "Derived from the yield_validation tiers below, which are directly sourced, rather than from a separately stated yield figure in the source document."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.2, "severity": "warning", "message": "Crop failure -- heavy rain at flowering, poor weeding, or extreme shatter." },
+      { "condition_type": "range", "min": 0.2, "max": 0.8, "severity": "pass", "message": "Standard Nigerian smallholder range." },
+      { "condition_type": "greater_than", "min": 1.0, "severity": "warning", "message": "Exceptional GAP management (improved NCRI varieties)." },
+      { "condition_type": "greater_than", "min": 2.5, "severity": "block", "message": "Impossible for West African conditions." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. NOTE: the source table for sesame did not include an explicit 0 t/ha row (unlike maize, rice, and tomato, which did). The equals_zero tier here is an INFERENCE, added for consistency and because a genuine 0-yield report is a plausible real input that the system needs to handle, not a directly sourced figure for this specific crop. Same GPS-anchored-area caveat as the other crops applies."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-06",
+      "changed_by": "AgTrail Knowledge Base - sixth crop template, first sourced directly from the AgTrail Master Agronomist & Validator Ruleset",
+      "summary": "First crop built from the master ruleset rather than general web research, and the first of the ruleset's actual High priority crops (Cocoa was already built before the ruleset arrived; Sesame, Ginger, Cashew, and Hibiscus are the remaining High priority crops). Two real gaps carried forward honestly rather than filled with guesses: the source document's GAP process flow does not name any specific pest or disease for sesame (unlike maize, tomato, and rice, which all had named threats), and does not give soil pH or climate requirements, focusing instead on process timing. Two rules (sesame_r1, sesame_r2, land clearing and planting timing) reuse defaults from other crop files since the source doesn't state sesame-specific intervals for those particular steps. The yield_validation equals_zero tier was inferred rather than directly sourced, since the source table for sesame skipped that row. Not yet reviewed beyond this first pass.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    }
+  ]
+}

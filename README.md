@@ -19,7 +19,8 @@ agtrail-knowledge-base/
 │       ├── cocoa.json       # template: perennial/tree crop
 │       ├── cassava.json     # template: annual root crop, open-ended harvest window
 │       ├── tomato.json      # template: repeating harvest within one planting cycle
-│       └── rice.json        # template: paddy/flooded water management, nursery-to-transplant cereal
+│       ├── rice.json        # template: paddy/flooded water management, nursery-to-transplant cereal
+│       └── sesame.json      # first crop sourced directly from the AgTrail Master Agronomist & Validator Ruleset
 ├── engine/
 │   ├── loader.py            # loads a crop file, applies regional_overrides patches
 │   ├── history.py           # shared FarmOperation parsing + crop-scoping (used by validator and suggestions)
@@ -139,6 +140,7 @@ Endpoints:
 | `GET` | `/crops` | Lists available crop ids |
 | `POST` | `/validate` | Same input shape as a scenario file, returns a validation report |
 | `POST` | `/suggestions` | What's due next for a farm, and whether it's overdue |
+| `POST` | `/validate-yield` | Checks a reported harvest yield (t/ha) against the crop's tiered ranges, independent of timing |
 
 Error responses: a `404` for a `crop_id` that doesn't exist, a `400` for a malformed field (like a bad date), and a `422` for a request missing a required field entirely (handled by FastAPI's own request validation, before our code even runs). All three are tested in `tests/test_api.py`.
 
@@ -175,6 +177,31 @@ This is a `POST`, even though it's conceptually a read, because it needs to send
 
 One more thing worth knowing: "overdue" in a suggestion is relative to whichever rule the engine picks as the *typical* window, which is not always the same as the validator's hard block boundary. Cassava is the clearest example, its suggestion can say "overdue" once a farm passes the 270 to 450 day typical harvest window, even though the validator itself would never reject a late cassava harvest, since cassava's actual block rule has no upper bound at all. A reminder nudging someone past the normal window is still useful even when the crop is more forgiving than that window suggests. This is tested explicitly in `tests/test_suggestions.py`.
 
+## Yield validation: is the reported harvest amount plausible
+
+A separate dimension from everything above. `validate_operation` checks *when* something happened; `validate_yield` checks *how much* was reported at harvest (tonnes per hectare), completely independent of timing. A record can be perfectly timed and still report an impossible yield, a unit typo (kg entered where tonnes was expected), an inflated area, or a genuine total crop failure that should be logged as a loss event rather than a harvest.
+
+```python
+from engine.yield_validator import validate_yield
+
+result = validate_yield("maize", 12.0)
+print(result.severity)   # "block" -- exceeds the biological ceiling for rainfed maize
+```
+
+Or over the API:
+
+```bash
+curl -X POST http://127.0.0.1:8000/validate-yield \
+  -H "Content-Type: application/json" \
+  -d '{"crop_id": "maize", "tonnes_per_hectare": 12.0}'
+```
+
+This was introduced by the **AgTrail Master Agronomist & Validator Ruleset** (Agrolinking Solutions Ltd., July 2026), the first genuine agronomist-authored review this project has received, everything before it was self-sourced from public agricultural guides. Every crop has a 5-tier structure: exactly 0 must be logged as a Loss/Disaster Event rather than a harvest, very low but nonzero is a warning, a normal range passes, unusually high is a warning, and implausibly high is a hard block. **Maize, Tomato, and Sesame** have this populated so far; calling `validate_yield` on a crop without this data raises a clear error rather than guessing.
+
+**Known limitation, stated plainly:** the source ruleset ties this to GPS-polygon-anchored area, not self-reported area. AgTrail does not implement GPS-based area verification yet, so a self-reported area could still be used to game the resulting t/ha figure even with this check in place. This catches the clearest cases, not everything.
+
+One implementation detail worth knowing if you're extending this: some tiers can legitimately overlap. A yield of 12 t/ha for maize matches *both* the `> 5.0` warning tier and the `> 10.0` block tier. `engine/yield_validator.py` deliberately picks the most specific (highest threshold) match rather than the first one it checks, this was a real bug caught while building it, and `tests/test_yield_validator.py` locks in the correct behavior specifically at that overlap point.
+
 ## Adding a new crop
 
 1. Copy `knowledge_base/crops/maize.json` (or `cocoa.json` if the new crop is a tree/perennial) as a starting point.
@@ -194,10 +221,15 @@ One more thing worth knowing: "overdue" in a suggestion is relative to whichever
 - [x] Edge case testing pass on the engine: found and fixed four real issues — an unrecognized operation_id silently passing with no error, raw Python exceptions leaking out for malformed input instead of clear typed errors, and (the most serious one) mixed-crop history on one farm silently picking up the wrong crop's dependency date and producing an incorrect block. All four are now fixed and locked in with tests.
 - [x] API layer (`api/` — FastAPI, `POST /validate`, `GET /crops`, `GET /health`, automatic docs at `/docs`, 8 new tests using FastAPI's TestClient, 32 tests passing total). Tested with a real running server, not just in-process, including both error paths (404 for unknown crop, 400 for malformed data).
 - [x] Suggestions layer (`engine/suggestions.py` + `POST /suggestions`) — answers "what's due next and by when," built on the same workflow and timing data validation already uses. Deliberately scoped to v1: only the next required not-yet-logged step, no recurrence modeling yet (documented as a real, intentional gap, not an oversight). Also prompted a small refactor: history parsing and crop-scoping logic was pulled out of `validator.py` into a shared `engine/history.py` so both validation and suggestions use the exact same logic rather than two copies that could quietly drift apart. 44 tests passing total.
-- [ ] No agronomist currently available — data is sourced from published references (IITA, NAERLS, CRIN, etc.) but not field-verified. Plan is to keep building on sourced data while pursuing an informal reviewer (extension officer, university contact, experienced farmers) in parallel
-- [ ] Resolve flagged uncertainties: maize (Leaf Blight, Stem Borer sourcing), cassava (land prep/planting interval sourcing, CBSD presence in Nigeria unconfirmed), cocoa (yield figures, the 18-month bearing claim, a candidate regional_overrides split for fertilizer by soil zone that CRIN's own literature mentions but doesn't give exact numbers for)
+- [x] Real agronomist-authored review received: the **AgTrail Master Agronomist & Validator Ruleset** (Agrolinking Solutions Ltd., July 2026). Covers 23 crops with real priority tiers based on export potential and EUDR (EU deforestation regulation) compliance, not the informal "10 crop" list this project was originally tracking against. High priority: Cocoa, Sesame, Ginger, Cashew, Hibiscus. This supersedes the earlier "pursue an informal reviewer" plan for any crop it covers.
+- [x] Maize reconciled against the master ruleset (v1.3.0): corrected 3 rules that were wrong (land-prep-to-planting window, top-dress bounds, and a missing hard-block floor on first weeding), added 2 hard blocks that didn't exist before (top-dress after 60 days, pesticide spray after tasseling), and split harvest into two genuinely separate operations (fresh/green cob vs dry grain), which the old version had conflated into one. Every change documents exactly what it corrected and why, nothing was silently overwritten.
+- [x] Tomato reconciled against the master ruleset (v1.1.0): nursery-to-transplant hard block widened from 21-35 to 15-45 days (with 21-35 demoted to an internal warning band), harvest floor corrected from 55 to 45 days, an invented 110-day upper harvest block removed entirely, and two genuinely new rules added (staking lateness warning, post-harvest handling 48h warning / 72h hard block).
+- [x] Sesame added as the first crop built directly from the master ruleset rather than general web research (`knowledge_base/crops/sesame.json`). This is also the first of the ruleset's real High priority crops built after Cocoa. Two real gaps carried forward honestly: the source names no specific pest or disease for sesame (diseases/pests left empty rather than invented), and gives no soil pH or climate data (those fields omitted rather than guessed). The yield_validation zero-tier was inferred, not directly sourced, since the source table skipped that row for this crop specifically, documented and tested as such.
+- [x] Yield validation added as a new subsystem (`engine/yield_validator.py`, `POST /validate-yield`): checks reported harvest quantity (t/ha) against a crop's tiered ranges, independent of operation timing. Maize, tomato, and sesame have this data populated so far. Caught and fixed a real tier-overlap bug during testing (see README's Yield Validation section).
+- [ ] Cassava, cocoa, and rice still need the same reconciliation pass against the master ruleset that maize and tomato just got
+- [ ] Resolve flagged uncertainties: maize (Leaf Blight, Stem Borer sourcing — may now be resolved by the master ruleset, needs checking), cassava (land prep/planting interval sourcing, CBSD presence in Nigeria unconfirmed), cocoa (yield figures, the 18-month bearing claim, a candidate regional_overrides split for fertilizer by soil zone that CRIN's own literature mentions but doesn't give exact numbers for), sesame (no diseases/pests sourced at all yet, no soil/climate data)
 - [x] Fourth crop: Tomato, sourced. First crop to test a genuinely repeating harvest within one planting cycle (no once-only rule on the harvest operation), unlike maize/cassava's single terminal harvest or cocoa's separate multi-year seasons. Includes a properly sourced Tuta absoluta pest entry (over 80% documented crop loss in Nigeria, a 2015 national price crisis).
 - [x] Fifth crop: Rice (lowland/transplanted), sourced. First crop to model paddy water management (flooding) as an explicit operation, and the first cereal with a nursery-to-transplant lifecycle. Harvest window uses a clearly flagged derived estimate (converting sowing-based variety duration classes to days-after-transplanting) rather than a directly sourced figure. Deliberately scoped to lowland/transplanted rice only; upland and Fadama rice are explicitly flagged as not covered.
-- [ ] Remaining crops toward the original 10: soybean, sesame, ginger, pepper, yam
+- [ ] Next crops should follow the master ruleset's real priority order: Ginger, Cashew, and Hibiscus are the remaining High priority crops (Cocoa and Sesame are done). The old "toward the original 10" framing (soybean, sesame, ginger, pepper, yam) is retired in favor of this.
 - [ ] Recurrence modeling for suggestions (repeat-interval operations like weeding_2, and cocoa's seasonal harvest cycle)
 - [x] API deployed and live at `https://agtrail-api.onrender.com`, via Render's free tier using `render.yaml`. Verified end to end against the real deployed instance, not just locally: all endpoints, all documented error codes (400, 404, 422), confirmed working through the live `/docs` page.

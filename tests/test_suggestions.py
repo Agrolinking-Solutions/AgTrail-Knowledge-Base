@@ -44,11 +44,11 @@ def test_next_step_overdue():
             {"operation_id": "land_clearing", "date": "2026-04-01"},
             {"operation_id": "land_preparation", "date": "2026-04-10"},
         ],
-        as_of=date(2026, 5, 1),
+        as_of=date(2026, 5, 15),  # 35 days after land prep; maize_r2's corrected window is 0-30 days
     )
     assert report.suggestion.operation_id == "planting"
     assert report.suggestion.status == "overdue"
-    assert report.suggestion.days_overdue == 7
+    assert report.suggestion.days_overdue == 5
 
 
 def test_cycle_complete_when_nothing_required_remains():

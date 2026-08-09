@@ -65,6 +65,19 @@ class CropsResponse(BaseModel):
     crops: list[str]
 
 
+class YieldValidateRequest(BaseModel):
+    crop_id: str = Field(..., description="e.g. 'maize'")
+    tonnes_per_hectare: float = Field(..., description="Reported yield, tonnes per hectare")
+
+
+class YieldValidateResponse(BaseModel):
+    crop_id: str
+    tonnes_per_hectare: float
+    severity: str
+    is_loss_event: bool
+    message: str
+
+
 class SuggestionOut(BaseModel):
     operation_id: str
     status: str

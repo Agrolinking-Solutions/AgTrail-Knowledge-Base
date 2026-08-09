@@ -7,7 +7,7 @@
     "crop_cycle_type": "annual",
     "typical_duration_days": 105,
     "regions": ["Nigeria - Guinea Savanna", "Nigeria - Sudan Savanna"],
-    "current_version": "1.2.0"
+    "current_version": "1.3.0"
   },
 
   "growth_stages": [
@@ -29,7 +29,8 @@
     { "operation_id": "second_fertilizer", "name": "Second Fertilizer Application (Top-dress)", "category": "input_application", "description": "Urea top-dressing at vegetative stage.", "requires_evidence": true, "can_repeat": false },
     { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control.", "requires_evidence": false, "can_repeat": true },
     { "operation_id": "pest_scouting", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Fall armyworm and other pest management.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Cob harvesting.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "harvest_fresh", "name": "Harvest (Fresh/Green Cob)", "category": "harvest", "description": "NEW operation, added per the AgTrail Master Agronomist & Validator Ruleset: harvesting for fresh/green eating corn at the milk-to-dough stage, distinct from letting the crop mature to dry grain. The previous version of this file only modeled dry grain harvest, conflating two genuinely different farmer decisions into one operation.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Dry Grain)", "category": "harvest", "description": "Dry grain harvesting at physiological maturity.", "requires_evidence": true, "can_repeat": false },
     { "operation_id": "drying", "name": "Drying", "category": "post_harvest", "description": "Field or platform drying to safe moisture content.", "requires_evidence": false, "can_repeat": false },
     { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Shelling and storage/bagging.", "requires_evidence": false, "can_repeat": false }
   ],
@@ -44,9 +45,10 @@
     { "step_number": 7, "operation_id": "second_fertilizer", "required": true },
     { "step_number": 8, "operation_id": "weeding_2", "required": false, "repeat_until": "harvest" },
     { "step_number": 9, "operation_id": "pest_scouting", "required": false, "repeat_until": "harvest" },
-    { "step_number": 10, "operation_id": "harvest", "required": true },
-    { "step_number": 11, "operation_id": "drying", "required": true },
-    { "step_number": 12, "operation_id": "storage", "required": false }
+    { "step_number": 10, "operation_id": "harvest_fresh", "required": false },
+    { "step_number": 11, "operation_id": "harvest", "required": true },
+    { "step_number": 12, "operation_id": "drying", "required": true },
+    { "step_number": 13, "operation_id": "storage", "required": false }
   ],
 
   "validation_rules": [
@@ -57,8 +59,9 @@
     },
     {
       "rule_id": "maize_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Planting cannot occur before land preparation is completed, and must occur within 14 days of it (soil loses tilth/moisture advantage after that)."
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: planting before land preparation is a hard block, but that case is already caught by the global backdate rule (maize_r11), since land preparation would be the most recently logged operation. This rule's own severity should therefore be warning, for the case of planting more than 30 days after land preparation (soil loses tilth/moisture advantage), not a block at 14 days as the previous version incorrectly stated.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- supersedes the earlier self-sourced 14-day figure"
     },
     {
       "rule_id": "maize_r3", "operation_id": "first_fertilizer", "depends_on_operation_id": "planting",
@@ -69,14 +72,26 @@
     {
       "rule_id": "maize_r4", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
       "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "First manual weeding is recommended at 2 weeks after planting (earlier, from 2-3 weeks, if Imperata cylindrica is a problem).",
-      "source": "Farmwarehouse / IITA extension guidance, Step by Step Maize Production in Nigeria"
+      "severity": "warning", "condition": "The critical weed-free window is 14-21 days after planting; logged outside that but still at or after 7 days is flagged. See maize_r4_floor for the separate hard block under 7 days.",
+      "source": "Farmwarehouse / IITA extension guidance, Step by Step Maize Production in Nigeria; boundary structure corrected against the AgTrail Master Agronomist & Validator Ruleset, which specifies three tiers here rather than a single warning band"
+    },
+    {
+      "rule_id": "maize_r4_floor", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 7, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: weeding logged before 7 days after planting is a hard block, there is nothing meaningful to weed yet at that point. This floor did not exist in the previous version of this file.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "maize_r5", "operation_id": "second_fertilizer", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 21, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Base/umbrella window (21-35 days) covering all regions in this file. The precise window differs by zone -- see regional_overrides: Guinea savanna is 28-35 days, Sudan savanna (extra-early varieties) is 21-28 days. Engines should apply the regional_overrides patch for maize_r5 when the farm's region is known, and fall back to this wider umbrella only when region is unknown.",
-      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+      "min_days_after_dependency": 21, "max_days_after_dependency": 42, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Base/umbrella typical window, now 21-42 days per the AgTrail Master Agronomist & Validator Ruleset (previously 21-35, sourced only from IITA's regional figures). The precise window still differs by zone -- see regional_overrides: Guinea savanna is 28-35 days, Sudan savanna (extra-early varieties) is 21-28 days, both of which sit inside this broader typical window. See maize_r5_floor for the hard block boundary, which did not exist in the previous version of this file.",
+      "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020 (regional figures, unchanged); typical window widened to 21-42 per the AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "maize_r5_floor", "operation_id": "second_fertilizer", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "NEW rule: top-dress logged before 14 days or after 60 days after planting is a hard block. The previous version of this file had no hard block at all for this operation, only the warning-severity typical-window rule, meaning an absurdly late top-dress (e.g. day 100) would have passed with only a soft flag.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "maize_r6", "operation_id": "weeding_2", "depends_on_operation_id": "planting",
@@ -87,20 +102,43 @@
     {
       "rule_id": "maize_r7", "operation_id": "pest_scouting", "depends_on_operation_id": "planting",
       "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Fall Armyworm control is most effective when insecticide is applied weekly during the first 3 weeks after planting; scouting/control logged well outside this window is flagged since FAW damage compounds quickly if missed early.",
-      "source": "Farmwarehouse, Step by Step Maize Production in Nigeria (Ampligo/Emacot application schedule)"
+      "severity": "warning", "condition": "Fall Armyworm control is most effective when insecticide is applied weekly during the first 3 weeks after planting; scouting/control logged well outside this window is flagged since FAW damage compounds quickly if missed early. The Master Agronomist & Validator Ruleset frames this differently: it calls for calendar/routine sprays to be blocked entirely, only allowing a spray once scouting confirms 5-10%+ damage. AgTrail's schema does not yet have a field to represent 'evidence of scouting threshold met' as a precondition on an operation, so that specific requirement cannot be enforced yet -- flagged as a real, current limitation rather than silently ignored. See maize_r7_floor for the one piece of that guidance this schema CAN enforce: a hard block on spraying after tasseling.",
+      "source": "Farmwarehouse, Step by Step Maize Production in Nigeria (Ampligo/Emacot application schedule); evidence-gating principle per the AgTrail Master Agronomist & Validator Ruleset, not yet enforceable in this schema"
+    },
+    {
+      "rule_id": "maize_r7_floor", "operation_id": "pest_scouting", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 65, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "NEW rule: pesticide application after tasseling (65 days after planting) is a hard block, this is late enough that FAW spraying is no longer appropriate and the operation likely represents a different pest/disease control action, or a data error. This did not exist in the previous version of this file. Note: operation_id 'pest_scouting' is used generically for all pest and disease control in this file, so this block boundary is specifically about FAW-context sprays per the source ruleset -- it may be too broad if later used for legitimate late-season scouting unrelated to FAW, flagged as a known modeling limitation.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "maize_r8", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 80, "max_days_after_dependency": 150, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Harvest cannot be logged before 80 days after planting (physiologically impossible even for the earliest-maturing hybrids) or after 150 days (implausible for all but the latest-maturing varieties; almost certainly a data error at this range).",
-      "source": "Cross-referenced: Ghana MOFA Maize Production Guide (90-115 days), IITA/USAID Nigeria manuals (early/medium/late maturity classes), FAO regional guide (130-160 days for late varieties, though this is unusually long and treated as an upper bound rather than the norm)"
+      "min_days_after_dependency": 80, "max_days_after_dependency": 160, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 80 days after planting (physiologically impossible even for the earliest-maturing hybrids). Upper bound CORRECTED from 150 to 160 days per the AgTrail Master Agronomist & Validator Ruleset. The 80-day floor is retained from the earlier cross-referenced sources since the master ruleset does not state one explicitly, and is not contradicted by it.",
+      "source": "Cross-referenced: Ghana MOFA Maize Production Guide, IITA/USAID Nigeria manuals, FAO regional guide (80-day floor, unchanged); upper bound corrected to 160 per the AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
       "rule_id": "maize_r8b", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 90, "max_days_after_dependency": 120, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "90-120 days covers the typical medium-maturity hybrid grown across Nigerian Guinea/Sudan savanna zones. Harvest logged inside the hard block range (80-150 days) but outside this typical window is flagged so the farmer can confirm their variety's maturity class rather than being blocked outright.",
-      "source": "IITA maturity-class guidance, cross-checked against Ghana MOFA (90-115 days)"
+      "min_days_after_dependency": 90, "max_days_after_dependency": 130, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "90-130 days covers physiological maturity through the point where loss to birds/rot becomes a real concern. Upper bound CORRECTED from 120 to 130 days per the master ruleset ('flag after 130 DAP'). Harvest logged inside the hard block range (80-160 days) but outside this typical window is flagged so the farmer can confirm their variety's maturity class rather than being blocked outright.",
+      "source": "IITA maturity-class guidance, Ghana MOFA (90-115 days, unchanged); upper bound corrected to 130 per the AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "maize_r8_fresh", "operation_id": "harvest_fresh", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 60, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "NEW rule: fresh/green cob harvest cannot be logged before 60 days after planting. No upper block -- past a certain point a late 'fresh' harvest just becomes a de facto dry grain harvest instead, which is covered by the separate harvest operation.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "maize_r8b_fresh", "operation_id": "harvest_fresh", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 65, "max_days_after_dependency": 75, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "NEW rule: 65-75 days after planting is the typical milk-to-dough stage window for fresh/green cob harvest. Outside this but past the 60-day floor is flagged rather than blocked.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "maize_r8_fresh_once", "operation_id": "harvest_fresh", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Fresh/green cob harvest can only be logged once per planting cycle, same reasoning as dry grain harvest."
     },
     {
       "rule_id": "maize_r9", "operation_id": "harvest", "depends_on_operation_id": null,
@@ -155,6 +193,18 @@
     "notes": "1.2-2.0 t/ha reflects typical unoptimized smallholder yields; 2.5-3.5 t/ha (up to ~3+ t/ha) reflects recommended-practice yields in Northern Nigeria per IITA. Treat the top of this range as achievable-with-good-management rather than typical."
   },
 
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.8, "severity": "warning", "message": "Near-total crop failure; verify plot area and inputs." },
+      { "condition_type": "range", "min": 0.8, "max": 5.0, "severity": "pass", "message": "Standard Nigerian smallholder-to-commercial range." },
+      { "condition_type": "greater_than", "min": 5.0, "severity": "warning", "message": "Exceptional; requires manual review of seed and management." },
+      { "condition_type": "greater_than", "min": 10.0, "severity": "block", "message": "Approaches the biological limit for rainfed maize -- almost certainly a kg/tonne unit typo or inflated area." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. NEW dimension not present in the previous version of this file -- assumes reported area is trustworthy, which depends on GPS-polygon-anchored area tracking that AgTrail does not yet implement (self-reported area could still be gamed to manipulate the resulting t/ha figure even with this check in place)."
+  },
+
   "regional_overrides": [
     {
       "region": "Nigeria - Guinea Savanna",
@@ -207,6 +257,13 @@
       "changed_by": "AgTrail Knowledge Base - regional split",
       "summary": "Split the second_fertilizer (top-dress) timing rule by region rather than leaving one merged 21-35 day window: IITA's source actually gives Guinea savanna zones 28-35 days and Sudan savanna (extra-early varieties) 21-28 days -- these had been incorrectly averaged into a single range in v1.1.0. Base rule maize_r5 is now documented as a fallback umbrella for when region is unknown; regional_overrides carries the precise per-zone window. This is the first crop file to actually use regional_overrides, so it also establishes the convention: overrides.validation_rules is a list of partial patches keyed by rule_id, applied over the base rule of the same id.",
       "source": "IITA, Guide to Maize Production in Northern Nigeria, 2020"
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-08-06",
+      "changed_by": "AgTrail Knowledge Base - reconciled against the AgTrail Master Agronomist & Validator Ruleset",
+      "summary": "This is the first genuine agronomist-authored review this file has received, everything before this was self-sourced from public agricultural guides, not verified by a domain expert. Corrections made: (1) maize_r2, planting-after-land-prep changed from an incorrect hard block at 14 days to a warning at 30 days, since the true hard block condition (planting before land prep at all) is already covered by the global backdate rule. (2) maize_r4, added a new hard-block floor at 7 days for first weeding, which had no lower bound at all before. (3) maize_r5, widened the typical top-dress window to 21-42 days and added a genuinely new hard block boundary (14-60 days) that did not exist previously, meaning an absurdly late top-dress used to only get a soft warning, now it is correctly rejected. (4) maize_r7, added a hard block on pesticide application after tasseling (65 days), and documented an honest limitation: the source ruleset also calls for blocking routine calendar sprays in favor of evidence-gated ones (only allowing a spray once scouting confirms 5-10 percent damage), which this schema cannot yet enforce since it has no field for 'scouting evidence threshold met.' (5) Split harvest into two genuinely different operations: harvest_fresh (green/milk-to-dough cob, 60 day floor, 65-75 typical) and the existing harvest (dry grain), which the previous version of this file had conflated into one. (6) Corrected the dry grain harvest bounds: hard block upper bound 150 to 160 days, typical warning upper bound 120 to 130 days. (7) Added an entirely new yield_validation dimension (5-tier structure validating reported harvest tonnes per hectare, independent of timing), which is a new subsystem, not a data correction, and is not yet wired into the validation engine's operation-timing logic. Every changed rule states explicitly what changed and why, rather than silently overwriting the prior sourced values.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
   ]
 }

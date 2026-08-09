@@ -388,3 +388,210 @@ def test_rice_late_harvest_for_long_duration_variety_is_not_blocked():
     )
     assert not report.blocked
     assert any(i.rule_id == "rice_r8b" for i in report.warnings)
+
+
+# --- Corrections from the AgTrail Master Agronomist & Validator Ruleset (maize v1.3.0) ---
+
+def test_maize_weeding_before_seven_days_is_now_blocked():
+    """
+    Previously weeding_1 had no lower bound at all. The master ruleset added
+    a hard block under 7 days after planting -- there's nothing to weed yet.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+    ]
+    report = validate_operation(
+        crop_id="maize",
+        history=history,
+        new_operation={"operation_id": "weeding_1", "date": "2026-01-15"},  # 5 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "maize_r4_floor" for i in report.blocking_issues)
+
+
+def test_maize_top_dress_after_sixty_days_is_now_blocked():
+    """
+    Previously second_fertilizer only had a warning-severity rule, so an
+    absurdly late top-dress (e.g. 100 days after planting) passed with just
+    a soft flag. The master ruleset added a real hard block at 60 days.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+    ]
+    report = validate_operation(
+        crop_id="maize",
+        history=history,
+        new_operation={"operation_id": "second_fertilizer", "date": "2026-04-20"},  # 100 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "maize_r5_floor" for i in report.blocking_issues)
+
+
+def test_maize_pesticide_spray_after_tasseling_is_now_blocked():
+    """
+    New hard block: FAW-context pesticide application after tasseling
+    (65 days after planting) is now rejected outright, previously there
+    was no upper bound on pest_scouting timing at all.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+    ]
+    report = validate_operation(
+        crop_id="maize",
+        history=history,
+        new_operation={"operation_id": "pest_scouting", "date": "2026-03-21"},  # 70 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "maize_r7_floor" for i in report.blocking_issues)
+
+
+def test_maize_fresh_cob_harvest_is_a_genuinely_separate_operation():
+    """
+    harvest_fresh (green/milk-to-dough cob) is a new operation added per the
+    master ruleset, distinct from the existing dry-grain harvest. A fresh
+    harvest at 70 days (inside the 65-75 day typical window) should pass
+    cleanly, proving the two harvest types don't interfere with each other.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+    ]
+    report = validate_operation(
+        crop_id="maize",
+        history=history,
+        new_operation={"operation_id": "harvest_fresh", "date": "2026-03-21"},  # 70 days after planting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_maize_fresh_cob_harvest_before_sixty_days_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+    ]
+    report = validate_operation(
+        crop_id="maize",
+        history=history,
+        new_operation={"operation_id": "harvest_fresh", "date": "2026-02-09"},  # 30 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "maize_r8_fresh" for i in report.blocking_issues)
+
+
+# --- Corrections from the AgTrail Master Agronomist & Validator Ruleset (tomato v1.1.0) ---
+
+def test_tomato_harvest_at_fifty_days_now_passes_cleanly():
+    """
+    Previously the harvest floor was 55 days (self-sourced), so a 50-day
+    harvest would have blocked. The master ruleset corrects the floor to
+    45 days with a 50-day typical-window start, so 50 days should now pass
+    with zero issues, not block.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "transplanting", "date": "2026-02-01"},
+    ]
+    report = validate_operation(
+        crop_id="tomato",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-03-23"},  # 50 days after transplanting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_tomato_staking_after_thirty_days_is_flagged():
+    """New rule: staking logged after 30 days after transplanting is a warning."""
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "transplanting", "date": "2026-02-01"},
+    ]
+    report = validate_operation(
+        crop_id="tomato",
+        history=history,
+        new_operation={"operation_id": "staking", "date": "2026-03-13"},  # 40 days after transplanting
+    )
+    assert not report.blocked
+    assert any(i.rule_id == "tomato_r4b" for i in report.warnings)
+
+
+def test_tomato_post_harvest_handling_beyond_72_hours_is_blocked():
+    """
+    New rule: aggregating harvested fruit more than 72 hours after the most
+    recent harvest pick is a hard block. Checked against the MOST RECENT
+    harvest occurrence, which is the correct behavior since harvest repeats.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "nursery_establishment", "date": "2026-01-05"},
+        {"operation_id": "transplanting", "date": "2026-02-01"},
+        {"operation_id": "harvest", "date": "2026-04-05"},
+    ]
+    report = validate_operation(
+        crop_id="tomato",
+        history=history,
+        new_operation={"operation_id": "post_harvest_handling", "date": "2026-04-09"},  # 4 days later
+    )
+    assert report.blocked
+    assert any(i.rule_id == "tomato_r_postharvest_block" for i in report.blocking_issues)
+
+
+# --- Sesame: first crop built directly from the AgTrail Master Agronomist & Validator Ruleset ---
+
+def test_sesame_harvest_too_early_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="sesame",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-03-16"},  # 60 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "sesame_r5" for i in report.blocking_issues)
+
+
+def test_sesame_harvest_in_typical_window_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="sesame",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-04-25"},  # 100 days after planting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_sesame_fertilizer_after_forty_five_days_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="sesame",
+        history=history,
+        new_operation={"operation_id": "first_fertilizer", "date": "2026-03-06"},  # 50 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "sesame_r4_floor" for i in report.blocking_issues)
