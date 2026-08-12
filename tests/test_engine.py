@@ -289,6 +289,165 @@ def test_optional_operation_absent_from_history_does_not_wrongly_block():
     assert not report.blocked
 
 
+# --- Reported bug: land preparation, planting, and harvest could be logged
+# in any order, including all on the same date, with nothing catching it.
+# Root cause: each rule only checked an operation's relationship to its OWN
+# declared dependency, never its position relative to everything ELSE
+# already logged. Fixed with a workflow-order sanity check in validate_operation.
+
+def test_reported_bug_land_prep_after_planting_and_harvest_same_date_is_now_blocked():
+    """
+    The exact scenario reported: land preparation, planting, and harvest all
+    logged on the same date. Previously land_preparation logged AFTER
+    planting and harvest already existed in history passed with zero
+    issues. It must now block.
+    """
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "planting", "date": "2026-01-01"},
+            {"operation_id": "harvest", "date": "2026-01-01"},
+        ],
+        new_operation={"operation_id": "land_preparation", "date": "2026-01-01"},
+    )
+    assert report.blocked
+    assert any(i.rule_id == "engine-workflow-order" for i in report.blocking_issues)
+
+
+def test_reported_bug_planting_after_land_prep_and_harvest_same_date_is_now_blocked():
+    """Same bug, different ordering: planting inserted after land_prep and harvest already exist."""
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "land_preparation", "date": "2026-01-01"},
+            {"operation_id": "harvest", "date": "2026-01-01"},
+        ],
+        new_operation={"operation_id": "planting", "date": "2026-01-01"},
+    )
+    assert report.blocked
+    assert any(i.rule_id == "engine-workflow-order" for i in report.blocking_issues)
+
+
+def test_workflow_order_bug_generalizes_beyond_same_date():
+    """
+    The bug wasn't really about same-date submissions specifically, it was
+    about missing position-in-workflow awareness entirely. Land prep logged
+    after planting (a later step), even on a later date than planting
+    itself, was never caught before either.
+    """
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "planting", "date": "2026-01-10"},
+        ],
+        new_operation={"operation_id": "land_preparation", "date": "2026-01-15"},
+    )
+    assert report.blocked
+    assert any(i.rule_id == "engine-workflow-order" for i in report.blocking_issues)
+
+
+def test_workflow_order_check_allows_legitimate_new_season_restart():
+    """
+    The fix must NOT block a real new planting cycle. Logging land_clearing
+    again after a prior harvest, dated after that harvest, is exactly how
+    a farmer starts season two on an annual crop, and must still pass.
+    """
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "land_preparation", "date": "2026-01-05"},
+            {"operation_id": "planting", "date": "2026-01-10"},
+            {"operation_id": "harvest", "date": "2026-05-01"},
+        ],
+        new_operation={"operation_id": "land_clearing", "date": "2026-06-01"},
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_workflow_order_check_new_season_restart_same_date_as_harvest_is_not_trusted():
+    """
+    Edge case caught while building the fix: if the new operation is dated
+    the SAME as the last harvest (not clearly after it), the new-season
+    exception should NOT apply, since that's indistinguishable from the
+    original bug rather than a believable season restart.
+    """
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "planting", "date": "2026-01-01"},
+            {"operation_id": "harvest", "date": "2026-01-01"},
+        ],
+        new_operation={"operation_id": "land_clearing", "date": "2026-01-01"},
+    )
+    assert report.blocked
+    assert any(i.rule_id == "engine-workflow-order" for i in report.blocking_issues)
+
+
+def test_workflow_order_check_does_not_interfere_with_repeatable_operations():
+    """Repeatable operations (weeding, fertilizer rounds) must remain free to interleave flexibly."""
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-01-01"},
+            {"operation_id": "land_preparation", "date": "2026-01-05"},
+            {"operation_id": "planting", "date": "2026-01-10"},
+            {"operation_id": "first_fertilizer", "date": "2026-01-15"},
+            {"operation_id": "second_fertilizer", "date": "2026-02-05"},
+        ],
+        new_operation={"operation_id": "weeding_1", "date": "2026-02-10"},
+    )
+    assert not report.blocked
+
+
+def test_workflow_order_check_never_resets_for_perennial_crops():
+    """
+    Cocoa's harvest is repeatable (recurring seasonal harvest), so there is
+    no legitimate "new cycle" concept in this model at all. land_clearing
+    reappearing after ANY harvest should still block, unlike the annual
+    crop case above.
+    """
+    report = validate_operation(
+        crop_id="cocoa",
+        history=[
+            {"operation_id": "land_clearing", "date": "2024-01-01"},
+            {"operation_id": "nursery_establishment", "date": "2024-01-05"},
+            {"operation_id": "transplanting", "date": "2024-06-01"},
+            {"operation_id": "harvest", "date": "2026-08-01"},
+        ],
+        new_operation={"operation_id": "land_clearing", "date": "2026-09-01"},
+    )
+    assert report.blocked
+    assert any(i.rule_id == "engine-workflow-order" for i in report.blocking_issues)
+
+
+def test_workflow_order_check_full_valid_sequence_passes_at_every_step():
+    """
+    Regression guard: a normal, correctly-ordered farm record, validated one
+    step at a time as it's built up, must never trip the new check.
+    """
+    history = []
+    steps = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-05"},
+        {"operation_id": "planting", "date": "2026-01-10"},
+        {"operation_id": "first_fertilizer", "date": "2026-01-15"},
+        {"operation_id": "weeding_1", "date": "2026-01-25"},
+        {"operation_id": "second_fertilizer", "date": "2026-02-10"},
+        {"operation_id": "harvest", "date": "2026-05-01"},
+        {"operation_id": "drying", "date": "2026-05-03"},
+    ]
+    for step in steps:
+        report = validate_operation(crop_id="maize", history=history, new_operation=step)
+        assert not report.blocked, f"Unexpected block at {step['operation_id']}: {report.blocking_issues}"
+        history.append(step)
+
+
 def test_tomato_harvest_can_genuinely_repeat():
     """
     Tomato was built specifically to test a shape none of the other three
@@ -595,3 +754,158 @@ def test_sesame_fertilizer_after_forty_five_days_is_blocked():
     )
     assert report.blocked
     assert any(i.rule_id == "sesame_r4_floor" for i in report.blocking_issues)
+
+
+# --- Ginger: third crop built from the AgTrail Master Agronomist & Validator Ruleset ---
+
+def test_ginger_harvest_too_early_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="ginger",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-06-14"},  # 150 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "ginger_r4" for i in report.blocking_issues)
+
+
+def test_ginger_harvest_in_typical_window_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="ginger",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-09-12"},  # 240 days after planting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_ginger_drying_without_splitting_is_blocked():
+    """
+    Ginger introduces a genuinely new pattern: a hard block enforced not by
+    a timing window but by a missing prerequisite operation entirely.
+    Drying (logging 'Dry Split Ginger') without a prior splitting step is
+    rejected outright, and this works for free through the existing
+    missing-prerequisite check, no new engine code was needed for it.
+    """
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+        {"operation_id": "harvest", "date": "2026-09-12"},
+    ]
+    report = validate_operation(
+        crop_id="ginger",
+        history=history,
+        new_operation={"operation_id": "drying", "date": "2026-09-15"},  # no splitting logged
+    )
+    assert report.blocked
+    assert any(i.rule_id == "ginger_r5" for i in report.blocking_issues)
+
+
+def test_ginger_drying_after_splitting_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+        {"operation_id": "harvest", "date": "2026-09-12"},
+        {"operation_id": "splitting", "date": "2026-09-13"},
+    ]
+    report = validate_operation(
+        crop_id="ginger",
+        history=history,
+        new_operation={"operation_id": "drying", "date": "2026-09-15"},
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+# --- Cashew: fourth crop built from the AgTrail Master Agronomist & Validator Ruleset ---
+
+def test_cashew_first_harvest_before_two_point_five_years_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2024-01-01"},
+        {"operation_id": "nursery_establishment", "date": "2024-01-05"},
+        {"operation_id": "land_preparation", "date": "2024-03-01"},
+        {"operation_id": "transplanting", "date": "2024-04-01"},
+    ]
+    report = validate_operation(
+        crop_id="cashew",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-06-10"},  # ~800 days after transplanting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "cashew_r3" for i in report.blocking_issues)
+
+
+def test_cashew_harvest_past_three_years_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2024-01-01"},
+        {"operation_id": "nursery_establishment", "date": "2024-01-05"},
+        {"operation_id": "land_preparation", "date": "2024-03-01"},
+        {"operation_id": "transplanting", "date": "2024-04-01"},
+    ]
+    report = validate_operation(
+        crop_id="cashew",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2027-07-14"},  # ~1200 days after transplanting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+# --- Hibiscus: fifth crop built from the AgTrail Master Agronomist & Validator Ruleset ---
+
+def test_hibiscus_harvest_too_early_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="hibiscus",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-03-16"},  # 60 days after planting
+    )
+    assert report.blocked
+    assert any(i.rule_id == "hibiscus_r4" for i in report.blocking_issues)
+
+
+def test_hibiscus_harvest_in_typical_window_passes_cleanly():
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+    ]
+    report = validate_operation(
+        crop_id="hibiscus",
+        history=history,
+        new_operation={"operation_id": "harvest", "date": "2026-05-15"},  # 120 days after planting
+    )
+    assert not report.blocked
+    assert not report.issues
+
+
+def test_hibiscus_storage_without_drying_is_blocked():
+    """Same missing-prerequisite pattern as Ginger's splitting-before-drying rule."""
+    history = [
+        {"operation_id": "land_clearing", "date": "2026-01-01"},
+        {"operation_id": "land_preparation", "date": "2026-01-10"},
+        {"operation_id": "planting", "date": "2026-01-15"},
+        {"operation_id": "harvest", "date": "2026-05-15"},
+    ]
+    report = validate_operation(
+        crop_id="hibiscus",
+        history=history,
+        new_operation={"operation_id": "storage", "date": "2026-05-20"},  # no drying logged
+    )
+    assert report.blocked
+    assert any(i.rule_id == "hibiscus_r5" for i in report.blocking_issues)

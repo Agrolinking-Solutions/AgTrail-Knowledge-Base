@@ -120,6 +120,72 @@ def validate_operation(
                 )
             )
 
+    # Workflow-order sanity check. The global-order check above only catches
+    # a STRICTLY EARLIER date than the most recent operation. It does nothing
+    # for same-date or later-date submissions that still make no sense, e.g.
+    # logging land_preparation after harvest already exists in history, even
+    # dated today. No individual rule catches this either, since each rule
+    # only checks an operation's relationship to its OWN declared dependency,
+    # not its position relative to everything else already logged.
+    #
+    # This check blocks logging a one-time (can_repeat: false) operation if a
+    # LATER one-time operation, per the crop's workflow step_number order,
+    # has already been logged.
+    #
+    # Whether a "new cycle" legitimately resets this depends on the crop.
+    # For annual, single-harvest crops (maize, cassava, rice: harvest itself
+    # is can_repeat false), logging land_clearing again after a harvest is
+    # how a real new planting cycle begins, so history from BEFORE the most
+    # recent harvest is excluded from this check entirely once a harvest has
+    # happened. For crops where harvest itself repeats (cocoa/cashew's
+    # recurring seasonal harvest, tomato/hibiscus's multiple picks within one
+    # planting), there is no such reset: land_clearing or transplanting
+    # reappearing after any harvest is never legitimate in this model, so no
+    # exception applies and the full history is checked.
+    operations_by_id = {o["operation_id"]: o for o in crop.get("operations", [])}
+    workflow_steps = crop.get("workflow", [])
+    step_number_by_op = {s["operation_id"]: s["step_number"] for s in workflow_steps}
+
+    harvest_operations = [o for o in crop.get("operations", []) if o.get("category") == "harvest"]
+    harvest_is_repeatable = any(o.get("can_repeat") for o in harvest_operations)
+
+    comparison_hist = hist
+    if not harvest_is_repeatable:
+        harvest_op_ids = {o["operation_id"] for o in harvest_operations}
+        harvest_dates = [h.date for h in hist if h.operation_id in harvest_op_ids]
+        if harvest_dates:
+            most_recent_harvest_date = max(harvest_dates)
+            # The cycle-reset exception only applies if THIS operation is
+            # dated strictly AFTER the last harvest. If it's dated on or
+            # before that harvest, e.g. the same date, this is not a
+            # believable "new season," so no exception applies and the
+            # FULL history is checked, catching exactly that edge case.
+            if op.date > most_recent_harvest_date:
+                comparison_hist = [h for h in hist if h.date > most_recent_harvest_date]
+
+    new_op_step = step_number_by_op.get(op.operation_id)
+    new_op_can_repeat = operations_by_id.get(op.operation_id, {}).get("can_repeat", False)
+
+    if new_op_step is not None and not new_op_can_repeat:
+        for h in comparison_hist:
+            h_step = step_number_by_op.get(h.operation_id)
+            h_can_repeat = operations_by_id.get(h.operation_id, {}).get("can_repeat", False)
+            if h_step is not None and not h_can_repeat and h_step > new_op_step:
+                issues.append(
+                    ValidationIssue(
+                        rule_id="engine-workflow-order",
+                        severity="block",
+                        message=(
+                            f"'{op.operation_id}' cannot be logged now: "
+                            f"'{h.operation_id}' has already been logged, and it "
+                            f"comes later in the workflow. Inserting an earlier "
+                            f"step after a later one has already happened is not "
+                            f"allowed, even if the date looks plausible on its own."
+                        ),
+                    )
+                )
+                break
+
     relevant_rules = [r for r in rules if r["operation_id"] in (op.operation_id, "*")]
 
     for rule in relevant_rules:

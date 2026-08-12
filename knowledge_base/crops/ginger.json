@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "crop_id": "ginger",
+    "name": "Ginger",
+    "scientific_name": "Zingiber officinale",
+    "category": "spice",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 270,
+    "regions": ["Nigeria - Southern Kaduna (Kachia, Jaba)"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "sprouting_emergence", "name": "Sprouting / Emergence", "starts_day_after_planting": 15, "ends_day_after_planting": 30, "description": "Setts sprout and shoots emerge." },
+    { "stage_id": "vegetative_rhizome_initiation", "name": "Vegetative Growth & Rhizome Initiation", "starts_day_after_planting": 31, "ends_day_after_planting": 120, "description": "Vegetative growth with rhizome formation beginning underground." },
+    { "stage_id": "rhizome_maturation_senescence", "name": "Rhizome Maturation & Senescence", "starts_day_after_planting": 121, "ends_day_after_planting": 240, "description": "Rhizomes bulk up as foliage senesces (dies back), foliage die-back is the visual signal that harvest is approaching, not a fixed calendar date." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Deep-till well-drained loam; form beds or ridges for drainage, waterlogging drives Pythium rhizome rot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting (Setts)", "category": "planting", "description": "Cut healthy rhizome setts of 15-30g with 1-2 viable buds, treated against rhizome rot before planting. Spacing 20-30cm x 20cm; cover and mulch immediately.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "mulching", "name": "Mulching", "category": "crop_management", "description": "Heavy mulch to retain moisture and suppress weeds before shoots emerge.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "weeding", "name": "Weeding & Earthing-Up", "category": "crop_management", "description": "Weeding and earthing-up (mounding soil around the base) to control rhizome rot via drainage.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "fertilizer_application", "name": "Fertilizer Application (NPK)", "category": "input_application", "description": "No specific timing was given in the source document beyond bundling it with weeding/earthing-up as general 'maintenance.' Kept as a separate operation for consistency with other crop files, but with no sourced timing rule, flagged for follow-up.", "requires_evidence": true, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Rhizome rot (Pythium) is the named risk, driven primarily by poor drainage rather than a pest requiring its own spray schedule.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Harvested 7-9 months after planting, triggered by foliage die-back rather than a fixed date.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "splitting", "name": "Washing & Splitting", "category": "post_harvest", "description": "Washing and cleanly splitting rhizomes, the required first step before drying for export-grade Dry Split Ginger.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "drying", "name": "Drying (Dry Split Ginger)", "category": "post_harvest", "description": "Sun-drying split rhizomes 5-8 days to under 10% moisture for export-grade Dry Split Ginger. This schema can enforce that drying happens after splitting, but cannot yet enforce the 5-8 day DURATION of the drying process itself, since operations are logged as a single date, not a start/end span, flagged as a real limitation.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "mulching", "required": false },
+    { "step_number": 5, "operation_id": "weeding", "required": false, "repeat_until": "harvest" },
+    { "step_number": 6, "operation_id": "fertilizer_application", "required": false, "repeat_until": "harvest" },
+    { "step_number": 7, "operation_id": "pest_disease_control", "required": false, "repeat_until": "harvest" },
+    { "step_number": 8, "operation_id": "harvest", "required": true },
+    { "step_number": 9, "operation_id": "splitting", "required": false },
+    { "step_number": 10, "operation_id": "drying", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "ginger_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval itself not stated for ginger specifically in the source, carried over as a reasonable default. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific interval not stated in the ginger section itself"
+    },
+    {
+      "rule_id": "ginger_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before land preparation. Interval itself not stated for ginger specifically, carried over as a reasonable default. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific interval not stated in the ginger section itself"
+    },
+    {
+      "rule_id": "ginger_r3", "operation_id": "mulching", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Mulching should be done by 14 days after planting, to retain moisture and suppress weeds before shoots emerge. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent. What this rule CAN enforce: if mulching IS logged, flag it as late when it happens after 14 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "ginger_r4", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 180, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 180 days after planting. No stated upper hard block, see ginger_r4b for the typical window and its flagged boundaries.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "ginger_r4b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 210, "max_days_after_dependency": 270, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "210-270 days (roughly 7-9 months) is the typical harvest window, triggered by foliage die-back rather than a fixed calendar date. Harvest inside the hard block range (180+ days) but outside this window is flagged.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "ginger_r5", "operation_id": "drying", "depends_on_operation_id": "splitting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Drying (logging 'Dry Split Ginger') without a prior splitting step is a hard block. This is naturally enforced by the missing-prerequisite check: if splitting has never been logged, drying is rejected outright. The 14-day window is a reasonable default for how long after splitting drying should begin, not an explicit source figure.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (the splitting-before-drying requirement is directly sourced; the 14-day window is a reasonable default, not sourced)"
+    },
+    {
+      "rule_id": "ginger_r6", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "texture": ["loam"],
+    "drainage": "well-drained -- deep-tilled, bedded or ridged specifically to avoid waterlogging, which drives Pythium rhizome rot.",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "notes": "Not sourced from the master ruleset's GAP process flow beyond noting Southern Kaduna (Kachia, Jaba) as the primary production zone. Rainfall and temperature fields deliberately omitted rather than guessed at. Flagged as a real gap needing a dedicated sourcing pass."
+  },
+
+  "diseases": [
+    { "name": "Rhizome Rot (Pythium)", "risk_stage_ids": ["vegetative_rhizome_initiation", "rhizome_maturation_senescence"], "symptoms": "Not detailed beyond rot; the source ties this directly to waterlogging.", "management": "Well-drained beds/ridges, avoiding waterlogging, and using disease-free planting setts treated before planting are the named defenses.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026" }
+  ],
+
+  "pests": [],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "5.0 - 15.0 (fresh rhizome weight)",
+    "unit": "tonnes",
+    "factors": ["rhizome rot pressure", "drainage quality", "harvest timing relative to foliage die-back", "GAP optimization"],
+    "confidence": 0.6,
+    "notes": "This figure is for FRESH rhizome weight. If processed into Dry Split Ginger, expect roughly 20% of the fresh weight, per the source document. Derived from the yield_validation tiers below."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 5.0, "severity": "warning", "message": "Poor yield -- rhizome rot (Pythium) or late planting." },
+      { "condition_type": "range", "min": 5.0, "max": 15.0, "severity": "pass", "message": "Expected smallholder range (fresh)." },
+      { "condition_type": "greater_than", "min": 15.0, "severity": "warning", "message": "Highly optimized GAP." },
+      { "condition_type": "greater_than", "min": 35.0, "severity": "block", "message": "Biological maximum exceeded (fresh basis)." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. This table is for FRESH rhizomes only; the source separately notes Dry Split Ginger is roughly 20% of fresh weight, but gives no separate dry-basis table, so this system cannot yet validate a yield reported on a dry basis without first converting it. Two adjustments made for consistency with how this schema resolves tier gaps: the source's warning tier was stated as '< 4.0' with the pass range starting at 5.0, leaving 4.0-5.0 uncovered; extended the warning tier to '< 5.0' to close that gap. Similarly the source's upper warning tier was stated as '15.0-25.0' with the block starting at '> 35.0', leaving 25.0-35.0 uncovered; modeled as an open-ended '> 15.0' warning, which the engine's existing overlap-resolution logic correctly cedes to the '> 35.0' block tier for very high values, same approach used for Tomato. The equals_zero tier itself was also inferred, the source table for Ginger did not include an explicit 0 t/ha row, same situation as Sesame."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-08",
+      "changed_by": "AgTrail Knowledge Base - seventh crop template, second sourced directly from the AgTrail Master Agronomist & Validator Ruleset",
+      "summary": "Second of the ruleset's High priority crops to be built (after Cocoa and Sesame). Introduces a genuinely new pattern: a hard block enforced not by a timing window but by a missing prerequisite operation entirely (drying without a prior splitting step), which turned out to already be supported for free by the existing missing-prerequisite check in engine/validator.py, no new engine code was needed. Also documents a real, current limitation: this schema logs operations as a single date, not a duration, so the source's '5-8 days of drying' requirement can only be partially enforced (that drying happens after splitting), not the drying process's own length. Two yield tier gaps in the source (4.0-5.0 and 25.0-35.0 t/ha, both left uncovered by the source's own stated bands) were closed using the same interpretive approach already established for Tomato's yield table. Two rules (ginger_r1, ginger_r2, land clearing and planting timing) reuse defaults from other crop files since the source doesn't state ginger-specific intervals for those particular steps. No pest data at all in the source beyond the disease entry; pests left as an empty array rather than invented. Not yet reviewed beyond this first pass.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    }
+  ]
+}

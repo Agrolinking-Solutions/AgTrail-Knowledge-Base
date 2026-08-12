@@ -79,3 +79,40 @@ def test_sesame_inferred_zero_tier_is_a_loss_event():
 def test_sesame_extreme_yield_is_blocked():
     result = validate_yield("sesame", 3.0)
     assert result.severity == "block"
+
+
+def test_ginger_yield_gap_between_stated_tiers_is_still_covered():
+    """
+    Ginger's source table left two ranges uncovered (4.0-5.0 and
+    25.0-35.0 t/ha), gaps between its own stated bands. Rather than let
+    those crash the validator, both were closed using the same approach
+    already used for Tomato: extending the nearer warning tier. This
+    locks in that both gap values resolve to warning, not an error.
+    """
+    result_low_gap = validate_yield("ginger", 4.5)
+    assert result_low_gap.severity == "warning"
+
+    result_high_gap = validate_yield("ginger", 30.0)
+    assert result_high_gap.severity == "warning"
+
+
+def test_ginger_extreme_yield_is_blocked():
+    result = validate_yield("ginger", 40.0)
+    assert result.severity == "block"
+
+
+def test_cashew_zero_yield_is_a_loss_event():
+    result = validate_yield("cashew", 0)
+    assert result.severity == "block"
+    assert result.is_loss_event is True
+
+
+def test_cashew_extreme_yield_is_blocked():
+    """5.0 t/ha/yr matches both the '>1.0' warning and '>4.0' block tiers; block must win."""
+    result = validate_yield("cashew", 5.0)
+    assert result.severity == "block"
+
+
+def test_hibiscus_extreme_yield_is_blocked():
+    result = validate_yield("hibiscus", 3.0)
+    assert result.severity == "block"

@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "crop_id": "hibiscus",
+    "name": "Hibiscus (Roselle)",
+    "scientific_name": "Hibiscus sabdariffa",
+    "category": "cash_crop",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 160,
+    "regions": ["Nigeria - Dry North (Jigawa, Kano, Katsina)"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination_seedling", "name": "Germination & Seedling", "starts_day_after_planting": 0, "ends_day_after_planting": 14, "description": "Emergence and early seedling establishment." },
+    { "stage_id": "vegetative_branching", "name": "Vegetative & Branching", "starts_day_after_planting": 15, "ends_day_after_planting": 75, "description": "Vegetative growth and branching, calyces will later form on these branches." },
+    { "stage_id": "flowering_calyx_formation", "name": "Flowering & Calyx Formation", "starts_day_after_planting": 76, "ends_day_after_planting": 120, "description": "Flowering; the calyx (the harvested part, used for Zobo drink and export) forms after each flower drops." },
+    { "stage_id": "maturity_harvesting", "name": "Maturity & Harvesting", "starts_day_after_planting": 121, "ends_day_after_planting": 160, "description": "Calyces mature. Over-mature calyces turn woody and shatter, so harvest timing matters." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Light tillage on well-drained soil; hibiscus is low-input and drought-hardy, so land prep needs are minimal compared to most crops in this knowledge base.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Direct seeded, several seeds per hole, spacing 50-60cm x 30cm. No nursery stage.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "thinning", "name": "Thinning", "category": "crop_management", "description": "Thinning dense stands, calyces form on branches so overcrowding cuts yield.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "weeding", "name": "Weeding", "category": "crop_management", "description": "General weed control.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "fertilizer_application", "name": "Fertilizer Application", "category": "input_application", "description": "Minimal fertilizer is usually needed, hibiscus is a low-input crop by design.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Flea beetle is the named pest.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Fresh Calyx)", "category": "harvest", "description": "Fresh calyx collection, 110-160 days after planting, after the flower drops. NOTE: the source describes calyx formation following individual flower drop, which implies staggered ripening across a plant, similar in spirit to Tomato. The source itself does not explicitly state repeated picking the way it does for Tomato, so can_repeat is set to true here as an interpretive judgment call, not a directly sourced fact, flagged honestly rather than presented as certain.", "requires_evidence": true, "can_repeat": true },
+    { "operation_id": "drying", "name": "Drying (Export Rule)", "category": "post_harvest", "description": "Separate calyx from the rest of the fruit and sun-dry on tarpaulins (not bare soil, which adds sand/salmonella and triggers export rejection) to under 12% moisture.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Storage of dried calyx.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "thinning", "required": false },
+    { "step_number": 5, "operation_id": "weeding", "required": false, "repeat_until": "harvest" },
+    { "step_number": 6, "operation_id": "fertilizer_application", "required": false },
+    { "step_number": 7, "operation_id": "pest_disease_control", "required": false, "repeat_until": "harvest" },
+    { "step_number": 8, "operation_id": "harvest", "required": true },
+    { "step_number": 9, "operation_id": "drying", "required": false },
+    { "step_number": 10, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "hibiscus_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval itself not stated for hibiscus specifically, carried over as a reasonable default. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific interval not stated in the hibiscus section itself"
+    },
+    {
+      "rule_id": "hibiscus_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before land preparation. Interval itself not stated for hibiscus specifically, carried over as a reasonable default. Flagged for review.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific interval not stated in the hibiscus section itself"
+    },
+    {
+      "rule_id": "hibiscus_r3", "operation_id": "thinning", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Thinning should be done by 21 days after planting. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent. What this rule CAN enforce: if thinning IS logged, flag it as late when it happens after 21 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "hibiscus_r4", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 100, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 100 days after planting. No stated upper hard block, see hibiscus_r4b for the typical window.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "hibiscus_r4b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 110, "max_days_after_dependency": 160, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "110-160 days after planting is the typical window. Harvest inside the hard block range (100+ days) but outside this window is flagged, over-mature calyces turn woody and shatter past this point.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "rule_id": "hibiscus_r5", "operation_id": "storage", "depends_on_operation_id": "drying",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Storage without a prior drying step is a hard block, naturally enforced by the missing-prerequisite check: if drying has never been logged, storage is rejected outright. The 14-day window is a reasonable default for how long after drying storage should begin, not an explicit source figure. Same pattern as Ginger's splitting-before-drying rule.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (the drying-before-storage requirement is directly sourced; the 14-day window is a reasonable default, not sourced)"
+    },
+    {
+      "rule_id": "hibiscus_r6", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    }
+  ],
+
+  "soil_requirements": {
+    "texture": [],
+    "drainage": "well-drained -- otherwise low-input, hibiscus is drought-hardy and tolerates poorer soils than most crops in this knowledge base.",
+    "nitrogen_needs": "low"
+  },
+
+  "weather_preferences": {
+    "notes": "Not sourced from the master ruleset's GAP process flow beyond noting the dry North (Jigawa, Kano, Katsina) as the primary production zone, and that the crop is drought-hardy. Rainfall and temperature fields deliberately omitted rather than guessed at. Flagged as a real gap needing a dedicated sourcing pass."
+  },
+
+  "diseases": [],
+
+  "pests": [
+    { "name": "Flea Beetle", "risk_stage_ids": ["germination_seedling", "vegetative_branching"], "symptoms": "Not detailed beyond being named as a maintenance-stage risk.", "management": "Named as needing management; specific control methods not detailed in the source.", "confidence": 0.5, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- named but not detailed, flagged for follow-up" }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.3 - 1.0 (dry calyx basis)",
+    "unit": "tonnes",
+    "factors": ["harvest timing precision (over-maturity causes shatter)", "thinning/stand density", "export-grade drying quality"],
+    "confidence": 0.6,
+    "notes": "Yield is DRY calyces. Fresh calyx weight is roughly 10 times heavier per the source, so a fresh-weight figure should never be compared directly against these dry-basis numbers. Derived from the yield_validation tiers below."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Severe failure -- drought or flea-beetle wipeout -- must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.3, "severity": "warning", "message": "Severe failure -- drought or flea-beetle wipeout." },
+      { "condition_type": "range", "min": 0.3, "max": 1.0, "severity": "pass", "message": "Expected Northern smallholder range." },
+      { "condition_type": "greater_than", "min": 1.0, "severity": "warning", "message": "Exceptional yield." },
+      { "condition_type": "greater_than", "min": 2.5, "severity": "block", "message": "Improbable -- fresh calyces likely logged as dry." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. This table is for DRY calyces specifically; fresh weight is roughly 10x heavier per the source, and reporting a fresh-weight figure against this table would produce a misleading hard block (the source's own block rationale, 'fresh calyces likely logged as dry,' names this exact confusion directly). Two adjustments made for consistency with how this schema resolves tier gaps, same approach as Tomato, Ginger, and Cashew: the source's warning tier was stated as '< 0.2' with the pass range starting at 0.3, extended to '< 0.3' to close that gap; the source's upper warning tier was stated as '> 1.5' but the pass range ends at 1.0, leaving 1.0-1.5 uncovered, modeled as an open-ended '> 1.0' warning instead. The equals_zero tier was inferred, the source table did not include an explicit 0 t/ha row."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-08",
+      "changed_by": "AgTrail Knowledge Base - ninth crop template, fourth sourced directly from the AgTrail Master Agronomist & Validator Ruleset",
+      "summary": "Fourth and final of the ruleset's High priority crops, completing that tier (Cocoa, Sesame, Ginger, Cashew, Hibiscus all now built). Same missing-prerequisite pattern as Ginger (storage requires drying first). One genuine interpretive judgment call, clearly flagged rather than hidden: the source describes calyx formation following individual flower drop, implying staggered ripening, but does not explicitly state repeated picking the way it does for Tomato. can_repeat was set to true on harvest as a reasonable inference, not a directly sourced fact. Same yield-table gap-closing approach used for Tomato, Ginger, and Cashew applied here too. No disease data at all in the source for this crop; only one pest (flea beetle) named without detail. Not yet reviewed beyond this first pass.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    }
+  ]
+}
