@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "crop_id": "cowpea",
+    "name": "Cowpea (Beans / Vigna unguiculata)",
+    "scientific_name": "Vigna unguiculata",
+    "category": "legume",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 75,
+    "regions": ["Nigeria - North", "Nigeria - Middle Belt", "Nigeria - Sudan Savanna"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination_seedling", "name": "Germination & Seedling", "starts_day_after_planting": 0, "ends_day_after_planting": 10, "description": "Emergence and early seedling establishment. Cowpea aphid (Aphis craccivora) causes its greatest damage specifically at this stage." },
+    { "stage_id": "vegetative_nodulation", "name": "Vegetative growth & nodulation", "starts_day_after_planting": 11, "ends_day_after_planting": 30, "description": "Vegetative growth alongside root nodule formation -- the nitrogen-fixing bacteria (Rhizobium) colonizing the roots, which is why cowpea needs comparatively little nitrogen fertilizer of its own and instead benefits following cereal crops in rotation." },
+    { "stage_id": "flowering", "name": "Flowering", "starts_day_after_planting": 31, "ends_day_after_planting": 45, "description": "Flower bud formation and flowering. Flower bud thrips (Megalurothrips sjostedti) attack specifically at this stage, destroying buds and preventing pod formation." },
+    { "stage_id": "pod_fill", "name": "Pod development & filling", "starts_day_after_planting": 46, "ends_day_after_planting": 65, "description": "Pods form and fill with seed. Maruca pod borer and pod-sucking bugs cause their damage during this window, directly on the developing seed." },
+    { "stage_id": "maturity", "name": "Maturity / pod drying", "starts_day_after_planting": 66, "ends_day_after_planting": 90, "description": "Pods dry and turn brown/tan, ready for harvest. Unlike sesame, cowpea pods do not shatter as aggressively, but delayed harvest still exposes drying pods to weathering and field pest damage." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing/harrowing and ridging. Cowpea tolerates lighter tillage than cereals but still benefits from a weed-free seedbed given how vulnerable it is to early weed competition.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Direct seeding, typically on ridges or flat, no nursery stage.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing failed stands.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "phosphorus_application", "name": "Phosphorus Fertilizer Application (SSP/DAP)", "category": "input_application", "description": "NEW operation, distinct from the nitrogen-focused fertilizer operations in the cereal crop files in this knowledge base. Cowpea fixes its own nitrogen via root nodulation and generally does NOT need nitrogen fertilizer -- excess nitrogen actually pushes lush vegetative growth at the expense of grain yield. What it does need is phosphorus (commonly Single Super Phosphate or DAP) to support good nodulation and nitrogen fixation. A small starter NPK dose is sometimes still used on poor/new soils, but phosphorus is the operative nutrient here, not nitrogen.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual or chemical weed control during the critical early competition window.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control before canopy closure suppresses weeds naturally -- cowpea's broad leaves shade the soil effectively once established.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_scouting", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Cowpea has a genuinely different pest at nearly every growth stage (aphids at seedling, thrips at flowering, Maruca pod borer and pod-sucking bugs at pod fill) rather than one dominant threat throughout, unlike maize's Fall Armyworm-centric pest_scouting operation.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Picking/cutting of dry, browned pods, or pulling whole plants for threshing.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "drying_threshing", "name": "Drying & Threshing", "category": "post_harvest", "description": "Further sun-drying of pods if needed, then threshing to release grain.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Bagging and storage of threshed grain. Cowpea grain in storage is highly vulnerable to the cowpea storage weevil/bruchid (Callosobruchus maculatus), whose infestation typically begins in the field before harvest and continues in storage -- see validation_rules and pests.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "gap_filling", "required": false },
+    { "step_number": 5, "operation_id": "phosphorus_application", "required": false },
+    { "step_number": 6, "operation_id": "weeding_1", "required": true, "repeat_until": null },
+    { "step_number": 7, "operation_id": "weeding_2", "required": false, "repeat_until": null },
+    { "step_number": 8, "operation_id": "pest_scouting", "required": false, "repeat_until": "harvest" },
+    { "step_number": 9, "operation_id": "harvest", "required": true },
+    { "step_number": 10, "operation_id": "drying_threshing", "required": false },
+    { "step_number": 11, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "cowpea_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval consistent with the default used across this knowledge base's other crop files -- not independently sourced to a cowpea-specific figure. Flagged for agronomist review.",
+      "source": "General cross-crop default (same pattern as maize.json, cassava.json, sesame.json)."
+    },
+    {
+      "rule_id": "cowpea_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Planting cannot occur before land preparation.",
+      "source": "General cross-crop default -- not independently sourced to a cowpea-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "cowpea_r_phosphorus", "operation_id": "phosphorus_application", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 7, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "NEW rule, specific to this crop file. Phosphorus-based fertilizer (SSP/DAP) should be applied at or very close to sowing (not later than about 7 days after planting), since its role is enabling early nodulation and nitrogen fixation -- unlike a cereal top-dress, this is not something that helps if applied mid-season. Logged later than this is flagged, not blocked, since a delayed application still has some benefit even if reduced.",
+      "source": "TAAT Africa, Good Agronomic Practices on Cowpea ('Apply two bags DAP/hectare at sowing, but not later than 7 days after planting')."
+    },
+    {
+      "rule_id": "cowpea_r3", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "First weeding recommended 2-3 weeks after planting. Weed competition is described as especially critical in the first 5-8 weeks after planting, both for direct resource competition and because weeds harbour pests.",
+      "source": "Daily Trust, Experts Outline Steps As Farmers Begin Cowpea Planting (Prof. Omoigui/Iorlamen, IITA-affiliated guidance)."
+    },
+    {
+      "rule_id": "cowpea_r4", "operation_id": "weeding_2", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 35, "max_days_after_dependency": 42, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Second weeding recommended around 5-6 weeks after planting, closing out the critical 5-8 week weed-competition window before canopy closure begins suppressing weeds naturally.",
+      "source": "Daily Trust, Experts Outline Steps As Farmers Begin Cowpea Planting; Agriculture.Institute, Cowpea Farming: Cultivation Practices for High Yields."
+    },
+    {
+      "rule_id": "cowpea_r_pest_floor", "operation_id": "pest_scouting", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Unlike maize's single Fall-Armyworm-centric pest_scouting rule, cowpea's dominant field threat genuinely changes by stage: aphids (seedling, roughly 0-10 days), flower thrips (flowering, roughly 31-45 days), and Maruca pod borer / pod-sucking bugs (pod fill, roughly 46-65 days). This schema does not yet support stage-conditional pest guidance within a single rule, so this is left as an always-available warning-severity operation rather than being artificially split into multiple day-windowed rules that would each only be half-true. Flagged as a real modeling limitation, not an oversight.",
+      "source": "Frontiers, Genomic Tools in Cowpea Breeding Programs (stage-by-stage pest succession); ScienceDirect, Cowpea Aphid-Borne Mosaic Virus overview."
+    },
+    {
+      "rule_id": "cowpea_r5", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 55, "max_days_after_dependency": 120, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest cannot be logged before 55 days after planting -- cowpea is one of the fastest-maturing grain legumes and some early varieties are ready close to 60 days, but nothing meaningful is ready before this floor. Upper bound of 120 days is a hard outer limit for a crop whose full range across varieties runs 60-90 days.",
+      "source": "Foraminifera Market Research, Cowpea (Beans) Farming in Nigeria (60-90 day maturity range, multiple planting cycles per year)."
+    },
+    {
+      "rule_id": "cowpea_r5b", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 60, "max_days_after_dependency": 90, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "60-90 days after planting is the typical maturity window across cowpea varieties grown in Nigeria. Harvest logged inside the hard block range but outside this window is flagged so the farmer can confirm variety maturity class rather than being blocked outright.",
+      "source": "Foraminifera Market Research, Cowpea (Beans) Farming in Nigeria."
+    },
+    {
+      "rule_id": "cowpea_r6", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template. Note: real cowpea harvesting for the fresh-pod/vegetable market is sometimes staggered/picked over multiple passes, and cowpea's short cycle means some farmers run multiple plantings per year on the same plot -- this rule covers a single planting cycle's dry-grain harvest, not the whole season.",
+      "source": "Foraminifera Market Research (multiple planting cycles per year, noted as a distinguishing feature of this crop)."
+    },
+    {
+      "rule_id": "cowpea_r_storage_weevil", "operation_id": "storage", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0, "max_days_after_dependency": 3, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "NEW rule, specific to this crop file: the cowpea storage weevil/bruchid (Callosobruchus maculatus) begins infesting pods in the field before harvest and continues multiplying rapidly in storage, so delay between harvest/threshing and proper storage (e.g. hermetic bagging) compounds an infestation that has often already started, rather than starting a clock from zero the way cassava's post-harvest deterioration does. Storage weevil and mycotoxin contamination together have been documented causing 30-100% losses. This is a warning rather than a block since delayed storage is a real farmer circumstance, not an impossible record.",
+      "source": "Gates Ag One, Cowpea crop profile ('Weevils and mycotoxin contamination can further cause an estimated 30-100% losses during storage'); cropgenebank.sgrp.cgiar.org, Insects - cowpea (bruchid infestation starting in the field and carrying into storage)."
+    },
+    {
+      "rule_id": "cowpea_r7", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention from maize.json / cassava.json / sesame.json."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": ["sandy loam", "loam"],
+    "drainage": "well-drained",
+    "nitrogen_needs": "low"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 400,
+    "rainfall_mm_max_cycle": 700,
+    "temp_c_min": 20,
+    "temp_c_max": 35,
+    "notes": "Drought-tolerant relative to cereals, which is a major reason it is grown across the dry savanna zones of West Africa; low water requirement is also cited as part of why it can be grown as a dry-season crop in irrigated systems. Excess/waterlogged conditions are more damaging than moderate drought stress."
+  },
+
+  "diseases": [
+    { "name": "Bacterial Blight (Xanthomonas spp.)", "risk_stage_ids": ["vegetative_nodulation", "flowering"], "symptoms": "Water-soaked lesions on leaves that turn necrotic; described as the main bacterial pathogen affecting cowpea's leaves and stems.", "management": "Use certified/clean seed (bacterial blight is seed-transmissible), avoid working in wet fields (spreads readily in moisture), resistant varieties where available.", "confidence": 0.75, "source": "ScienceDirect, Cowpea Aphid (topic overview, disease section) and Development of Biotic Stress Resistant Cowpea, Springer -- both name bacterial blight as the main bacterial disease class." },
+    { "name": "Cowpea Aphid-Borne Mosaic Virus (CAMV) / viral complex", "risk_stage_ids": ["germination_seedling", "vegetative_nodulation"], "symptoms": "Mosaic mottling, leaf distortion, stunted growth; transmitted by aphids (non-persistently) rather than by seed alone.", "management": "Control the aphid vector, use resistant varieties, remove volunteer/infected plants that serve as inoculum sources.", "confidence": 0.7, "source": "ScienceDirect, Cowpea Aphid-Borne Mosaic Virus overview; documented specifically as infecting cowpea in Nigeria (Gumedzoe et al., cited in the biotic stress resistance literature)." }
+  ],
+
+  "pests": [
+    { "name": "Cowpea Aphid (Aphis craccivora)", "risk_stage_ids": ["germination_seedling"], "symptoms": "Sap-sucking colonies on young shoots and leaves; causes the greatest damage specifically at the seedling stage and also transmits Cowpea Aphid-Borne Mosaic Virus.", "management": "Scout from emergence, targeted insecticide if colonies are heavy, resistant varieties (wild relative lines have shown aphid resistance).", "confidence": 0.85, "source": "ScienceDirect, Cowpea Aphid overview and Cowpea Aphid-Borne Mosaic Virus overview." },
+    { "name": "Flower Bud Thrips (Megalurothrips sjostedti)", "risk_stage_ids": ["flowering"], "symptoms": "Attacks flower buds, inhibiting anthesis (flower opening) and pod formation; affected plants can remain vegetative longer than normal.", "management": "Scout at flowering onset, targeted insecticide application timed to flowering, resistant varieties where available.", "confidence": 0.8, "source": "ScienceDirect, Cowpea Aphid-Borne Mosaic Virus overview (thrips section); Frontiers, Genomic Tools in Cowpea Breeding Programs." },
+    { "name": "Maruca Pod Borer (Maruca vitrata)", "risk_stage_ids": ["flowering", "pod_fill"], "symptoms": "Larvae feed on flower buds, flowers, and pods; described as one of the most damaging cowpea pests region-wide, with yield loss estimates of 20-80% and, per one source, losses of up to 80% from this pest alone under heavy pressure.", "management": "Scout regularly through flowering and pod fill, targeted insecticide, Bt-cowpea (pod borer resistant, PBR cowpea) has been developed specifically against this pest and is at various stages of regulatory approval/adoption in West Africa as of the sources reviewed.", "confidence": 0.9, "source": "ScienceDirect, Cowpea Aphid-Borne Mosaic Virus overview (20-80% yield reduction figure); Gates Ag One, Cowpea crop profile (up to 80% losses); Open Access Government, A biotech shield for cowpea against major insect pests (PBR/Bt cowpea development)." },
+    { "name": "Pod-Sucking Bugs (Clavigralla tomentosicollis and related species)", "risk_stage_ids": ["pod_fill"], "symptoms": "Bugs pierce pods and feed directly on developing seed, causing shriveled, discolored, or aborted seed even when the pod itself looks intact.", "management": "Scout during pod fill, targeted insecticide, avoid extending the pod-fill window unnecessarily since exposure time drives cumulative damage.", "confidence": 0.75, "source": "ScienceDirect, Cowpea Aphid-Borne Mosaic Virus overview; Frontiers, Genomic Tools in Cowpea Breeding Programs." },
+    { "name": "Cowpea Storage Weevil / Bruchid (Callosobruchus maculatus)", "risk_stage_ids": ["maturity"], "symptoms": "Small round exit holes in stored grain; infestation frequently begins in the field on maturing/drying pods before harvest and continues multiplying rapidly in storage.", "management": "Prompt threshing and hermetic (airtight) storage (e.g. PICS bags) rather than open sacks, avoid mixing new grain with old infested stock, timely harvest to limit field-stage infestation window -- see the cowpea_r_storage_weevil validation rule.", "confidence": 0.85, "source": "cropgenebank.sgrp.cgiar.org, Insects - cowpea; Gates Ag One, Cowpea crop profile (30-100% storage losses from weevils and mycotoxin combined)." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.3 - 1.0 (traditional smallholder practice), 1.0 - 2.5 (improved varieties / good agronomic practice)",
+    "unit": "tonnes",
+    "factors": ["variety (traditional vs. IITA-improved)", "Maruca and pod-sucking bug pressure during pod fill", "weed control timing", "phosphorus availability for nodulation", "storage weevil losses (reduce marketable yield, not field yield)"],
+    "confidence": 0.55,
+    "notes": "Wide range reflects genuinely wide real-world variation, not uncertainty in sourcing: FAOSTAT-based figures cited for West Africa put actual average yields at under 10% of the crop's theoretical ceiling (~12.3 t/ha), with a Ghana national average of 0.87 t/ha and a separate Nigeria-specific study finding yields ranging 0.10-1.55 t/ha across the period studied. IITA's improved-variety adoption studies report roughly a 26% yield increase over traditional varieties, which is reflected in the higher end of this range."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.15, "severity": "warning", "message": "Near-total crop failure; verify plot area, Maruca/pod-sucking bug pressure, and weeding history." },
+      { "condition_type": "range", "min": 0.15, "max": 2.5, "severity": "pass", "message": "Standard Nigerian smallholder-to-improved-variety range." },
+      { "condition_type": "greater_than", "min": 2.5, "severity": "warning", "message": "Exceptional; requires manual review of variety and management." },
+      { "condition_type": "greater_than", "min": 6.0, "severity": "block", "message": "Well above the crop's documented theoretical ceiling (~12.3 t/ha under ideal research-station conditions, but far above anything achievable in normal farm conditions at this range) -- almost certainly a kg/tonne unit typo or inflated area." }
+    ],
+    "source": "Crop Trust, Cowpea overview (150 kg/ha to 5.5+ t/ha range across countries globally, used as an outer sanity bound); Gates Ag One, Cowpea crop profile (12.29 MT/ha theoretical maximum under research conditions, actual farm yields under 10% of that); same GPS-anchored-area caveat as other crops in this knowledge base."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-14",
+      "changed_by": "AgTrail Knowledge Base - new crop, priority commodity list",
+      "summary": "Initial file for Cowpea, the last of the priority commodities (Vitamin A Maize, OFSP, Ginger, Sesame, Cowpea, Hibiscus) requested alongside the existing knowledge base -- and the first crop in this knowledge base to actually use the 'legume' category (all prior crops were cereal, tuber, cash_crop, or tree_crop). Structured closer to sesame.json's short-cycle field-crop pattern than cassava's root-crop pattern, but with several genuinely legume-specific additions rather than a straight copy: (1) a phosphorus_application operation replacing the nitrogen-fertilizer operations used elsewhere in this knowledge base, since cowpea fixes its own nitrogen via root nodulation and actually performs worse with heavy nitrogen fertilization; (2) an explicit note (cowpea_r_pest_floor) that the dominant pest genuinely changes by growth stage (aphids at seedling, thrips at flowering, Maruca and pod-sucking bugs at pod fill) rather than one pest dominating the whole cycle the way Fall Armyworm does for maize -- flagged as a real schema limitation since this file cannot yet express stage-conditional pest guidance within a single rule; (3) a storage-weevil rule (cowpea_r_storage_weevil) modeling that Callosobruchus maculatus infestation typically starts in the field before harvest and compounds in storage, rather than starting from zero at harvest the way cassava's post-harvest deterioration does. Yield figures are unusually well-sourced for how wide the range is -- the width reflects genuine documented variation (FAOSTAT-cited country averages from 150 kg/ha to over 5 t/ha, actual West African farm yields reported under 10% of the crop's research-station ceiling) rather than a sourcing gap. Not yet agronomist-reviewed, same caveat as every other crop file in this knowledge base at initial draft stage.",
+      "source": "TAAT Africa, Good Agronomic Practices on Cowpea; Daily Trust, Experts Outline Steps As Farmers Begin Cowpea Planting; IITA, Cowpea Production manual; Foraminifera Market Research, Cowpea (Beans) Farming in Nigeria; Agriculture.Institute, Cowpea Farming: Cultivation Practices for High Yields; ScienceDirect topic overviews (Cowpea Aphid, Cowpea Aphid-Borne Mosaic Virus); Frontiers, Genomic Tools in Cowpea Breeding Programs; cropgenebank.sgrp.cgiar.org, Insects - cowpea; Gates Ag One, Cowpea crop profile; Crop Trust, Cowpea overview; MEL CGIAR, Improved cowpea varieties contribute to poverty reduction in Nigeria; Open Access Government, A biotech shield for cowpea against the major insect pests."
+    }
+  ]
+}
