@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "crop_id": "oil_palm",
+    "name": "Oil Palm",
+    "scientific_name": "Elaeis guineensis (Tenera hybrid)",
+    "category": "tree_crop",
+    "crop_cycle_type": "perennial",
+    "typical_duration_days": 1095,
+    "regions": ["Nigeria - South-South", "Nigeria - South-East"],
+    "current_version": "1.1.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "pre_nursery_nursery", "name": "Pre-Nursery & Nursery", "starts_day_after_planting": -360, "ends_day_after_planting": 0, "description": "Certified Tenera seedlings raised for a typical 10-12 months before transplanting. Day 0 is transplanting, not seed sowing -- same convention as cocoa.json. -360 is a typical-case placeholder; the actual hard-block/warning bounds (8-18 / 10-14 months) are enforced via validation_rules, not this stage boundary." },
+    { "stage_id": "immature_establishment", "name": "Immature (Establishment)", "starts_day_after_planting": 0, "ends_day_after_planting": 1095, "description": "Years 0-3. Young palm growth, not yet bearing." },
+    { "stage_id": "early_yielding", "name": "Early Yielding", "starts_day_after_planting": 1096, "ends_day_after_planting": 2190, "description": "Years 3-6. Fresh Fruit Bunch (FFB) production has begun but yield is still climbing toward peak." },
+    { "stage_id": "peak_yielding", "name": "Peak Yielding", "starts_day_after_planting": 2191, "ends_day_after_planting": 5475, "description": "Years 7-15. Full FFB productivity." },
+    { "stage_id": "declining", "name": "Declining", "starts_day_after_planting": 5476, "ends_day_after_planting": 9125, "description": "Years 20-25+. Declining yield; typical commercial replanting horizon." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing, Lining & Holing", "category": "land_prep", "description": "Clearing, lining, and holing on deep, moist soils.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Raising certified Tenera (Dura x Pisifera) seedlings. Reject unimproved Dura material, which yields far less oil.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "cover_crop_establishment", "name": "Legume Cover Crop Establishment", "category": "land_prep", "description": "Establishing a legume cover crop (Pueraria) alongside site preparation, maintained through the immature stage.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Transplanting young seedlings (at 10-14 months) into triangular 9m x 9m x 9m spacing (~143 palms/ha). This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "fertilizer_application", "name": "Fertilizer Application", "category": "input_application", "description": "Balanced fertilizer application -- potassium is specifically critical for this crop.", "requires_evidence": true, "can_repeat": true, "optional": true },
+    { "operation_id": "pruning", "name": "Pruning", "category": "crop_management", "description": "Sparing pruning of fronds.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "weeding", "name": "Circle Weeding", "category": "crop_management", "description": "Circle-weeding around the palm base; cover crop maintenance.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Control", "category": "pest_disease_control", "description": "Fusarium wilt and Ganoderma management through clean planting material and field sanitation.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (FFB Cutting)", "category": "harvest", "description": "Cutting ripe Fresh Fruit Bunches (loose fruits present). Recurs every 10-14 days for decades once bearing begins -- there is no once-only rule for this operation, same pattern as cocoa.json's full_bearing harvest. The harvest-INTERVAL data-integrity rule ('hard block if multiple harvests are logged within 7 days; flag if intervals exceed 21 days'), previously flagged as unimplementable, is NOW IMPLEMENTED -- see oil_palm_r_harvest_interval_block/warn in validation_rules, which use the required_dependency: false field added to the engine specifically to fix this rule.", "requires_evidence": true, "can_repeat": true },
+    { "operation_id": "milling", "name": "Milling", "category": "post_harvest", "description": "Milling FFB -- free-fatty-acid content rises immediately post-harvest, so promptness matters more here than for most other crops in this knowledge base.", "requires_evidence": false, "can_repeat": true, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "nursery_establishment", "required": true },
+    { "step_number": 3, "operation_id": "cover_crop_establishment", "required": false },
+    { "step_number": 4, "operation_id": "transplanting", "required": true },
+    { "step_number": 5, "operation_id": "fertilizer_application", "required": false, "repeat_until": null },
+    { "step_number": 6, "operation_id": "pruning", "required": false, "repeat_until": null },
+    { "step_number": 7, "operation_id": "weeding", "required": false, "repeat_until": null },
+    { "step_number": 8, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
+    { "step_number": 9, "operation_id": "harvest", "required": true, "repeat_until": null },
+    { "step_number": 10, "operation_id": "milling", "required": false, "repeat_until": null }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "oil_palm_r_land_clearing_gate", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning nursery_establishment could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Pattern and max-day window (60 days) matches cocoa.json's existing analogous rule (cocoa_r1)."
+    },
+    {
+      "rule_id": "oil_palm_r_nursery_block", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 240, "max_days_after_dependency": 540, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "UNITS CONVERSION, flagged explicitly: the source ruleset states this threshold in MONTHS ('hard block under 8 or over 18 months'), but this schema's validation_rules only support day-offsets. Converted using a 30-day-per-month approximation (8mo = 240 days, 18mo = 540 days), the same convention this knowledge base has used implicitly elsewhere but is being named explicitly here since this is the first rule built directly from a source figure stated in months rather than days. Young seedlings die on transplant if too young; over-aged ones suffer transplant shock.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 1."
+    },
+    {
+      "rule_id": "oil_palm_r_nursery_warn", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 300, "max_days_after_dependency": 420, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "UNITS CONVERSION (see oil_palm_r_nursery_block): source states 'flag under 10 or over 14 months', converted as 10mo = 300 days, 14mo = 420 days using the same 30-day-per-month approximation.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 1."
+    },
+    {
+      "rule_id": "oil_palm_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 900, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 2.5 years (900 days) -- the source ruleset states this figure directly in days (unlike the nursery rules above, which required a months-to-days conversion), so no approximation was needed here.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 1095, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 3 years (1095 days). Sits above the 900-day hard-block floor.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_harvest_interval_block", "operation_id": "harvest", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 7, "max_days_after_dependency": null, "required_dependency": false, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if multiple harvests are logged within 7 days (i.e. less than 7 days since the previous harvest). NEWLY IMPLEMENTED in the engine-fixes pass following the Medium-priority crop batch: this is a SELF-REFERENTIAL rule (depends_on_operation_id equals this rule's own operation_id, 'harvest'), checking the gap since the operation's own most recent prior occurrence rather than a different operation. v1.0.0 of this file flagged this as unsafe to implement, because the engine's missing-dependency handling used to unconditionally hard-block when no prior occurrence existed -- which would have permanently blocked every farmer's very first harvest ever. required_dependency: false (added to schema.json/engine.validator specifically to fix this rule) tells the engine to simply skip this check when there is no prior harvest yet, rather than auto-blocking. Confirmed via a scenario with zero harvest history: the first harvest now passes this rule with no issue, and only the 2nd+ harvest is checked against the 7-day floor.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_harvest_interval_warn", "operation_id": "harvest", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null, "max_days_after_dependency": 21, "required_dependency": false, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag if the interval since the previous harvest exceeds 21 days -- a gap this long suggests missed harvest rounds (FFB over-ripens and loses oil quality) rather than a normal 10-14 day cycle. Same self-referential mechanism as oil_palm_r_harvest_interval_block; required_dependency: false means this is also correctly skipped for the first-ever harvest, where there is no previous interval to measure.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_milling_block", "operation_id": "milling", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null, "max_days_after_dependency": 3, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "GRANULARITY LIMITATION, flagged explicitly and distinct from the months-to-days conversion above: the source states this threshold in HOURS ('hard block beyond 72h'), but operations in this schema are logged with a DATE only, not a date-and-time, so there is no way to check hours precisely at all -- not even via a conversion, the way months-to-days works. Approximated as 3 days (72h), which is coarser than the source and can misfire in both directions near the boundary: e.g. a harvest logged at 11pm and a milling logged at 2am two calendar-days later is genuinely only ~3 hours apart but would read as a 2-day gap here, and the reverse case (a real ~70-hour gap spanning only 2 calendar-date boundaries) could read as within-bounds when it should warn. Flagged for agronomist/engineering review -- this may need the operations data model itself to carry time-of-day, not just a rule-level fix.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_milling_warn", "operation_id": "milling", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "GRANULARITY LIMITATION (see oil_palm_r_milling_block): source states 'flag beyond 48h', approximated as 2 days with the same calendar-date-vs-clock-time caveat.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 4."
+    },
+    {
+      "rule_id": "oil_palm_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 4.5,
+    "ph_max": 6.0,
+    "texture": ["loam", "clay loam"],
+    "drainage": "deep, moist soils",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1800,
+    "rainfall_mm_max_cycle": 2500,
+    "temp_c_min": 24,
+    "temp_c_max": 32,
+    "notes": "Not covered numerically in the source ruleset section for this crop -- carried over as a placeholder from general Nigerian humid-forest oil palm agronomy references, same caveat as this knowledge base's other placeholder weather_preferences fields. Flagged for agronomist review."
+  },
+
+  "diseases": [
+    { "name": "Fusarium Wilt", "risk_stage_ids": ["immature_establishment", "early_yielding"], "symptoms": "Progressive frond yellowing and wilting, vascular discoloration; often fatal to young palms.", "management": "Clean planting material and field sanitation, per the source ruleset's Stage 3 guidance.", "confidence": 0.75, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 3." },
+    { "name": "Ganoderma (Basal Stem Rot)", "risk_stage_ids": ["early_yielding", "peak_yielding", "declining"], "symptoms": "Fungal rot at the base of the trunk, bracket fungi may appear at the stem base in advanced cases; a major cause of stand loss in older Nigerian/West African plantations.", "management": "Clean planting material and field sanitation, per the source ruleset's Stage 3 guidance.", "confidence": 0.8, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Stage 3." }
+  ],
+
+  "pests": [],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "2.0 - 15.0",
+    "unit": "tonnes Fresh Fruit Bunches (FFB), cumulative per hectare PER YEAR",
+    "factors": ["Tenera vs. unimproved Dura genetics", "palm age/growth stage", "potassium fertilization adequacy", "Ganoderma pressure in older stands", "harvest round consistency (10-14 day interval)"],
+    "confidence": 0.8,
+    "notes": "IMPORTANT DATA-ENTRY RISK, flagged explicitly and distinct from this knowledge base's usual sourcing caveats: the source ruleset states this figure is 'cumulative Fresh Fruit Bunches per hectare per year, NOT per harvest event' -- but harvest for this crop happens every 10-14 days, and this knowledge base's yield_validation tiers have no mechanism to distinguish 'this is one round's tonnage' from 'this is the annual cumulative total.' A field agent who enters a single round's FFB weight against these annual tiers would very likely trigger a false '< 2.0 t/ha, neglected/aging palm' warning even for a perfectly healthy, well-managed palm, since one round's tonnage is naturally a small fraction of the annual total. This is a real UX/data-integrity risk for this specific crop, not present in this knowledge base's other yield_validation sections, and should be flagged prominently wherever yield is actually entered in the product, not just in this file."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha/yr",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 2.0, "severity": "warning", "message": "Neglected, aging, or unimproved Dura palms." },
+      { "condition_type": "range", "min": 2.0, "max": 15.0, "severity": "pass", "message": "Standard plantations and smallholders." },
+      { "condition_type": "greater_than", "min": 15.0, "severity": "warning", "message": "Highly optimized GAP with Tenera hybrids; flag for review." },
+      { "condition_type": "greater_than", "min": 35.0, "severity": "block", "message": "Biologically improbable for Nigerian rainfall/sunlight." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm), Yield Validation table. Two gaps resolved the same way as this knowledge base's other crop files: the table as written leaves 2.0-3.0 (between its stated '<2.0 Soft Warning' and '3.0-15.0 Pass' tiers) and 25.0-35.0 (between its stated '15.0-25.0 Soft Warning' and '>35.0 Hard Block' tiers) covered by neither. Resolved by extending Pass down to 2.0 and merging the source's two separately-described warning bands ('15.0-25.0, Highly optimized GAP' and the unaddressed 25.0-35.0) into a single greater_than 15.0 warning tier. Confirmed via engine.yield_validator's own overlap-resolution logic (_specificity/_tier_matches in engine/yield_validator.py) that this merge is safe: when multiple greater_than tiers match the same value, the module already always selects the tier with the highest threshold, so a value like 40 correctly resolves to the >35.0 block tier rather than the >15.0 warning tier despite both technically matching."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Oil Palm, fifth of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base, built from Section 16. First PERENNIAL crop built in this batch (structured on cocoa.json's multi-year growth_stages/nursery-negative-offset pattern, the existing perennial template in this knowledge base). Surfaced three genuinely new categories of issue for the end-of-round engine review, beyond what yam/groundnut/pepper/onion already found: (1) MOST IMPORTANT -- the source ruleset's harvest-interval rule ('hard block if multiple harvests are logged within 7 days; flag if intervals exceed 21 days') looks implementable via a self-referential validation_rule (depends_on_operation_id == operation_id == 'harvest', checked against engine.validator's own code, which does technically support dep_id equal to operation_id). It was NOT implemented, because engine.validator's missing-dependency handling unconditionally hard-blocks when no prior matching operation exists in history -- meaning a self-referential harvest rule would permanently block every farmer's very FIRST harvest of the tree's life (since by definition no prior harvest exists yet), which is worse than merely being imprecise like pepper.json's frequency gap: it would look correct in every scenario test that includes a prior harvest and only fail in production on every single farmer's actual first use. This is flagged as needing an engine-level fix (e.g. an explicit 'skip if no prior occurrence' flag on a rule) before this rule type can be used anywhere in this knowledge base. (2) The nursery duration rule is stated in MONTHS in the source (unlike every previous crop's DAP/DAT-based rules), requiring an explicit 30-day-per-month conversion, named here rather than applied silently. (3) The milling rule is stated in HOURS (24-48h target, 72h hard block), which this schema cannot represent precisely at all since operations carry only a date, not a date-and-time -- approximated in days with an explicit calendar-date-vs-clock-time caveat, distinct from the months-to-days conversion since no conversion factor fixes a fundamentally coarser data model. Also flagged a real data-entry risk in yield_model.notes: this crop's yield figure is an ANNUAL cumulative total across many harvest rounds, not a per-event figure like every other crop file in this knowledge base, and nothing in the current UI/schema prevents a field agent from mistakenly entering a single round's tonnage against the annual tiers. Yield tier gaps resolved using the same merge technique as yam/groundnut/pepper/onion, and independently confirmed safe against engine.yield_validator's actual overlap-resolution code rather than just assumed. Not yet agronomist-reviewed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 16 (Oil Palm)."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added oil_palm_r_land_clearing_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - engine-fixes pass, Group A",
+      "summary": "Implemented the harvest-interval rule (oil_palm_r_harvest_interval_block/warn) that v1.0.0 flagged as unsafe to implement -- the highest-priority item from that flag list, since the naive self-referential approach would have permanently blocked every farmer's first-ever harvest. Uses the new required_dependency: false field (added to schema.json/engine.validator in this same pass, specifically to fix this rule): when a self-referential rule has no prior occurrence to compare against, the engine now skips that specific check instead of auto-blocking on a missing dependency. Both thresholds from the source are now enforced: hard block if harvest logged less than 7 days after the previous harvest, soft warning if the gap exceeds 21 days. Confirmed via scenario testing that a first-ever harvest (empty history) passes cleanly, and that a too-soon second harvest correctly blocks.",
+      "source": "N/A -- internal engine-capability fix, not new agronomic sourcing."
+    }
+  ]
+}

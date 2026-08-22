@@ -7,7 +7,7 @@
     "crop_cycle_type": "perennial",
     "typical_duration_days": 1095,
     "regions": ["Nigeria - Middle Belt (Kogi, Kwara)", "Nigeria - South-East"],
-    "current_version": "1.0.0"
+    "current_version": "1.0.2"
   },
 
   "growth_stages": [
@@ -45,6 +45,18 @@
 
   "validation_rules": [
     {
+      "rule_id": "cashew_r_land_prep_gate", "operation_id": "transplanting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
+    },
+    {
+      "rule_id": "cashew_r_land_clearing_gate", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning nursery_establishment could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Pattern and max-day window (60 days) matches cocoa.json's existing analogous rule (cocoa_r1)."
+    },
+    {
       "rule_id": "cashew_r1", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
       "min_days_after_dependency": 45, "max_days_after_dependency": 120, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Hard block if the nursery period is under 45 or over 120 days. Over-held seedlings form a coiled 'J-root' that snaps in wind years later, a real, specifically named agronomic risk, not a generic timing rule. See cashew_r1b for the narrower typical window.",
@@ -78,6 +90,12 @@
       "rule_id": "cashew_r5", "operation_id": "*", "depends_on_operation_id": null,
       "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    },
+    {
+      "rule_id": "cashew_r_seq_nursery_establishment_land_preparation", "operation_id": "land_preparation", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 90, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- land_preparation could previously be logged with no nursery_establishment in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (90 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
 
@@ -127,6 +145,20 @@
       "changed_by": "AgTrail Knowledge Base - eighth crop template, third sourced directly from the AgTrail Master Agronomist & Validator Ruleset",
       "summary": "Third of the ruleset's High priority crops to be built (after Cocoa and Sesame; Ginger was the second). First crop to name fire risk as an explicit management concern (fire_trace_maintenance), a real, specific detail for savanna-zone tree crops rather than a generic operation carried over from elsewhere. Structurally closest to Cocoa (perennial, nursery-to-transplant, recurring seasonal harvest with no once-only rule), but with a notably more precise nursery-duration rule (explicit hard block AND typical window both given directly in the source, unlike most other crops where only one tier was stated). Same duration-vs-single-date limitation flagged as Ginger: the source's 2-3 day drying duration cannot be fully enforced by this schema. Diseases left empty (source names pests but not diseases for cashew); both named pests (stem borer, leaf miner) carry low confidence since the source names them without describing symptoms or management detail. Not yet reviewed beyond this first pass.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added cashew_r_land_prep_gate, cashew_r_land_clearing_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.0.2",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
+      "summary": "Added cashew_r_seq_nursery_establishment_land_preparation. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
     }
   ]
 }

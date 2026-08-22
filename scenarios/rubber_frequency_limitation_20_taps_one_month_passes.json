@@ -1,0 +1,27 @@
+{
+  "crop_id": "rubber",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2018-01-01" },
+    { "operation_id": "transplanting", "date": "2018-02-15" },
+    { "operation_id": "tapping", "date": "2024-06-01" },
+    { "operation_id": "tapping", "date": "2024-06-03" },
+    { "operation_id": "tapping", "date": "2024-06-05" },
+    { "operation_id": "tapping", "date": "2024-06-07" },
+    { "operation_id": "tapping", "date": "2024-06-09" },
+    { "operation_id": "tapping", "date": "2024-06-11" },
+    { "operation_id": "tapping", "date": "2024-06-13" },
+    { "operation_id": "tapping", "date": "2024-06-15" },
+    { "operation_id": "tapping", "date": "2024-06-17" },
+    { "operation_id": "tapping", "date": "2024-06-19" },
+    { "operation_id": "tapping", "date": "2024-06-21" },
+    { "operation_id": "tapping", "date": "2024-06-22" },
+    { "operation_id": "tapping", "date": "2024-06-23" },
+    { "operation_id": "tapping", "date": "2024-06-24" },
+    { "operation_id": "tapping", "date": "2024-06-25" },
+    { "operation_id": "tapping", "date": "2024-06-26" },
+    { "operation_id": "tapping", "date": "2024-06-27" },
+    { "operation_id": "tapping", "date": "2024-06-28" },
+    { "operation_id": "tapping", "date": "2024-06-29" }
+  ],
+  "new_operation": { "operation_id": "tapping", "date": "2024-06-30" }
+}

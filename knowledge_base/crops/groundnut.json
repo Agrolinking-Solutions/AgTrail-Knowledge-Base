@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "crop_id": "groundnut",
+    "name": "Groundnut (Peanut)",
+    "scientific_name": "Arachis hypogaea",
+    "category": "legume",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 110,
+    "regions": ["Nigeria - Sudan Savanna", "Nigeria - Guinea Savanna"],
+    "current_version": "1.1.2"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination", "name": "Germination", "starts_day_after_planting": 0, "ends_day_after_planting": 7, "description": "Seed germination." },
+    { "stage_id": "vegetative", "name": "Vegetative", "starts_day_after_planting": 8, "ends_day_after_planting": 30, "description": "Vegetative growth." },
+    { "stage_id": "flowering_pegging", "name": "Flowering & Pegging", "starts_day_after_planting": 31, "ends_day_after_planting": 60, "description": "Flowers form and 'pegs' (fertilized ovaries) grow downward and bury into the soil to form pods -- the stage the source ruleset describes as the one on which this crop's agronomy hinges. This is also the stage where weeding becomes actively destructive rather than beneficial: hoeing here cuts pegs and destroys developing pods." },
+    { "stage_id": "pod_development_bulking", "name": "Pod Development & Bulking", "starts_day_after_planting": 61, "ends_day_after_planting": 100, "description": "Pods bulk underground." },
+    { "stage_id": "maturity", "name": "Maturity", "starts_day_after_planting": 101, "ends_day_after_planting": 120, "description": "Leaves yellow and inner shells become veined, signalling harvest readiness." }
+  ],
+
+  "operations": [
+    { "operation_id": "seed_selection_treatment", "name": "Seed Selection & Treatment", "category": "land_prep", "description": "Use of certified, rosette-resistant seed (e.g. SAMNUT series); shelled just before planting and treated against soil pests.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Loosening sandy-loam soil to a fine tilth on ridges so pegs can penetrate the soil easily.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Direct seeding at 75cm x 25cm spacing (or 50cm x 15cm for bunch types), ensuring firm seed-soil contact.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding", "name": "Weeding", "category": "crop_management", "description": "Manual/mechanical weeding. Must be completed before pegging becomes active -- see the timing note in validation_rules for a real limitation in how precisely this can be enforced.", "requires_evidence": false, "can_repeat": true },
+    { "operation_id": "calcium_application", "name": "Calcium (Gypsum) Application", "category": "input_application", "description": "Gypsum application timed to pegging, for well-filled pods.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Lifting)", "category": "harvest", "description": "Lifting of pods once leaves yellow and inner shells are veined.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "drying", "name": "Drying (Sun-Drying)", "category": "post_harvest", "description": "Sun-drying of lifted pods to below 8% moisture -- the primary aflatoxin (Aspergillus) prevention step for this crop.", "requires_evidence": false, "can_repeat": false },
+    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Bagging and storage of dried pods/kernels.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "seed_selection_treatment", "required": false },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "weeding", "required": true, "repeat_until": null },
+    { "step_number": 5, "operation_id": "calcium_application", "required": false },
+    { "step_number": 6, "operation_id": "harvest", "required": true },
+    { "step_number": 7, "operation_id": "drying", "required": true },
+    { "step_number": 8, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "groundnut_r_land_prep_gate", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
+    },
+    {
+      "rule_id": "groundnut_r_weeding_late", "operation_id": "weeding", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 40, "max_days_after_dependency": 60, "window_mode": "inside", "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Soft warning if weeding is logged between 40-60 DAP -- hoeing during active pegging cuts the pegs and destroys pods. FIXED in the engine-fixes pass following the Medium-priority crop batch: this rule originally could not be expressed precisely, since the engine only supported 'warn outside a window,' not 'warn inside one' -- it was implemented as a conservative superset (any weeding after 40 DAP) that over-fired for weeding logged well past 60 DAP, which the source never flagged as risky. Now uses window_mode: 'inside', added specifically to fix this rule, and fires only within the true 40-60 day risk band, matching the source exactly.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 3."
+    },
+    {
+      "rule_id": "groundnut_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 80, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 80 DAP.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 4."
+    },
+    {
+      "rule_id": "groundnut_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 90, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 90 DAP. Sits above the 80-day hard-block floor: harvest logged between 80 and 90 days is physically accepted but flagged, since the stated typical window starts at 90 DAP.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 4."
+    },
+    {
+      "rule_id": "groundnut_r_harvest_late_warn", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 130, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag after 130 DAP -- over-mature pegs rot and pods detach in the soil. Note: same pattern as this knowledge base's Yam file -- the source states this floor/ceiling pair as warnings only, with no separate hard-block ceiling for extreme lateness, so none is invented here.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 4."
+    },
+    {
+      "rule_id": "groundnut_r_harvest_once", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template.",
+      "source": "Inherited convention from this knowledge base's other annual-crop files -- not separately addressed in the source ruleset for this crop."
+    },
+    {
+      "rule_id": "groundnut_r_storage_requires_drying", "operation_id": "storage", "depends_on_operation_id": "drying",
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if storage is logged without a drying record existing first. This is the source ruleset's explicit 'Hard block if logged into storage without drying' rule. Mechanically, engine.validator already produces a hard block whenever a rule's declared dependency has no matching entry in history, regardless of what severity is set here -- so this rule's severity field is set to 'block' to match the engine's actual enforced behavior rather than to trigger it (the block happens either way once the dependency is declared).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 4."
+    },
+    {
+      "rule_id": "groundnut_r_drying_duration_warn", "operation_id": "storage", "depends_on_operation_id": "drying",
+      "min_days_after_dependency": 5, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "MODELING ASSUMPTION, flagged explicitly: the source ruleset says 'flag if drying is under 5 days -- damp storage breeds Aspergillus (aflatoxin).' This describes a DURATION of the drying process itself, but this schema's operations only carry a single date each, not a start/end range, so there is no direct field for 'how many days did drying take.' Approximated here by treating the drying operation's logged date as when sun-drying began, and requiring storage to be logged at least 5 days after that date as a proxy for 'drying lasted at least 5 days before the crop went into storage.' This is a reasonable proxy, not an exact implementation of the source rule, and depends on farmers/field agents logging drying at its start rather than its completion -- flagged for agronomist/ruleset-author confirmation that this interpretation is acceptable, similar to the curing-duration modeling used in ofsp.json.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 4."
+    },
+    {
+      "rule_id": "groundnut_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base -- corresponds to the ruleset's Anti-Fraud & Anti-Typo Controls section, not a crop-specific rule."
+    },
+    {
+      "rule_id": "groundnut_r_seq_harvest_drying", "operation_id": "drying", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 10, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- drying could previously be logged with no harvest in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (10 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": ["sandy loam"],
+    "drainage": "well-drained, loose tilth (needed for peg penetration)",
+    "nitrogen_needs": "low"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 500,
+    "rainfall_mm_max_cycle": 800,
+    "temp_c_min": 22,
+    "temp_c_max": 32,
+    "notes": "Not covered numerically in the source ruleset section for this crop -- carried over as a placeholder from general West African groundnut agronomy references, same caveat as yam.json's weather_preferences. Flagged for agronomist review."
+  },
+
+  "diseases": [
+    { "name": "Groundnut Rosette Disease", "risk_stage_ids": ["vegetative", "flowering_pegging"], "symptoms": "Stunting, leaf mottling/mosaic, chlorosis; aphid-transmitted. Explicitly named in the source ruleset as decisive for variety selection in the savanna.", "management": "Use rosette-resistant SAMNUT varieties (e.g. SAMNUT 24, 25) -- the source ruleset describes this as decisive, not just helpful, for savanna production.", "confidence": 0.9, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Recommended Varieties and Stage 3." },
+    { "name": "Leaf Spot (early and late)", "risk_stage_ids": ["flowering_pegging", "pod_development_bulking"], "symptoms": "Circular necrotic leaf lesions, premature defoliation.", "management": "Resistant varieties and timely control, per the source ruleset.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 3." }
+  ],
+
+  "pests": [
+    { "name": "Soil Pests (termites, millipedes)", "risk_stage_ids": ["germination", "pod_development_bulking"], "symptoms": "Seed/seedling damage at planting; pod scarring during bulking.", "management": "Seed treatment before planting, per the source ruleset's Stage 1 guidance.", "confidence": 0.6, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Stage 1 ('treat against soil pests')." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.5 - 3.0",
+    "unit": "tonnes",
+    "factors": ["rosette disease pressure / variety choice", "weeding timing relative to pegging", "calcium/gypsum availability at pegging", "drying promptness (affects marketable yield via aflatoxin rejection, not field yield)"],
+    "confidence": 0.85,
+    "notes": "Range taken directly from the source ruleset, extended slightly at the top to close a gap in its stated tiers -- see yield_validation source note. SAMNUT varieties are noted in the source as reaching the higher end of the Pass range."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A true zero must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.5, "severity": "warning", "message": "Severe failure -- Rosette disease or late planting." },
+      { "condition_type": "range", "min": 0.5, "max": 3.0, "severity": "pass", "message": "Expected range (SAMNUT varieties at the higher end)." },
+      { "condition_type": "greater_than", "min": 3.0, "severity": "warning", "message": "Highly optimized yield; flag for review." },
+      { "condition_type": "greater_than", "min": 5.0, "severity": "block", "message": "Biological maximum exceeded -- user likely logged unshelled wet weight." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut), Yield Validation table. Two things resolved rather than transcribed as-is: (1) the table's own text states Pass as '0.5-2.5 t/ha' and Soft Warning as '>3.0 t/ha', leaving 2.5-3.0 covered by neither -- same gap pattern found in this knowledge base's yam.json, resolved the same way, by extending Pass to 0.5-3.0 and treating '>3.0' as the literal operative threshold. (2) The table itself has no explicit zero-value row, but the italic note directly above it ('a true zero should be logged as a loss event') is an explicit textual instruction from the source, not an inference -- implemented as the equals_zero tier, consistent with every other crop file in this knowledge base. Both resolutions flagged for agronomist/ruleset-author confirmation."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Groundnut (Peanut), second of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base, built directly from Section 10 of the ruleset docx (same sourcing approach as yam.json). Three things required explicit interpretation rather than direct transcription, all flagged in-line in validation_rules/yield_validation rather than silently resolved: (1) the source's weeding rule ('warning if logged between 40-60 DAP') describes an interior band, which this engine's validation_rules mechanic cannot express -- it only supports 'before floor' or 'after ceiling' checks. Implemented as a >40-day warning, which correctly covers the true 40-60 risk band but also over-fires past 60 DAP, which the source does not itself flag. (2) The aflatoxin/drying rule bundles two distinct concerns -- 'hard block if storage logged without drying' (directly supported: engine.validator auto-blocks on a missing dependency) and 'flag if drying is under 5 days' (a DURATION the single-date operation model cannot represent directly) -- approximated by treating drying's logged date as its start and requiring 5+ days before storage, flagged as a proxy rather than an exact match, mirroring how ofsp.json modeled curing duration. (3) The yield_validation table has the same 2.5-3.0 t/ha gap pattern found in yam.json, resolved the same way (extend Pass to 0.5-3.0), plus an explicit equals_zero tier added from the table's italic prefacing note rather than a table row. Not yet agronomist-reviewed against the ruleset author's intent for any of the three flagged items above.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 10 (Groundnut)."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - engine-fixes pass, Group A",
+      "summary": "Fixed groundnut_r_weeding_late to use the new window_mode: 'inside' field (added to schema.json/engine.validator in this same pass, specifically to fix this rule) instead of the disclosed-as-imprecise max_days_after_dependency-only workaround from v1.0.0. The rule now fires only within the true 40-60 DAP risk band the source states, rather than also over-firing for any weeding logged well past 60 DAP. No agronomic content changed -- this is a precision fix to how the existing sourced rule is enforced, not a new rule or a new threshold.",
+      "source": "N/A -- internal engine-capability fix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added groundnut_r_land_prep_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.2",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
+      "summary": "Added groundnut_r_seq_harvest_drying. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    }
+  ]
+}

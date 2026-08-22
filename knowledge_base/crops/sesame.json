@@ -7,7 +7,7 @@
     "crop_cycle_type": "annual",
     "typical_duration_days": 105,
     "regions": ["Nigeria - Middle Belt", "Nigeria - North"],
-    "current_version": "1.0.0"
+    "current_version": "1.1.1"
   },
 
   "growth_stages": [
@@ -42,13 +42,13 @@
   "validation_rules": [
     {
       "rule_id": "sesame_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval itself not stated in the source document's GAP flow for sesame specifically, carried over as a reasonable default consistent with other crop files. Flagged for review.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific 30-day interval not stated in the sesame section itself"
     },
     {
       "rule_id": "sesame_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
+      "min_days_after_dependency": 1, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Planting cannot occur before land preparation. Interval itself not explicitly stated for sesame in the source document, carried over as a reasonable default. Flagged for review.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (GAP process structure); specific 14-day interval not stated in the sesame section itself"
     },
@@ -115,11 +115,11 @@
     "tiers": [
       { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
       { "condition_type": "less_than", "max": 0.2, "severity": "warning", "message": "Crop failure -- heavy rain at flowering, poor weeding, or extreme shatter." },
-      { "condition_type": "range", "min": 0.2, "max": 0.8, "severity": "pass", "message": "Standard Nigerian smallholder range." },
+      { "condition_type": "range", "min": 0.2, "max": 1.0, "severity": "pass", "message": "Standard Nigerian smallholder range." },
       { "condition_type": "greater_than", "min": 1.0, "severity": "warning", "message": "Exceptional GAP management (improved NCRI varieties)." },
       { "condition_type": "greater_than", "min": 2.5, "severity": "block", "message": "Impossible for West African conditions." }
     ],
-    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. NOTE: the source table for sesame did not include an explicit 0 t/ha row (unlike maize, rice, and tomato, which did). The equals_zero tier here is an INFERENCE, added for consistency and because a genuine 0-yield report is a plausible real input that the system needs to handle, not a directly sourced figure for this specific crop. Same GPS-anchored-area caveat as the other crops applies."
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. NOTE: the source table for sesame did not include an explicit 0 t/ha row (unlike maize, rice, and tomato, which did). The equals_zero tier here is an INFERENCE, added for consistency and because a genuine 0-yield report is a plausible real input that the system needs to handle, not a directly sourced figure for this specific crop. Same GPS-anchored-area caveat as the other crops applies. BUGFIX (v1.1.0): the Pass tier's originally-stated ceiling (0.8 t/ha) and the Soft Warning tier's stated floor (>1.0 t/ha) left 0.8-1.0 t/ha covered by neither -- a real, previously-undetected gap that would have made engine.yield_validator.validate_yield() raise a ValueError for a plausible real harvest (e.g. 0.9 t/ha) instead of returning a result. Caught by a new automated test (test_no_yield_validation_gaps_in_plausible_range in tests/test_yield_validator.py), added specifically because every prior gap found in this knowledge base (yam.json, groundnut.json, pepper.json, onion.json, oil_palm.json, rubber.json, coffee.json, cotton.json) had only ever been caught by a manual one-off script re-run by hand per file, not by anything that ran automatically across every crop -- including this pre-existing one, which predates that whole batch. Resolved the same way as this knowledge base's other gap fixes: extended the Pass tier's ceiling from 0.8 to 1.0 to meet the warning tier's floor exactly."
   },
 
   "regional_overrides": [],
@@ -131,6 +131,20 @@
       "changed_by": "AgTrail Knowledge Base - sixth crop template, first sourced directly from the AgTrail Master Agronomist & Validator Ruleset",
       "summary": "First crop built from the master ruleset rather than general web research, and the first of the ruleset's actual High priority crops (Cocoa was already built before the ruleset arrived; Sesame, Ginger, Cashew, and Hibiscus are the remaining High priority crops). Two real gaps carried forward honestly rather than filled with guesses: the source document's GAP process flow does not name any specific pest or disease for sesame (unlike maize, tomato, and rice, which all had named threats), and does not give soil pH or climate requirements, focusing instead on process timing. Two rules (sesame_r1, sesame_r2, land clearing and planting timing) reuse defaults from other crop files since the source doesn't state sesame-specific intervals for those particular steps. The yield_validation equals_zero tier was inferred rather than directly sourced, since the source table for sesame skipped that row. Not yet reviewed beyond this first pass.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - bugfix via new automated yield-gap-detection test",
+      "summary": "Fixed a genuine, previously-undetected gap in yield_validation.tiers: 0.8-1.0 t/ha was covered by neither the Pass tier (stated ceiling 0.8) nor the next Soft Warning tier (stated floor >1.0), which would have made validate_yield() raise instead of returning a result for a real farmer reporting e.g. 0.9 t/ha. This predates and is unrelated to the Medium-priority crop batch (yam/groundnut/pepper/onion/oil_palm/rubber/coffee/cotton) -- it was caught only because a new automated test was added specifically because those crops' gaps had all previously been found by one-off manual scripts, not anything that ran for every crop automatically. See yield_validation.source for the fix.",
+      "source": "N/A -- internal data-integrity fix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Bumped min_days_after_dependency from 0 to 1 on sesame_r1, sesame_r2, in response to a real bug the user found while using the platform: land preparation could be logged and the very next dependent stage logged on the SAME DAY, with no gap enforced at all, even though the workflow conceptually expects one stage to be completed/settled before the next begins. min=0 technically meant '0 or more days later', which permitted same-day submissions. This is a data-authoring fix (a deliberate rule-value choice), not an engine bug -- the engine was correctly enforcing exactly what the rule said, the rule just said something too permissive. No maximum-day-window or severity changed, and no other rule in this file was touched.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
     }
   ]
 }

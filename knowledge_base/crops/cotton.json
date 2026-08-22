@@ -1,0 +1,115 @@
+{
+  "metadata": {
+    "crop_id": "cotton",
+    "name": "Cotton",
+    "scientific_name": "Gossypium spp.",
+    "category": "cash_crop",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 150,
+    "regions": ["Nigeria - North", "Nigeria - Middle Belt"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "germination_seedling", "name": "Germination & Seedling", "starts_day_after_planting": 0, "ends_day_after_planting": 15, "description": "Germination and early seedling establishment." },
+    { "stage_id": "vegetative", "name": "Vegetative", "starts_day_after_planting": 16, "ends_day_after_planting": 45, "description": "Vegetative growth. Thinning to 2 plants/stand should happen by the end of this stage." },
+    { "stage_id": "squaring_flowering", "name": "Squaring & Flowering", "starts_day_after_planting": 46, "ends_day_after_planting": 75, "description": "Squaring and flowering begins. Bollworm scouting/control window starts here." },
+    { "stage_id": "boll_development", "name": "Boll Development", "starts_day_after_planting": 76, "ends_day_after_planting": 110, "description": "Bolls develop. Bollworm scouting/control window ends here." },
+    { "stage_id": "boll_opening", "name": "Boll Opening", "starts_day_after_planting": 111, "ends_day_after_planting": 150, "description": "Bolls open; hand-picking begins, staggered from the base of the plant upward." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Working to a fine tilth and ridging -- cotton needs a warm, well-drained seedbed. The source ruleset does not separately name a land-clearing step for this crop, same pattern as yam.json/onion.json; kept as a single operation to stay faithful to the source rather than imposing an unstated split.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "seed_selection", "name": "Seed Selection", "category": "land_prep", "description": "Use of certified, acid-delinted, treated seed of an adapted variety -- SAMCOT series (SAMCOT 8, 9, 10, 11), or BT hybrids where approved. Which of these a farmer actually used matters for the bollworm-scouting operation below, but this schema has no per-planting variety/cultivar field to record or condition rules on -- see pest_scouting's description.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Direct seeding, several seeds per hole, at 75-90cm x 25-30cm spacing.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "thinning", "name": "Thinning", "category": "crop_management", "description": "Thinning to 2 plants per stand by 21 DAP -- un-thinned stands grow spindly and set few bolls. ABSENCE-BASED RULE, not implemented: the source states 'soft warning if not logged' by 21 DAP, but this schema's validation_rules only fire when an operation IS logged, not when one fails to happen by a deadline. Same limitation already flagged for tomato.json's staking reminder (tomato_r4b) and onion.json's irrigation-cessation note -- this is the third instance of that category in this knowledge base, not a new one.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "pest_scouting", "name": "Bollworm Scouting/Control", "category": "pest_disease_control", "description": "Scouting and control across 45-90 DAP. TWO COMPOUNDING LIMITATIONS, not implemented as a validation_rule: (1) same ABSENCE-BASED limitation as thinning above -- the source says 'soft warning if no scouting/application is logged in this window', which this schema cannot check. (2) VARIETY-CONDITIONAL, a genuinely new limitation category: the source explicitly says this warning applies 'unless BT cotton' (BT hybrids sharply reduce bollworm pressure and need less spraying) -- but this schema has no field anywhere that records which variety/cultivar a specific farmer's planting used, so even if absence-checking were supported, there would be no way to conditionally suppress this rule for BT growers. Flagged for the end-of-round review: several crops in this knowledge base (this one, vitamin_a_maize.json's OPV-vs-hybrid distinction, onion.json's SAMNUT-vs-local distinction) have rules that implicitly depend on which variety was planted, and the schema has no field for it at all.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Hand-Picking)", "category": "harvest", "description": "Hand-picking seed cotton as bolls open, staggered from the base of the plant upward. Recurs across the picking season -- no once-only rule, same pattern as tomato.json/pepper.json's staggered-harvest crops.", "requires_evidence": true, "can_repeat": true },
+    { "operation_id": "post_harvest_handling", "name": "Post-Harvest Handling", "category": "post_harvest", "description": "Keeping seed cotton clean and dry, avoiding contamination that downgrades lint grade/value. NO NUMERIC RULE, and deliberately not borrowed by analogy from another crop: the source gives no hour/day figure for this crop at all, unlike pepper.json (which borrowed tomato.json's figure explicitly flagged as an estimate, since both are perishable fruit with closely analogous spoilage mechanisms). Cotton's post-harvest concern is contamination/grade downgrade, not perishable spoilage, so borrowing a timing figure from an unrelated crop would not be a defensible analogy the way it was for pepper. Left without a validation_rule rather than inventing one.", "requires_evidence": false, "can_repeat": true, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_preparation", "required": true },
+    { "step_number": 2, "operation_id": "seed_selection", "required": false },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "thinning", "required": false },
+    { "step_number": 5, "operation_id": "pest_scouting", "required": false, "repeat_until": null },
+    { "step_number": 6, "operation_id": "harvest", "required": true, "repeat_until": null },
+    { "step_number": 7, "operation_id": "post_harvest_handling", "required": false, "repeat_until": null }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "cotton_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 100, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 100 DAP -- bolls do not burst before ~100 days. No upper block: this is a staggered multi-pick harvest across the boll-opening window, same reasoning as tomato.json/pepper.json's open-ended harvest ceilings.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 20 (Cotton), Stage 4."
+    },
+    {
+      "rule_id": "cotton_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 110, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 110 DAP. Sits above the 100-day hard-block floor.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 20 (Cotton), Stage 4."
+    },
+    {
+      "rule_id": "cotton_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 7.5,
+    "texture": ["sandy loam", "loam"],
+    "drainage": "well-drained -- source explicitly calls for a 'warm, well-drained seedbed'",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 700,
+    "rainfall_mm_max_cycle": 1200,
+    "temp_c_min": 20,
+    "temp_c_max": 35,
+    "notes": "Not covered numerically in the source ruleset section for this crop beyond the qualitative 'warm' seedbed note (reflected in soil_requirements.drainage above). Carried over as a placeholder from general Nigerian Northern/Middle-Belt cotton agronomy references, same caveat as this knowledge base's other placeholder weather_preferences fields. Flagged for agronomist review."
+  },
+
+  "diseases": [],
+
+  "pests": [
+    { "name": "Bollworm complex (American, spiny, pink bollworm)", "risk_stage_ids": ["squaring_flowering", "boll_development"], "symptoms": "Larvae bore into squares and bolls, causing direct yield and lint-quality loss; can otherwise destroy the crop per the source ruleset's own framing.", "management": "Scouting and control across 45-90 DAP for conventional varieties; BT hybrids sharply reduce spray needs (see pest_scouting operation's description for the variety-conditional limitation this creates).", "confidence": 0.85, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 20 (Cotton), Stage 3 and Recommended Varieties." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.4 - 3.0",
+    "unit": "tonnes seed cotton (lint plus internal seed, pre-ginning)",
+    "factors": ["conventional vs. BT variety (BT reduces bollworm-driven losses)", "thinning timing", "bollworm pressure/control", "planting date adherence"],
+    "confidence": 0.75,
+    "notes": "Range taken directly from the source ruleset's Pass and first Warning tiers, extended slightly to close gaps in its stated tiers -- see yield_validation source note."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.4, "severity": "warning", "message": "Severe failure -- bollworm wipeout or late planting." },
+      { "condition_type": "range", "min": 0.4, "max": 1.2, "severity": "pass", "message": "Conventional-seed smallholder range." },
+      { "condition_type": "greater_than", "min": 1.2, "severity": "warning", "message": "High yield from BT cotton with good fertility; flag for review." },
+      { "condition_type": "greater_than", "min": 5.0, "severity": "block", "message": "Improbable rainfed -- unit typo or area inflation." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 20 (Cotton), Yield Validation table. TWO gaps in the source table, same pattern as coffee.json: (1) the table states '<0.3 Soft Warning' and '0.4-1.2 Pass', leaving 0.3-0.4 covered by neither -- resolved by setting the warning tier's ceiling to 0.4 to meet Pass's floor exactly, same technique as coffee.json's narrow first gap. (2) The table states '1.2' as Pass's ceiling and '1.5-3.0' as the next Soft Warning band, then '>5.0' as Hard Block, leaving BOTH 1.2-1.5 and 3.0-5.0 covered by neither of the stated bands -- resolved by merging into a single greater_than 1.2 warning tier covering everything up to the Hard Block ceiling, same merge technique used throughout this knowledge base's Master-Ruleset-sourced crops. Both flagged for agronomist/ruleset-author confirmation."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Cotton, eighth and FINAL crop of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset. Built from Section 20. This crop file has fewer enforceable validation_rules than any other crop built in this batch (only 3, vs. 6-9 for every other crop), and that is a deliberate, disclosed outcome, not a shortfall in effort: of the three rules the source names for Stage 3/4, two (thinning-by-21-DAP, bollworm-scouting-in-window) are 'soft warning if NOT logged' rules -- the same ABSENCE-BASED limitation already flagged in tomato.json's staking reminder (tomato_r4b) and onion.json's irrigation-cessation note, now appearing a third time. The bollworm rule additionally introduced a genuinely NEW limitation, flagged here for the first time explicitly even though it was latent in earlier crops: it is VARIETY-CONDITIONAL ('unless BT cotton'), but this schema has no per-planting field anywhere that records which variety/cultivar was actually used, so even an absence-checking engine upgrade couldn't correctly suppress this rule for BT growers without also adding a variety field. This same gap was silently present in vitamin_a_maize.json (OPV vs. hybrid) and onion.json (SAMNUT vs. local variety) but not explicitly named as a schema-level gap until now -- named here for the end-of-round review as a cross-cutting issue, not a cotton-specific one. Post-harvest handling was deliberately left without a validation_rule rather than borrowing a figure by analogy the way pepper.json did from tomato.json, since the source gives no numeric figure at all for cotton and the underlying concern (contamination/grade downgrade) isn't closely analogous to the perishable-fruit spoilage mechanism pepper/tomato share. Yield tier gaps (two of them, same pattern as coffee.json) resolved the same way. This completes all 8 Medium-priority crops from the Master Ruleset (Yam, Groundnut, Pepper, Onion, Oil Palm, Rubber, Coffee, Cotton). Not yet agronomist-reviewed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 20 (Cotton)."
+    }
+  ]
+}

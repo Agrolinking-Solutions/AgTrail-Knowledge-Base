@@ -1,0 +1,194 @@
+{
+  "metadata": {
+    "crop_id": "onion",
+    "name": "Onion (Allium cepa)",
+    "scientific_name": "Allium cepa",
+    "category": "vegetable",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 110,
+    "regions": ["Nigeria - North (dry-season irrigated)"],
+    "current_version": "1.0.2"
+  },
+
+  "growth_stages": [
+    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -45, "ends_day_after_planting": 0, "description": "Seedlings raised for 35-45 days before transplanting. Day 0 is transplanting, not seed sowing -- same convention as tomato.json/pepper.json." },
+    { "stage_id": "vegetative_growth", "name": "Vegetative Growth", "starts_day_after_planting": 1, "ends_day_after_planting": 60, "description": "Leaf/vegetative growth after transplanting." },
+    { "stage_id": "bulb_formation_expansion", "name": "Bulb Formation & Expansion", "starts_day_after_planting": 61, "ends_day_after_planting": 90, "description": "Bulb initiation and expansion." },
+    { "stage_id": "maturity", "name": "Maturity (Foliage toppling)", "starts_day_after_planting": 91, "ends_day_after_planting": 110, "description": "Neck-fall/toppling signals harvest readiness." }
+  ],
+
+  "operations": [
+    { "operation_id": "seed_selection", "name": "Seed/Variety Selection", "category": "land_prep", "description": "Choice of long-storage red types (Sokoto/Kano red local, improved Red Creole/Bombay Red) suited to the aggregation and trade market.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sowing seed in nursery beds.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Preparing fine, well-drained beds -- onions specifically dislike waterlogging. The source ruleset does not separately name a land-clearing step for this crop, same pattern as yam.json; kept as a single operation to stay faithful to the source rather than imposing an unstated split.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Transplanting seedlings at ~10-15cm x 10cm spacing for good bulb size and packing density. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "nitrogen_application", "name": "Nitrogen Application", "category": "input_application", "description": "Early nitrogen application only -- late nitrogen causes 'thick necks' that fail to seal and rot in store.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "irrigation", "name": "Irrigation", "category": "crop_management", "description": "Consistent irrigation through the growing season, stopped before harvest to aid field curing. The 'stop before harvest' half of this guidance is an absence/cessation-based instruction (do X, then STOP doing X) that this schema's validation_rules cannot represent -- rules only fire when an operation IS logged, not when one continues past a point it should have ended. Same category of limitation as tomato_r4b's staking reminder in tomato.json. No validation_rule is attached to this operation for that reason.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Thrips monitoring/control.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest (Lifting)", "category": "harvest", "description": "Lifting bulbs at neck-fall/toppling.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "curing", "name": "Curing (Field Curing)", "category": "post_harvest", "description": "Field-curing with tops attached for 7-14 days before storage -- the primary rot-prevention step for this crop, and what enables the long shelf-life this crop is grown for.", "requires_evidence": false, "can_repeat": false },
+    { "operation_id": "storage", "name": "Storage (Warehouse)", "category": "post_harvest", "description": "Warehouse storage of cured bulbs.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "seed_selection", "required": false },
+    { "step_number": 2, "operation_id": "nursery_establishment", "required": true },
+    { "step_number": 3, "operation_id": "land_preparation", "required": true },
+    { "step_number": 4, "operation_id": "transplanting", "required": true },
+    { "step_number": 5, "operation_id": "nitrogen_application", "required": false },
+    { "step_number": 6, "operation_id": "irrigation", "required": false, "repeat_until": null },
+    { "step_number": 7, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
+    { "step_number": 8, "operation_id": "harvest", "required": true },
+    { "step_number": 9, "operation_id": "curing", "required": true },
+    { "step_number": 10, "operation_id": "storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "onion_r_land_prep_gate", "operation_id": "transplanting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
+    },
+    {
+      "rule_id": "onion_r_nursery_block", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 20, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if the nursery is under 20 or over 60 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 1."
+    },
+    {
+      "rule_id": "onion_r_nursery_warn", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 30, "max_days_after_dependency": 50, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag under 30 or over 50 days -- over-aged seedlings bulb prematurely in the bed. Sits inside the 20-60 day hard-block window.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 1."
+    },
+    {
+      "rule_id": "onion_r_nitrogen_block", "operation_id": "nitrogen_application", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if nitrogen is logged after 60 DAT. No floor: the source states 'apply N early only' without a stated minimum-days threshold, so none is invented here.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 3."
+    },
+    {
+      "rule_id": "onion_r_nitrogen_warn", "operation_id": "nitrogen_application", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag after 45 DAT -- late nitrogen causes 'thick necks' that fail to seal and rot in store.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 3."
+    },
+    {
+      "rule_id": "onion_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 75, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 75 DAT -- early bulbs are watery and unmarketable. No upper block: the source states no ceiling for this crop's harvest timing, same pattern as yam.json and groundnut.json.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 4."
+    },
+    {
+      "rule_id": "onion_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 85, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 85 DAT. Sits above the 75-day hard-block floor: harvest logged between 75 and 85 days is physically accepted but flagged, since the stated typical window starts at 90 DAT.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 4."
+    },
+    {
+      "rule_id": "onion_r_harvest_once", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template -- unlike tomato/pepper, onion is a single bulb-lift crop, not a repeated-picking crop.",
+      "source": "Inherited convention from this knowledge base's other single-harvest crop files -- not separately addressed in the source ruleset for this crop."
+    },
+    {
+      "rule_id": "onion_r_storage_requires_curing", "operation_id": "storage", "depends_on_operation_id": "curing",
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if logged to warehouse storage without a curing record existing first. Same mechanic as groundnut_r_storage_requires_drying in groundnut.json: engine.validator already produces a hard block whenever a rule's declared dependency has no matching entry in history, regardless of the severity set here.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 4."
+    },
+    {
+      "rule_id": "onion_r_curing_duration_warn", "operation_id": "storage", "depends_on_operation_id": "curing",
+      "min_days_after_dependency": 5, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "MODELING ASSUMPTION, same as groundnut_r_drying_duration_warn in groundnut.json: the source says 'flag if curing is under 5 days -- uncured onions rot in store,' describing a DURATION this schema's single-date operations cannot represent directly. Approximated by treating the curing operation's logged date as when field-curing began, and requiring storage to be logged at least 5 days after that as a proxy for 'curing lasted at least 5 days.' Note the source's own typical curing duration is stated as 7-14 days -- this rule only checks the stated 5-day minimum, not the 14-day typical upper bound, since no warning is stated in the source for curing longer than typical.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 4."
+    },
+    {
+      "rule_id": "onion_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base."
+    },
+    {
+      "rule_id": "onion_r_seq_nursery_establishment_land_preparation", "operation_id": "land_preparation", "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- land_preparation could previously be logged with no nursery_establishment in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (60 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    },
+    {
+      "rule_id": "onion_r_seq_harvest_curing", "operation_id": "curing", "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 5, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- curing could previously be logged with no harvest in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (5 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 6.0,
+    "ph_max": 6.8,
+    "texture": ["sandy loam", "loam"],
+    "drainage": "well-drained -- onions specifically dislike waterlogging, per the source ruleset's Stage 1 guidance",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 300,
+    "rainfall_mm_max_cycle": 500,
+    "temp_c_min": 15,
+    "temp_c_max": 30,
+    "notes": "Not covered numerically in the source ruleset section for this crop beyond the qualitative waterlogging note (reflected in soil_requirements.drainage above). CORRECTED: an initial draft of this field left these as null, since this is predominantly described as a dry-season IRRIGATED crop in the source ruleset's own framing and rainfall figures could be misleading for a crop whose water is normally supplied by irrigation, not rain -- but the schema requires integer/number types here, not null, so null would have failed schema validation. These figures are placeholder rainfall-equivalent/temperature ranges carried over from general West African dry-season onion agronomy references, same caveat as yam.json's and groundnut.json's weather_preferences placeholders. Flagged for agronomist review, and flagged as a genuine schema constraint worth knowing about: this crop file structurally cannot express 'not applicable, this crop uses irrigation, not rainfall' -- only a numeric placeholder."
+  },
+
+  "diseases": [],
+
+  "pests": [
+    { "name": "Thrips", "risk_stage_ids": ["vegetative_growth", "bulb_formation_expansion"], "symptoms": "Silvery leaf streaking/scarring from rasping-sucking feeding, reduced bulb size under heavy pressure.", "management": "Scouting and vector control per the source ruleset's IPM guidance; consistent irrigation also reduces thrips pressure, which favors hot, dry conditions.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Stage 3 ('Manage thrips; irrigate consistently...')." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "5.0 - 35.0",
+    "unit": "tonnes fresh bulbs",
+    "factors": ["thrips/weed pressure", "nursery age at transplant", "nitrogen timing (thick-neck/storage-rot risk if late)", "curing duration before storage", "irrigation consistency (dry-season crop, largely irrigation-dependent)"],
+    "confidence": 0.8,
+    "notes": "Range taken directly from the source ruleset's stated Pass tier, extended slightly at the top to close a gap in its stated tiers -- see yield_validation source note."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 5.0, "severity": "warning", "message": "Poor yield -- thrips or weed pressure." },
+      { "condition_type": "range", "min": 5.0, "max": 35.0, "severity": "pass", "message": "Standard dry-season production (fresh bulbs)." },
+      { "condition_type": "greater_than", "min": 35.0, "severity": "warning", "message": "Exceptional; verify improved genetics and drip irrigation." },
+      { "condition_type": "greater_than", "min": 70.0, "severity": "block", "message": "Biological maximum exceeded for West African conditions." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion), Yield Validation table. Two things resolved rather than transcribed as-is: (1) the table's own text states Pass as '5.0-25.0 t/ha' and Soft Warning as '>35.0 t/ha', leaving 25.0-35.0 covered by neither -- same gap pattern as yam.json/groundnut.json/pepper.json, resolved the same way, by extending Pass to 5.0-35.0. (2) UNLIKE groundnut.json and maize's source table, this crop's table has no explicit '0 t/ha' row and its prefacing note reads differently ('practical floor is the low soft-warning band' -- a comment about realistic reporting range, not an explicit 'zero = loss event' instruction like groundnut's). An equals_zero tier is still added here for consistency with the rest of this knowledge base and because yield_validator.py requires every possible value to match some tier or it raises an error -- but flagged explicitly that, unlike other crops, this specific tier is NOT directly stated in this crop's source section and should be confirmed against ruleset-author intent."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Onion (Allium cepa), fourth of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base, built from Section 14. Unlike pepper.json, this crop's source section gives fully explicit hard-block/soft-warning number pairs for nearly every rule, which also happen to fit this engine's existing 'outside a window' rule mechanic cleanly (a single rule with both min and max correctly represents 'block under 20 or over 60 days' in one rule, no interior-band problem the way groundnut.json's weeding rule had). Two items still required explicit flagging rather than direct transcription: (1) the curing-duration rule ('flag if curing is under 5 days') is the same DURATION-as-single-date-proxy limitation already flagged in groundnut.json's drying rule -- modeled the same way, with the same caveat about depending on curing being logged at its start. (2) The yield_validation table has the same 25.0-35.0 t/ha gap pattern as yam.json/groundnut.json/pepper.json, resolved the same way, PLUS a genuinely different wrinkle: unlike those crops, this crop's source table has no explicit '0 t/ha' row and its prefacing note doesn't use the explicit 'zero = loss event' language groundnut.json's did -- the equals_zero tier is added anyway for schema-safety and knowledge-base consistency, but flagged as not directly stated for this specific crop, unlike every other crop file's equals_zero tier so far. Also left weather_preferences numerically empty rather than guessed, since the source explicitly frames this as a dry-season IRRIGATED crop -- rainfall figures would misrepresent how the crop is actually watered. The irrigation operation's 'stop before harvest' guidance was also flagged as an absence/cessation-based instruction this schema's validation_rules architecture cannot represent, the same category of gap as tomato.json's staking-reminder note. Not yet agronomist-reviewed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 14 (Onion)."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added onion_r_land_prep_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.0.2",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
+      "summary": "Added onion_r_seq_nursery_establishment_land_preparation, onion_r_seq_harvest_curing. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    }
+  ]
+}

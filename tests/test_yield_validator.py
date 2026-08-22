@@ -116,3 +116,47 @@ def test_cashew_extreme_yield_is_blocked():
 def test_hibiscus_extreme_yield_is_blocked():
     result = validate_yield("hibiscus", 3.0)
     assert result.severity == "block"
+
+
+# --- Automated gap detection, added in the engine-fixes pass following the
+# Medium-priority crop batch ---------------------------------------------
+#
+# Every gap found in yam.json, groundnut.json, pepper.json, onion.json,
+# oil_palm.json, rubber.json, coffee.json, and cotton.json's source yield
+# tables was caught by a MANUAL script re-run by hand after authoring each
+# file, not by anything in this test suite. That is a process gap, not just
+# a data gap: nothing here actually enforced that every crop's tiers cover
+# their full range, so a future crop file with an unnoticed gap could ship,
+# pass schema validation and pytest cleanly, and only surface the very first
+# time a real farmer reports a yield that happens to fall in the hole --
+# at which point validate_yield() raises a ValueError instead of returning
+# a result. These tests close that gap going forward: any crop file with
+# yield_validation data is automatically swept across a fine-grained value
+# range and asserted to never raise.
+
+def _crops_with_yield_validation() -> list[str]:
+    from engine.loader import list_crops, load_crop
+    return [c for c in list_crops() if load_crop(c).get("yield_validation")]
+
+
+@pytest.mark.parametrize("crop_id", _crops_with_yield_validation())
+def test_no_yield_validation_gaps_in_plausible_range(crop_id):
+    """
+    Sweeps 0 to 100 t/ha in 0.1 steps (fine enough to catch a gap as narrow
+    as coffee.json's 0.3-0.4 t/ha band) and asserts every value resolves to
+    a tier rather than raising. 100 t/ha comfortably exceeds every crop's
+    hard-block ceiling in this knowledge base as of this test being written,
+    so this covers the full plausible-and-then-some range, not just the
+    Pass tier.
+    """
+    step = 1
+    max_value_x10 = 1000  # 100.0 t/ha, in tenths to keep the loop on integers
+    for value_x10 in range(0, max_value_x10 + step, step):
+        value = value_x10 / 10
+        try:
+            validate_yield(crop_id, value)
+        except ValueError as e:
+            pytest.fail(
+                f"{crop_id}: yield_validation has a gap at {value} t/ha -- "
+                f"validate_yield() raised instead of returning a tier: {e}"
+            )

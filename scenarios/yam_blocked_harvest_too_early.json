@@ -1,0 +1,8 @@
+{
+  "crop_id": "yam",
+  "history": [
+    { "operation_id": "land_preparation", "date": "2026-02-10" },
+    { "operation_id": "planting", "date": "2026-02-15" }
+  ],
+  "new_operation": { "operation_id": "harvest", "date": "2026-06-01" }
+}

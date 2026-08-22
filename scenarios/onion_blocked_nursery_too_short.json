@@ -1,0 +1,7 @@
+{
+  "crop_id": "onion",
+  "history": [
+    { "operation_id": "nursery_establishment", "date": "2026-01-01" }
+  ],
+  "new_operation": { "operation_id": "transplanting", "date": "2026-01-15" }
+}

@@ -1,0 +1,155 @@
+{
+  "metadata": {
+    "crop_id": "yam",
+    "name": "Yam (White Yam - Dioscorea rotundata)",
+    "scientific_name": "Dioscorea rotundata",
+    "category": "tuber",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 240,
+    "regions": ["Nigeria - Middle Belt"],
+    "current_version": "1.0.0"
+  },
+
+  "growth_stages": [
+    { "stage_id": "dormancy_presprout", "name": "Dormancy / Pre-Sprout", "starts_day_after_planting": 0, "ends_day_after_planting": 20, "description": "Not a named stage in the source ruleset (which begins its stage list at 21 DAP with Sprouting & Emergence) -- added here to cover days 0-20 so growth_stages has no gap at the start of the cycle. The mother sett/seed yam sustains the plant during this window, which is also why the fertilizer rule below has a hard floor at 30 DAP: too early and the crop is not yet drawing on soil nutrients." },
+    { "stage_id": "sprouting_emergence", "name": "Sprouting & Emergence", "starts_day_after_planting": 21, "ends_day_after_planting": 45, "description": "Shoot emergence from the seed yam/sett." },
+    { "stage_id": "vine_growth_canopy", "name": "Vine Growth & Canopy", "starts_day_after_planting": 45, "ends_day_after_planting": 90, "description": "Vine elongation; this is the window in which staking should occur to maximise light capture and reduce leaf disease." },
+    { "stage_id": "tuber_initiation_bulking", "name": "Tuber Initiation & Bulking", "starts_day_after_planting": 90, "ends_day_after_planting": 180, "description": "Underground tuber forms and bulks with starch." },
+    { "stage_id": "maturity_senescence", "name": "Maturity / Senescence", "starts_day_after_planting": 180, "ends_day_after_planting": 240, "description": "Vines yellow and die back, signalling harvest readiness." }
+  ],
+
+  "operations": [
+    { "operation_id": "seed_yam_selection", "name": "Seed Yam Selection & Treatment", "category": "land_prep", "description": "Selection of healthy, medium-sized whole seed yams or cut setts; cut surfaces treated with wood ash or an approved fungicide against rot before planting.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "land_preparation", "name": "Land Preparation (Mounding/Ridging)", "category": "land_prep", "description": "Large mounds or ridges formed on deep, well-drained soil to allow tubers to expand freely. The source ruleset does not separate a distinct land-clearing step for this crop the way this knowledge base's other files do -- kept as a single operation to stay faithful to the source document rather than imposing an unstated split.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Seed yams/setts planted into mounds, spacing approximately 1m x 1m (~10,000 stands/ha). Recommended early in the season for a full bulking window.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "staking", "name": "Staking", "category": "crop_management", "description": "Lifting vines onto stakes to maximise light capture and reduce leaf disease.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "fertilizer_application", "name": "Fertilizer Application (NPK)", "category": "input_application", "description": "NPK application. Too early and the crop is still living off the mother sett, not the soil; too late and it has passed the window where fertilizer meaningfully supports bulking.", "requires_evidence": true, "can_repeat": false, "optional": true },
+    { "operation_id": "weeding_mulching", "name": "Weeding & Mulching", "category": "crop_management", "description": "Regular weeding plus mulching of mounds to conserve moisture and suppress weeds. The source ruleset gives no specific day-window for this operation (unlike staking and fertilizer, which both have explicit DAP thresholds), so no timing validation_rule is attached to it here -- flagged as a gap in the source document, not an oversight.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Harvest after vines yellow and die back.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "curing_storage", "name": "Curing & Storage", "category": "post_harvest", "description": "Curing and storage in a ventilated yam barn; roots handled gently to avoid bruising, which triggers storage rot.", "requires_evidence": false, "can_repeat": false, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "seed_yam_selection", "required": false },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "planting", "required": true },
+    { "step_number": 4, "operation_id": "fertilizer_application", "required": false },
+    { "step_number": 5, "operation_id": "staking", "required": false },
+    { "step_number": 6, "operation_id": "weeding_mulching", "required": false, "repeat_until": "harvest" },
+    { "step_number": 7, "operation_id": "harvest", "required": true },
+    { "step_number": 8, "operation_id": "curing_storage", "required": false }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "yam_r_staking_before_planting", "operation_id": "staking", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if staking is logged before planting -- there are no vines to stake yet.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 3."
+    },
+    {
+      "rule_id": "yam_r_staking_late", "operation_id": "staking", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag after 60 DAP. Recommended window is lifting vines onto stakes by 4-8 weeks after planting; staking logged later than that is still physically possible but has lost most of its light-capture/disease-reduction benefit.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 3."
+    },
+    {
+      "rule_id": "yam_r_fertilizer_early", "operation_id": "fertilizer_application", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 30, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 30 DAP -- the crop is still living off the mother sett and has not yet developed the root system to use applied fertilizer.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 3."
+    },
+    {
+      "rule_id": "yam_r_fertilizer_late", "operation_id": "fertilizer_application", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 90, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag after 90 DAP. Recommended window is application by 4-8 weeks after planting; applied later than 90 days, the crop has moved well into tuber bulking and the fertilizer is less useful.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 3."
+    },
+    {
+      "rule_id": "yam_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 150, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 150 DAP -- tubers have not meaningfully bulked before this. Note: the source ruleset states this floor but does NOT state a corresponding hard-block ceiling for lateness (unlike the yield-typo ceilings, which are always given). Delayed harvest past 270 DAP is documented only as a warning-level in-ground rot/nematode risk, not a hard block, and no upper block is invented here that the source document does not itself specify.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 4."
+    },
+    {
+      "rule_id": "yam_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 180, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 180 DAP. This sits above the 150-day hard-block floor: harvest logged between 150 and 180 days is physically accepted but flagged, since the typical window given for this crop starts at 180 DAP.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 4."
+    },
+    {
+      "rule_id": "yam_r_harvest_late_warn", "operation_id": "harvest", "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null, "max_days_after_dependency": 270, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag after 270 DAP, due to in-ground rot and nematode damage risk from extended in-soil storage.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 4."
+    },
+    {
+      "rule_id": "yam_r_harvest_once", "operation_id": "harvest", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template. Same simplification and caveat as this knowledge base's other root/tuber crop files: real-world piecemeal lifting is common practice but not yet supported by the workflow engine.",
+      "source": "Inherited convention from cassava.json / ofsp.json -- not separately addressed in the source ruleset for this crop."
+    },
+    {
+      "rule_id": "yam_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base -- corresponds to the ruleset's Anti-Fraud & Anti-Typo Controls section (GPS Polygon Anchor Rule / data-integrity intent), not a crop-specific rule."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": ["sandy loam", "loam"],
+    "drainage": "well-drained, deep soil (needed for unrestricted tuber expansion)",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1000,
+    "rainfall_mm_max_cycle": 1500,
+    "temp_c_min": 20,
+    "temp_c_max": 30,
+    "notes": "Not covered numerically in the source ruleset section for this crop -- rainfall and temperature figures here are carried over from general West African yam agronomy references as a placeholder, and should be replaced with ruleset-sourced figures if/when the document is extended to cover this. Flagged for agronomist review."
+  },
+
+  "diseases": [
+    { "name": "Yam Anthracnose (Colletotrichum gloeosporioides)", "risk_stage_ids": ["vine_growth_canopy"], "symptoms": "Leaf spotting and vine dieback, most damaging on unstaked/poorly aerated vines.", "management": "Timely staking (see staking operation) improves airflow and light, directly reducing this disease's severity; resistant varieties where available.", "confidence": 0.5, "source": "Not itself detailed in the source ruleset's Yam section -- inferred from the ruleset's own stated rationale for staking ('reduce leaf disease'), which implies a specific disease risk without naming one; anthracnose is the disease most commonly cited elsewhere in West African yam literature as the target of that staking benefit. Flagged for agronomist confirmation against the source ruleset's intent." }
+  ],
+
+  "pests": [
+    { "name": "Yam Nematodes (Scutellonema bradys / Meloidogyne spp.)", "risk_stage_ids": ["tuber_initiation_bulking", "maturity_senescence"], "symptoms": "Internal tuber damage (dry rot), often not visible externally until storage; explicitly named in the source ruleset as a reason to avoid delaying harvest past 270 DAP.", "management": "Harvest within the recommended 180-270 DAP window (see yam_r_harvest_late_warn), clean planting material, field rotation.", "confidence": 0.8, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Stage 4 (named directly as 'nematode damage')." }
+  ],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "5.0 - 20.0",
+    "unit": "tonnes fresh tuber",
+    "factors": ["staking timing", "fertilizer timing", "harvest timing (nematode/rot risk if delayed)", "seed yam/sett health"],
+    "confidence": 0.85,
+    "notes": "Range taken directly from the source ruleset's stated Pass tier."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event." },
+      { "condition_type": "less_than", "max": 5.0, "severity": "warning", "message": "Severe failure." },
+      { "condition_type": "range", "min": 5.0, "max": 25.0, "severity": "pass", "message": "Standard acceptable range (fresh tuber)." },
+      { "condition_type": "greater_than", "min": 25.0, "severity": "warning", "message": "Exceptional yield; flag for review." },
+      { "condition_type": "greater_than", "min": 40.0, "severity": "block", "message": "Improbable -- likely data-entry error or inflated plot size." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam), Yield Validation table. NOTE: the source table as written has an unaddressed gap -- it states Pass as '5.0-20.0 t/ha' and Soft Warning as '>25.0 t/ha', leaving 20.0-25.0 covered by neither tier. This crop file's yield_validator.py raises an error (does not silently pass) for any value matching zero tiers, so transcribing the gap as-is would make a real 22 t/ha harvest crash the validator rather than just being mis-flagged. Resolved here by extending Pass to 5.0-25.0, i.e. treating the document's '>25.0' threshold as the literal, operative boundary and '20.0' as the rounder figure mentioned in the same breath rather than a second real threshold. Flagged for agronomist/ruleset-author confirmation that this resolution matches intent."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Yam (White Yam, Dioscorea rotundata), first of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base. Unlike vitamin_a_maize.json, ofsp.json, and cowpea.json (which were built from general web research since no equivalent internal document existed yet for those crops), this file is built directly from Section 6 of the Master Ruleset docx, which is the platform's own authoritative source -- so nearly every operation, timing rule, and yield tier here is a direct transcription rather than independently sourced research. Three points where the source document itself was incomplete or ambiguous were resolved rather than silently papered over: (1) growth_stages in the source begins at 21 DAP (Sprouting & Emergence) with no stage covering days 0-20; added a 'dormancy_presprout' stage to cover it, explicitly marked as not from the source. (2) weeding_mulching has no stated DAP window in the source (unlike staking and fertilizer, which both have explicit thresholds), so no timing validation_rule was invented for it. (3) The yield_validation table has a genuine gap between the stated Pass ceiling (20.0 t/ha) and the Soft Warning floor (25.0 t/ha) -- transcribing it as-is would let engine.yield_validator.validate_yield() raise an error on a plausible real yield (e.g. 22 t/ha) instead of returning a result. Resolved by extending Pass to 5.0-25.0; flagged for confirmation against the ruleset author's actual intent. Also did not invent a hard-block harvest-lateness ceiling, since the source explicitly treats extended in-ground storage as a warning-level (nematode/rot) risk, not a hard block -- unlike this knowledge base's other crop files, which added their own anti-typo ceilings independently. Not yet agronomist-reviewed against the ruleset author's intent for the three flagged resolutions above.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 6 (Yam)."
+    }
+  ]
+}

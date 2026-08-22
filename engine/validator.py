@@ -9,7 +9,7 @@ The central function is validate_operation(). Everything else supports it.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from typing import Optional
 
 from .exceptions import InvalidOperationDataError
@@ -193,6 +193,39 @@ def validate_operation(
             # The wildcard rule is already covered by the explicit check above.
             continue
 
+        # Occurrence/frequency rules (added in the engine-fixes pass following
+        # the Medium-priority crop batch -- see pepper.json's harvest-frequency
+        # rule and rubber.json's tapping/stimulation-frequency rules, none of
+        # which could be expressed before this existed). This is evaluated
+        # independently of dependency/day-offset logic: a rule using this
+        # mechanism sets max_occurrences and occurrence_window_days instead of
+        # min/max_days_after_dependency, so it's handled here and then skipped
+        # for the rest of the loop below.
+        max_occ = rule.get("max_occurrences")
+        occ_window = rule.get("occurrence_window_days")
+        if max_occ is not None and occ_window is not None:
+            window_start = op.date - timedelta(days=occ_window - 1)
+            same_op_in_window = [
+                h for h in hist
+                if h.operation_id == op.operation_id and window_start <= h.date <= op.date
+            ]
+            # +1 counts the new submission itself, since it's about to be logged.
+            count_including_new = len(same_op_in_window) + 1
+            if count_including_new > max_occ:
+                issues.append(
+                    ValidationIssue(
+                        rule_id=rule["rule_id"],
+                        severity=rule["severity"],
+                        message=(
+                            f"{rule['condition']} ({count_including_new} "
+                            f"'{op.operation_id}' entries within the last "
+                            f"{occ_window} day(s) as of {op.date}; maximum is "
+                            f"{max_occ}.)"
+                        ),
+                    )
+                )
+            continue
+
         dep_id = rule.get("depends_on_operation_id")
         can_repeat = rule.get("can_repeat", True)
 
@@ -215,6 +248,16 @@ def validate_operation(
 
         dep_matches = [h for h in hist if h.operation_id == dep_id]
         if not dep_matches:
+            # required_dependency (added in the same engine-fixes pass, see
+            # schema.json) defaults to True, preserving the original
+            # auto-block-on-missing-dependency behavior for every rule that
+            # existed before this field did. A rule that explicitly sets this
+            # to False is a SELF-REFERENTIAL interval rule (dep_id equals this
+            # rule's own operation_id, checking the gap since the operation's
+            # own last occurrence) where having no prior occurrence simply
+            # means this is the first one ever -- not a violation to block.
+            if rule.get("required_dependency", True) is False:
+                continue
             issues.append(
                 ValidationIssue(
                     rule_id=rule["rule_id"],
@@ -232,6 +275,29 @@ def validate_operation(
 
         min_days = rule.get("min_days_after_dependency")
         max_days = rule.get("max_days_after_dependency")
+        window_mode = rule.get("window_mode", "outside")
+
+        if window_mode == "inside":
+            # Added in the engine-fixes pass -- see groundnut.json's weeding
+            # rule, which needed to warn ONLY inside an interior band (40-60
+            # DAP) and could not be expressed with the "outside" logic below.
+            # Fires when days_diff falls inside [min, max] (inclusive); either
+            # bound may be omitted to leave that side of the band open.
+            inside_lower = min_days is None or days_diff >= min_days
+            inside_upper = max_days is None or days_diff <= max_days
+            if inside_lower and inside_upper:
+                issues.append(
+                    ValidationIssue(
+                        rule_id=rule["rule_id"],
+                        severity=rule["severity"],
+                        message=(
+                            f"{rule['condition']} (logged {days_diff} day(s) "
+                            f"after '{dep_id}', inside the flagged "
+                            f"{min_days}-{max_days} day window.)"
+                        ),
+                    )
+                )
+            continue
 
         if min_days is not None and days_diff < min_days:
             issues.append(

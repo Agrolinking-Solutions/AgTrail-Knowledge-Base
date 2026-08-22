@@ -88,6 +88,7 @@ def test_regional_override_changes_the_outcome():
         {"operation_id": "land_preparation", "date": "2026-04-10"},
         {"operation_id": "planting", "date": "2026-04-15"},
         {"operation_id": "first_fertilizer", "date": "2026-04-20"},
+        {"operation_id": "weeding_1", "date": "2026-05-01"},
     ]
     new_operation = {"operation_id": "second_fertilizer", "date": "2026-05-10"}
 

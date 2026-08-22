@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "crop_id": "rubber",
+    "name": "Rubber (Hevea brasiliensis)",
+    "scientific_name": "Hevea brasiliensis",
+    "category": "tree_crop",
+    "crop_cycle_type": "perennial",
+    "typical_duration_days": 2190,
+    "regions": ["Nigeria - South-South", "Nigeria - South-East"],
+    "current_version": "1.0.1"
+  },
+
+  "growth_stages": [
+    { "stage_id": "immature_girth_development", "name": "Immature (Girth Development)", "starts_day_after_planting": 0, "ends_day_after_planting": 2190, "description": "Years 0-6. Girth builds toward the ~50cm tapping threshold. Day 0 is transplanting of budded stumps/poly-bag plants, NOT seed sowing -- see operations for why this crop has no on-farm nursery_establishment operation, unlike cocoa.json/oil_palm.json." },
+    { "stage_id": "tapping_yielding", "name": "Tapping (Yielding) Phase", "starts_day_after_planting": 2191, "ends_day_after_planting": 9125, "description": "Years 7-25+. Daily/frequent tapping management once girth threshold is reached." }
+  ],
+
+  "operations": [
+    { "operation_id": "land_clearing", "name": "Land Clearing & Lining", "category": "land_prep", "description": "Clearing and lining deep, well-drained soils.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "planting_material_sourcing", "name": "Planting Material Sourcing", "category": "land_prep", "description": "STRUCTURAL NOTE, distinct from cocoa.json/oil_palm.json: the source ruleset describes rubber planting material as budded stumps or poly-bag plants of a proven clone (RRIM 600, GT 1, NIG-800/RRIN) sourced from a CERTIFIED NURSERY -- i.e. an external supplier, not something the farmer raises on their own plot. There is deliberately no nursery_establishment operation in this crop file for that reason, and no nursery-duration validation_rule either, since the source gives no farmer-loggable timing threshold for a stage the farmer doesn't perform. This is a genuine crop-type difference, not an oversight.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "cover_crop_establishment", "name": "Legume Cover Crop Establishment", "category": "land_prep", "description": "Establishing a legume cover crop alongside site preparation.", "requires_evidence": false, "can_repeat": false, "optional": true },
+    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Transplanting budded stumps/poly-bag plants at ~6m x 3m spacing (~450-550 trees/ha). This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
+    { "operation_id": "weeding", "name": "Circle Weeding", "category": "crop_management", "description": "Weed-circle maintenance and cover-crop upkeep.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "girth_monitoring", "name": "Girth Monitoring", "category": "crop_management", "description": "Monitoring trunk girth toward the ~50cm tapping-readiness threshold. Informational/observational -- no validation_rule is attached to this operation, since the source ruleset's actual enforceable gate is the tapping floor/warning below (tapping_r_floor/early_warn), which is time-based (years since transplanting) rather than a girth measurement this schema has no field for.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "pest_disease_control", "name": "Pest & Disease Control", "category": "pest_disease_control", "description": "White Root Rot and leaf-fall disease management.", "requires_evidence": false, "can_repeat": true, "optional": true },
+    { "operation_id": "tapping", "name": "Tapping", "category": "harvest", "description": "Latex tapping using D3/D4 systems. Recurs many times per month for decades once mature -- no once-only rule, same pattern as cocoa.json/oil_palm.json's recurring harvest operations. NOTE: the source ruleset also specifies a tapping-FREQUENCY data-integrity rule here ('hard block if tapping is logged more than 20 days in a month; flag beyond 15') that this knowledge base's engine cannot implement -- this is the same rolling-window occurrence-count limitation already flagged for pepper.json's harvest-frequency rule (not the self-referential first-instance problem flagged for oil_palm.json's harvest-interval rule -- this is a genuinely different, also-unimplemented, limitation category). See version_history.", "requires_evidence": true, "can_repeat": true },
+    { "operation_id": "stimulation", "name": "Ethephon Stimulation", "category": "input_application", "description": "Ethephon yield-stimulation application, restricted to older trees only. NOTE: the source ruleset also specifies a stimulation-FREQUENCY rule here ('flag beyond 4 applications/year') that has the same rolling-window occurrence-count limitation as the tapping-frequency rule above -- not implemented, see version_history. Only the age-gate half of this rule (trees under 10 years) is implemented in validation_rules, since that part IS a standard day-offset check.", "requires_evidence": true, "can_repeat": true, "optional": true }
+  ],
+
+  "workflow": [
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "planting_material_sourcing", "required": false },
+    { "step_number": 3, "operation_id": "cover_crop_establishment", "required": false },
+    { "step_number": 4, "operation_id": "transplanting", "required": true },
+    { "step_number": 5, "operation_id": "weeding", "required": false, "repeat_until": null },
+    { "step_number": 6, "operation_id": "girth_monitoring", "required": false, "repeat_until": null },
+    { "step_number": 7, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
+    { "step_number": 8, "operation_id": "tapping", "required": true, "repeat_until": null },
+    { "step_number": 9, "operation_id": "stimulation", "required": false, "repeat_until": null }
+  ],
+
+  "validation_rules": [
+    {
+      "rule_id": "rubber_r_land_clearing_gate", "operation_id": "planting_material_sourcing", "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting_material_sourcing could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Pattern and max-day window (60 days) matches cocoa.json's existing analogous rule (cocoa_r1)."
+    },
+    {
+      "rule_id": "rubber_r_tapping_floor", "operation_id": "tapping", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 1825, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block before 5 years (60 months) -- early tapping stunts the tree permanently. Converted using the source's own stated year-equivalent (5 years = 1825 days at 365 days/year) rather than an approximated 30-day-per-month conversion, since the source itself gives both the month and year figure as equivalent here, unlike oil_palm.json's nursery rule, which only gave months.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_tapping_early_warn", "operation_id": "tapping", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 2190, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag before 6 years (72 months / 2190 days). Sits above the 5-year hard-block floor.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_tapping_frequency_block", "operation_id": "tapping", "depends_on_operation_id": null,
+      "max_occurrences": 20, "occurrence_window_days": 30, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block if tapping is logged more than 20 days in a month. NEWLY IMPLEMENTED in the engine-fixes pass following the Medium-priority crop batch, using the same max_occurrences/occurrence_window_days mechanism that fixed pepper.json's harvest-frequency rule. INTERPRETIVE CHOICE, flagged explicitly: the source says 'in a month', which could mean a rolling 30-day window or a fixed calendar month (e.g. all of June). This engine only supports rolling windows, so a 30-day rolling window is used -- arguably the more protective interpretation anyway, since a fixed-calendar-month check could be evaded by clustering taps across a month boundary (e.g. 15 late in one month, 15 early in the next) while a rolling window catches that. Flagged for agronomist/ruleset-author confirmation that this interpretation is acceptable.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_tapping_frequency_warn", "operation_id": "tapping", "depends_on_operation_id": null,
+      "max_occurrences": 15, "occurrence_window_days": 30, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag beyond 15 tapping days in a rolling 30-day window -- see rubber_r_tapping_frequency_block for the same rolling-window-vs-calendar-month interpretive note.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_stimulation_age_block", "operation_id": "stimulation", "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 3650, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
+      "severity": "block", "condition": "Hard block on trees under 10 years (3650 days). This is only the AGE half of the source's stimulation rule -- the FREQUENCY half is now implemented separately, see rubber_r_stimulation_frequency_warn.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_stimulation_frequency_warn", "operation_id": "stimulation", "depends_on_operation_id": null,
+      "max_occurrences": 4, "occurrence_window_days": 365, "can_repeat": true, "allow_backdate": false,
+      "severity": "warning", "condition": "Flag beyond 4 Ethephon stimulation applications in a rolling 365-day window. NEWLY IMPLEMENTED alongside the tapping-frequency rules above, using the same mechanism and the same rolling-window-vs-calendar-year interpretive choice.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 4."
+    },
+    {
+      "rule_id": "rubber_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
+      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Inherited convention across this knowledge base."
+    }
+  ],
+
+  "soil_requirements": {
+    "ph_min": 4.5,
+    "ph_max": 6.0,
+    "texture": ["loam", "clay loam"],
+    "drainage": "deep, well-drained soils",
+    "nitrogen_needs": "medium"
+  },
+
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1800,
+    "rainfall_mm_max_cycle": 2500,
+    "temp_c_min": 24,
+    "temp_c_max": 32,
+    "notes": "Not covered numerically in the source ruleset section for this crop -- carried over as a placeholder from general Nigerian humid-forest rubber agronomy references, same caveat as this knowledge base's other placeholder weather_preferences fields (e.g. oil_palm.json, sharing the same South-South/South-East growing region). Flagged for agronomist review."
+  },
+
+  "diseases": [
+    { "name": "White Root Rot", "risk_stage_ids": ["immature_girth_development", "tapping_yielding"], "symptoms": "Fungal root decay, progressive canopy decline; can kill the tree.", "management": "Field sanitation and monitoring, per the source ruleset's Stage 3 guidance.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 3." },
+    { "name": "Leaf-Fall Disease", "risk_stage_ids": ["immature_girth_development", "tapping_yielding"], "symptoms": "Premature defoliation.", "management": "Monitoring and management per the source ruleset's Stage 3 guidance.", "confidence": 0.6, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Stage 3." }
+  ],
+
+  "pests": [],
+
+  "yield_model": {
+    "expected_yield_per_hectare": "0.5 - 2.5",
+    "unit": "tonnes dry rubber content, cumulative per hectare PER YEAR",
+    "factors": ["clone quality (RRIM 600, GT 1, NIG-800/RRIN)", "tapping frequency/skill (over-tapping risks Brown Bast)", "Ethephon stimulation use", "White Root Rot / leaf-fall disease pressure", "tree age within the 7-25+ year tapping window"],
+    "confidence": 0.75,
+    "notes": "Range taken directly from the source ruleset's Pass and first Warning tiers. Same annual-cumulative-vs-per-event framing flagged in oil_palm.json's yield_model.notes applies here too: yield is explicitly 'per hectare per year', but tapping happens many times per month -- nothing in this schema distinguishes a single tapping session's output from the annual total, which is the same data-entry risk already flagged for oil palm."
+  },
+
+  "yield_validation": {
+    "unit": "t/ha/yr",
+    "tiers": [
+      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event, not a harvest record." },
+      { "condition_type": "less_than", "max": 0.5, "severity": "warning", "message": "Unskilled tapping, disease, or aging plantation." },
+      { "condition_type": "range", "min": 0.5, "max": 1.5, "severity": "pass", "message": "Standard smallholder-to-commercial range." },
+      { "condition_type": "greater_than", "min": 1.5, "severity": "warning", "message": "Well-managed high-yielding clones (RRIM 600); flag for review." },
+      { "condition_type": "greater_than", "min": 3.5, "severity": "block", "message": "Biological maximum exceeded for Nigerian conditions." }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber), Yield Validation table. Same gap pattern as this knowledge base's other Master-Ruleset-sourced crops: the table as written leaves 2.5-3.5 t/ha/yr (between its stated '1.5-2.5 Soft Warning' and '>3.5 Hard Block' tiers) covered by neither. Resolved by merging into a single greater_than 1.5 warning tier covering everything above Pass up to the Hard Block ceiling. The source's prefacing note ('Yield is dry rubber content per hectare per year') does not explicitly state a zero-yield/loss-event instruction either, same as onion.json/oil_palm.json -- the equals_zero tier is added for schema-safety and knowledge-base consistency, flagged as not directly stated for this specific crop."
+  },
+
+  "regional_overrides": [],
+
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
+      "summary": "Initial file for Rubber (Hevea brasiliensis), sixth of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base, built from Section 18. Second PERENNIAL crop in this batch, structured on oil_palm.json's pattern but with one genuine structural difference: rubber's planting material (budded stumps/poly-bag plants) comes from a CERTIFIED EXTERNAL NURSERY per the source ruleset's own wording, not an on-farm nursery the farmer establishes and logs -- so this file has a planting_material_sourcing operation instead of nursery_establishment, and no nursery-duration validation_rule at all (none is stated in the source for a stage the farmer doesn't perform). TWO rules named explicitly in the source document could not be implemented, both belonging to the SAME limitation category pepper.json's harvest-frequency rule already identified (rolling-window occurrence counting), applied here to two separate operations: (1) tapping-frequency ('hard block if tapping is logged more than 20 days in a month; flag beyond 15'), and (2) stimulation-frequency ('flag beyond 4 applications/year'). For stimulation, the OTHER half of its source rule -- an age gate ('hard block on trees under 10 years') -- IS a standard day-offset check and was implemented normally; only the frequency-counting half was left out. This confirms the rolling-window limitation isn't a one-off pepper.json quirk but a recurring gap worth prioritizing in the end-of-round engine review, now showing up on three separate rules across two crops. The tapping floor/warning rules (5 years / 6 years) were converted from months using the source's own explicitly-stated year-equivalents (1825/2190 days) rather than an approximated 30-day-per-month conversion, since the source gave both units directly here -- cleaner than oil_palm.json's nursery rule, which only had a months figure. Yield tier gap resolved the same way as yam/groundnut/pepper/onion/oil_palm, and the same annual-cumulative-vs-per-tapping-event yield-entry risk flagged in oil_palm.json applies here too. Not yet agronomist-reviewed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 18 (Rubber)."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added rubber_r_land_clearing_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "crop_id": "cowpea",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2026-04-01" },
+    { "operation_id": "land_preparation", "date": "2026-04-08" },
+    { "operation_id": "planting", "date": "2026-04-15" }
+  ],
+  "new_operation": { "operation_id": "phosphorus_application", "date": "2026-04-25" }
+}

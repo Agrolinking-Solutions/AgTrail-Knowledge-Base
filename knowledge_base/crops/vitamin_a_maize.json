@@ -7,7 +7,7 @@
     "crop_cycle_type": "annual",
     "typical_duration_days": 110,
     "regions": ["Nigeria - Guinea Savanna", "Nigeria - Sudan Savanna"],
-    "current_version": "1.0.0"
+    "current_version": "1.0.4"
   },
 
   "growth_stages": [
@@ -37,9 +37,9 @@
   ],
 
   "workflow": [
-    { "step_number": 1, "operation_id": "isolation_verification", "required": false },
-    { "step_number": 2, "operation_id": "land_clearing", "required": true },
-    { "step_number": 3, "operation_id": "land_preparation", "required": true },
+    { "step_number": 1, "operation_id": "land_clearing", "required": true },
+    { "step_number": 2, "operation_id": "land_preparation", "required": true },
+    { "step_number": 3, "operation_id": "isolation_verification", "required": false },
     { "step_number": 4, "operation_id": "planting", "required": true },
     { "step_number": 5, "operation_id": "gap_filling", "required": false },
     { "step_number": 6, "operation_id": "first_fertilizer", "required": true },
@@ -55,6 +55,12 @@
 
   "validation_rules": [
     {
+      "rule_id": "vitamin_a_maize_r_land_prep_gate", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
+    },
+    {
       "rule_id": "va_maize_r_isolation", "operation_id": "isolation_verification", "depends_on_operation_id": "land_preparation",
       "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
       "severity": "warning", "condition": "NEW rule, specific to this crop file. When the farmer intends to save/replant grain as seed (common smallholder practice for OPVs), the plot should be isolated by at least 200-300m from any other maize field, or use a temporal isolation of roughly 4-6 weeks difference in planting/flowering date, to prevent wind-borne cross-pollination from diluting the provitamin A trait in the next generation's seed. This is a warning, not a block: the engine cannot itself verify neighboring-field distance without GPS-polygon data AgTrail does not yet capture (same limitation noted elsewhere in this knowledge base), and isolation only matters at all if the farmer is saving seed rather than buying fresh seed each season -- which this schema also cannot yet distinguish.",
@@ -62,7 +68,7 @@
     },
     {
       "rule_id": "va_maize_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Land preparation cannot be logged before land clearing, and should not be logged more than 30 days after it. Same physical-crop logic as maize.json -- inherited unchanged since the provitamin A trait does not affect land prep timing.",
       "source": "Inherited from maize.json (same species; land prep is trait-independent)."
     },
@@ -107,6 +113,18 @@
       "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence). Inherited from maize.json.",
       "source": "Inherited from maize.json."
+    },
+    {
+      "rule_id": "vitamin_a_maize_r_seq_first_fertilizer_weeding_1", "operation_id": "weeding_1", "depends_on_operation_id": "first_fertilizer",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding_1 could previously be logged with no first_fertilizer in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    },
+    {
+      "rule_id": "vitamin_a_maize_r_seq_weeding_1_second_fertilizer", "operation_id": "second_fertilizer", "depends_on_operation_id": "weeding_1",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- second_fertilizer could previously be logged with no weeding_1 in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
 
@@ -163,6 +181,34 @@
       "changed_by": "AgTrail Knowledge Base - new crop, priority commodity list",
       "summary": "Initial file for Vitamin A Maize (provitamin A biofortified maize), one of the priority commodities (Vitamin A Maize, OFSP, Ginger, Sesame, Cowpea, Hibiscus) requested alongside the existing knowledge base. Built as a standalone crop file rather than a regional_override or variant of maize.json, since it needs its own crop_id (distinct dropdown entry, distinct version history) even though it shares maize's underlying growth-stage/workflow structure. Base agronomic timing rules (land prep, weeding floor, pest floor, backdate block) are inherited unchanged from maize.json since it is the same species. Two genuinely new dimensions were added, neither present in maize.json: (1) an isolation_verification operation and validation rule addressing genetic/trait purity when farmers save and replant OPV seed, sourced to FAO/SADC-GTZ and CIMMYT seed production handbooks (200-400m isolation depending on seed class, or 4-6 week temporal isolation as an alternative); (2) two postharvest validation rules addressing provitamin A carotenoid degradation specifically (tighter 0-5 day drying window, and a 180-day storage-duration advisory), sourced to published carotenoid retention studies on biofortified maize under Zambian and controlled storage conditions. Not yet agronomist-reviewed -- same caveat that applied to maize.json v1.0.0 applies here.",
       "source": "HarvestPlus, Vitamin A Maize crop page; FAO/SADC-GTZ, Open-Pollinated Maize Seed Production Handbook; CIMMYT, Community-Based Seed Production of Open-Pollinated Maize Varieties; Li et al., J. Agric. Food Chem. 2014, 62, 6317-6325; Burt et al. postharvest carotenoid stability research; Taleon et al./ACS Omega carotenoid retention study; Chen et al., aflatoxin/provitamin A maize resistance study."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-08-15",
+      "changed_by": "AgTrail Knowledge Base - bugfix via scenario testing",
+      "summary": "Fixed a workflow-ordering bug found by running scenario files through the actual engine (engine.validator), not just schema validation. isolation_verification was placed at workflow step_number 1 (before land_clearing), but its own validation rule (va_maize_r_isolation) depends on land_preparation happening first. Submitting isolation_verification after land_clearing/land_preparation were already logged -- the realistic case -- tripped the engine's engine-workflow-order block ('inserting an earlier step after a later one has already happened'), even though the isolation rule itself was working correctly underneath. Moved isolation_verification to step_number 3, between land_preparation (2) and planting (4), matching the dependency it actually declares. No change to any validation_rules content or sourcing -- this was purely a workflow step-ordering fix. Confirmed via scenarios/vitamin_a_maize_warning_isolation_distance.json, which now returns PASSED, WITH WARNINGS instead of BLOCKED.",
+      "source": "N/A -- internal engine-behavior fix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.0.2",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Bumped min_days_after_dependency from 0 to 1 on va_maize_r1, in response to a real bug the user found while using the platform: land preparation could be logged and the very next dependent stage logged on the SAME DAY, with no gap enforced at all, even though the workflow conceptually expects one stage to be completed/settled before the next begins. min=0 technically meant '0 or more days later', which permitted same-day submissions. This is a data-authoring fix (a deliberate rule-value choice), not an engine bug -- the engine was correctly enforcing exactly what the rule said, the rule just said something too permissive. No maximum-day-window or severity changed, and no other rule in this file was touched.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.0.3",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Added vitamin_a_maize_r_land_prep_gate, a dependency rule that was MISSING ENTIRELY from this file, in response to a real bug the user found while using the platform: the affected operation(s) could previously be logged with no preceding dependency in history at all -- not same-day, not any particular window, just completely unenforced. Confirmed via a test submission with empty history before this fix (the operation passed clean with zero warnings). Now requires at least 1 day after the dependency, closing the gap. This is a data-authoring fix (a rule that should have existed but didn't), not an engine bug.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.0.4",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
+      "summary": "Added vitamin_a_maize_r_seq_first_fertilizer_weeding_1, vitamin_a_maize_r_seq_weeding_1_second_fertilizer. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
     }
   ]
 }

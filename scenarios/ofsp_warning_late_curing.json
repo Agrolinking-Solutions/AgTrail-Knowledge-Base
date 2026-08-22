@@ -1,0 +1,10 @@
+{
+  "crop_id": "ofsp",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2026-04-01" },
+    { "operation_id": "land_preparation", "date": "2026-04-08" },
+    { "operation_id": "planting", "date": "2026-04-15" },
+    { "operation_id": "harvest", "date": "2026-07-19" }
+  ],
+  "new_operation": { "operation_id": "curing", "date": "2026-07-24" }
+}

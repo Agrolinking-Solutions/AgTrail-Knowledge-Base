@@ -1,0 +1,10 @@
+{
+  "crop_id": "pepper",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2026-03-01" },
+    { "operation_id": "nursery_establishment", "date": "2026-03-05" },
+    { "operation_id": "transplanting", "date": "2026-04-10" },
+    { "operation_id": "harvest", "date": "2026-06-15" }
+  ],
+  "new_operation": { "operation_id": "post_harvest_handling", "date": "2026-06-18" }
+}

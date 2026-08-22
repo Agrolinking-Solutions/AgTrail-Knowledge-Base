@@ -1,0 +1,11 @@
+{
+  "crop_id": "yam",
+  "history": [
+    { "operation_id": "seed_yam_selection", "date": "2026-02-01" },
+    { "operation_id": "land_preparation", "date": "2026-02-10" },
+    { "operation_id": "planting", "date": "2026-02-15" },
+    { "operation_id": "fertilizer_application", "date": "2026-03-20" },
+    { "operation_id": "staking", "date": "2026-03-25" }
+  ],
+  "new_operation": { "operation_id": "harvest", "date": "2026-09-13" }
+}

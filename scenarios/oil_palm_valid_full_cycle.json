@@ -1,0 +1,11 @@
+{
+  "crop_id": "oil_palm",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2020-01-01" },
+    { "operation_id": "nursery_establishment", "date": "2020-01-10" },
+    { "operation_id": "cover_crop_establishment", "date": "2021-01-05" },
+    { "operation_id": "transplanting", "date": "2021-01-15" },
+    { "operation_id": "fertilizer_application", "date": "2021-06-01" }
+  ],
+  "new_operation": { "operation_id": "harvest", "date": "2023-08-01" }
+}

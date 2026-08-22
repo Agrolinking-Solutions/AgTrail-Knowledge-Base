@@ -1,0 +1,11 @@
+{
+  "crop_id": "rubber",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2018-01-01" },
+    { "operation_id": "planting_material_sourcing", "date": "2018-01-10" },
+    { "operation_id": "cover_crop_establishment", "date": "2018-02-01" },
+    { "operation_id": "transplanting", "date": "2018-02-15" },
+    { "operation_id": "weeding", "date": "2018-04-01" }
+  ],
+  "new_operation": { "operation_id": "tapping", "date": "2024-06-01" }
+}

@@ -1,0 +1,8 @@
+{
+  "crop_id": "rubber",
+  "history": [
+    { "operation_id": "land_clearing", "date": "2018-01-01" },
+    { "operation_id": "transplanting", "date": "2018-02-15" }
+  ],
+  "new_operation": { "operation_id": "stimulation", "date": "2024-06-01" }
+}

@@ -7,7 +7,7 @@
     "crop_cycle_type": "perennial",
     "typical_duration_days": 1095,
     "regions": ["Nigeria - Southwest rainforest belt", "Nigeria - Cross River"],
-    "current_version": "1.1.0"
+    "current_version": "1.1.2"
   },
 
   "growth_stages": [
@@ -50,7 +50,7 @@
   "validation_rules": [
     {
       "rule_id": "cocoa_r1", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
+      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
       "severity": "warning", "condition": "Nursery is normally started around the time land clearing and shade preparation begins. Large gaps are flagged but not blocked since the nursery can run on a different plot while the main field is still being prepared.",
       "source": "Interval itself is still not tied to a specific named source. Flagged for further confirmation, same as before."
     },
@@ -94,6 +94,18 @@
       "rule_id": "cocoa_r7", "operation_id": "*", "depends_on_operation_id": null,
       "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
       "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm. Backdating that would reorder the sequence is not allowed."
+    },
+    {
+      "rule_id": "cocoa_r_seq_fertilizer_application_weeding", "operation_id": "weeding", "depends_on_operation_id": "fertilizer_application",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    },
+    {
+      "rule_id": "cocoa_r_seq_weeding_pruning", "operation_id": "pruning", "depends_on_operation_id": "weeding",
+      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
+      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
 
@@ -148,6 +160,20 @@
       "changed_by": "AgTrail Knowledge Base - sourced revision pass",
       "summary": "Replaced every previously unsourced timing rule, disease entry, and pest entry with numbers checked against named sources, matching the standard already applied to Maize and Cassava. Key changes: fertilizer now correctly applied at transplanting via organic manure rather than 30 days later; nursery duration widened to 90 to 210 days to honestly reflect a real conflict between two sources rather than picking one; harvest timing split into a conservative 2 year hard block plus a 3 to 5 year typical warning window, with an explicit flag on a single promotional source claiming 18 month hybrid bearing that is not corroborated anywhere else; black pod disease and swollen shoot virus rewritten with actual species names, transmission mechanisms, and cited yield loss figures instead of generic descriptions; added termites as a pest, though its entry is itself flagged as needing further detail. One notable finding not yet built into the file: CRIN's own literature states fertilizer requirements have been established separately for different soil zones, the southwest ecological zone, the sandy soils of Edo State, and the heavy rainfall areas of Ikom in Cross River State, which is a strong candidate for a future regional_overrides entry once the specific numbers for each zone can be found. Yield figures were deliberately not touched this pass and still need their own sourcing effort.",
       "source": "MarNat StudySpace - Cocoa Production in Nigeria; Floratalk - How to Plant Cocoa in Nigeria; UKEssays - Cocoa Cultivation Practices in Nigeria; Veggie Grow - Cocoa Farming in Nigeria; FarmPays 2026 - Cocoa Farming In Nigeria; CRIN - Agronomy and Soils programme page; CRIN - Cocoa programme page; CRIN 2023 Annual Report; Status of cocoa swollen shoot virus disease in Nigeria (field survey); Black pod disease profile, Southwest Nigeria (biorxiv); Testing for resistance of CRIN hybrid cacao germplasm against Phytophthora megakarya (biorxiv)"
+    },
+    {
+      "version": "1.1.1",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, land-prep sequencing gate",
+      "summary": "Bumped min_days_after_dependency from 0 to 1 on cocoa_r1, in response to a real bug the user found while using the platform: land preparation could be logged and the very next dependent stage logged on the SAME DAY, with no gap enforced at all, even though the workflow conceptually expects one stage to be completed/settled before the next begins. min=0 technically meant '0 or more days later', which permitted same-day submissions. This is a data-authoring fix (a deliberate rule-value choice), not an engine bug -- the engine was correctly enforcing exactly what the rule said, the rule just said something too permissive. No maximum-day-window or severity changed, and no other rule in this file was touched.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.2",
+      "date": "2026-08-17",
+      "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
+      "summary": "Added cocoa_r_seq_fertilizer_application_weeding, cocoa_r_seq_weeding_pruning. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
     }
   ]
 }
