@@ -106,7 +106,8 @@
           "can_repeat": { "type": "boolean" },
           "allow_backdate": { "type": "boolean", "default": false, "description": "Whether an operation's logged date may be earlier than the date it was actually submitted. Per the original discussion: generally false for anything that would let a farmer retroactively insert a step out of order." },
           "severity": { "type": "string", "enum": ["block", "warning"], "description": "block = red / rejected outright. warning = yellow / allowed through but flagged." },
-          "condition": { "type": "string", "description": "Human-readable statement of the rule, for audit/debug logs and for surfacing to the farmer as an error/warning message." },
+          "condition": { "type": "string", "description": "Internal rationale for the rule, for agronomists, audit and debug logs. Never shown to the farmer: the engine builds the farmer's message from the rule's operations and day limits." },
+          "message": { "type": "string", "description": "Optional plain-language lead shown to the farmer before the engine's generated detail. No sources, review notes or change history." },
           "source": { "type": "string", "description": "Where this specific interval/threshold came from (e.g. 'IITA Guide to Maize Production in Northern Nigeria, 2020'). Optional but strongly recommended -- an unsourced timing rule is a guess, not a validated constraint." }
         }
       }

@@ -146,6 +146,17 @@ def validate_operation(
     workflow_steps = crop.get("workflow", [])
     step_number_by_op = {s["operation_id"]: s["step_number"] for s in workflow_steps}
 
+    # Farmer-facing wording. A rule's `condition` is internal rationale for agronomists and maintainers
+    # (sources, review notes, change history) and is never shown to the farmer. The message is built from
+    # the rule's structure, led by the rule's optional plain-language `message` when the file gives one.
+    def _name(op_id: str) -> str:
+        name = operations_by_id.get(op_id, {}).get("name")
+        return name or op_id.replace("_", " ").capitalize()
+
+    def _lead(rule: dict) -> str:
+        m = rule.get("message")
+        return f"{m.strip().rstrip('.')}. " if isinstance(m, str) and m.strip() else ""
+
     harvest_operations = [o for o in crop.get("operations", []) if o.get("category") == "harvest"]
     harvest_is_repeatable = any(o.get("can_repeat") for o in harvest_operations)
 
@@ -176,11 +187,9 @@ def validate_operation(
                         rule_id="engine-workflow-order",
                         severity="block",
                         message=(
-                            f"'{op.operation_id}' cannot be logged now: "
-                            f"'{h.operation_id}' has already been logged, and it "
-                            f"comes later in the workflow. Inserting an earlier "
-                            f"step after a later one has already happened is not "
-                            f"allowed, even if the date looks plausible on its own."
+                            f"{_name(op.operation_id)} cannot be recorded now: "
+                            f"{_name(h.operation_id)} is already recorded, and it "
+                            f"comes later in the crop's steps."
                         ),
                     )
                 )
@@ -217,10 +226,9 @@ def validate_operation(
                         rule_id=rule["rule_id"],
                         severity=rule["severity"],
                         message=(
-                            f"{rule['condition']} ({count_including_new} "
-                            f"'{op.operation_id}' entries within the last "
-                            f"{occ_window} day(s) as of {op.date}; maximum is "
-                            f"{max_occ}.)"
+                            f"{_lead(rule)}{_name(op.operation_id)} recorded "
+                            f"{count_including_new} times in the {occ_window} day(s) "
+                            f"up to {op.date}; the most expected is {max_occ}."
                         ),
                     )
                 )
@@ -238,7 +246,10 @@ def validate_operation(
                     ValidationIssue(
                         rule_id=rule["rule_id"],
                         severity=rule["severity"],
-                        message=rule["condition"],
+                        message=(
+                            f"{_lead(rule)}{_name(op.operation_id)} can only be "
+                            f"recorded once for this crop cycle, and it is already recorded."
+                        ),
                     )
                 )
             continue
@@ -263,8 +274,9 @@ def validate_operation(
                     rule_id=rule["rule_id"],
                     severity="block",
                     message=(
-                        f"'{op.operation_id}' requires '{dep_id}' to be logged "
-                        f"first, and no record of it exists yet."
+                        f"{_lead(rule)}{_name(op.operation_id)} needs "
+                        f"{_name(dep_id)} to be recorded first, and there is no "
+                        f"record of it yet."
                     ),
                 )
             )
@@ -291,9 +303,10 @@ def validate_operation(
                         rule_id=rule["rule_id"],
                         severity=rule["severity"],
                         message=(
-                            f"{rule['condition']} (logged {days_diff} day(s) "
-                            f"after '{dep_id}', inside the flagged "
-                            f"{min_days}-{max_days} day window.)"
+                            f"{_lead(rule)}{_name(op.operation_id)} recorded "
+                            f"{days_diff} day(s) after {_name(dep_id)}, inside the "
+                            f"{min_days if min_days is not None else 0}–"
+                            f"{max_days if max_days is not None else '…'} day period to avoid."
                         ),
                     )
                 )
@@ -305,8 +318,9 @@ def validate_operation(
                     rule_id=rule["rule_id"],
                     severity=rule["severity"],
                     message=(
-                        f"{rule['condition']} (logged {days_diff} day(s) after "
-                        f"'{dep_id}'; minimum is {min_days}.)"
+                        f"{_lead(rule)}{_name(op.operation_id)} recorded "
+                        f"{days_diff} day(s) after {_name(dep_id)}; it should be "
+                        f"at least {min_days} day(s) after."
                     ),
                 )
             )
@@ -316,8 +330,9 @@ def validate_operation(
                     rule_id=rule["rule_id"],
                     severity=rule["severity"],
                     message=(
-                        f"{rule['condition']} (logged {days_diff} day(s) after "
-                        f"'{dep_id}'; maximum is {max_days}.)"
+                        f"{_lead(rule)}{_name(op.operation_id)} recorded "
+                        f"{days_diff} day(s) after {_name(dep_id)}; it should be "
+                        f"no later than {max_days} day(s) after."
                     ),
                 )
             )

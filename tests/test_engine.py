@@ -910,3 +910,24 @@ def test_hibiscus_storage_without_drying_is_blocked():
     )
     assert report.blocked
     assert any(i.rule_id == "hibiscus_r5" for i in report.blocking_issues)
+
+def test_farmer_messages_never_carry_internal_rule_notes():
+    """Rule `condition` text is internal rationale (sources, review notes, change history). The farmer sees a
+    message built from operation names and day limits, never that text or raw operation ids."""
+    report = validate_operation(
+        crop_id="maize",
+        history=[
+            {"operation_id": "land_clearing", "date": "2026-07-01"},
+            {"operation_id": "land_preparation", "date": "2026-07-10"},
+            {"operation_id": "planting", "date": "2026-07-29"},
+            {"operation_id": "first_fertilizer", "date": "2026-08-05"},
+        ],
+        new_operation={"operation_id": "second_fertilizer", "date": "2026-10-14"},
+    )
+    assert report.issues
+    for issue in report.issues:
+        for marker in ("PLATFORM BUGFIX", "NEW rule", "original file", "this file", "knowledge base", "_"):
+            assert marker not in issue.message, (marker, issue.message)
+    messages = " ".join(i.message for i in report.issues)
+    assert "Second Fertilizer Application (Top-dress) recorded 77 day(s) after Planting" in messages
+    assert "First Weeding" in messages
