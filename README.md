@@ -4,9 +4,62 @@ Crop knowledge base, schema, and validation tooling for AgTrail's Workflow & Val
 
 This project is the data layer discussed with the tech team: every crop is a structured JSON file (not free text, not hardcoded app logic) that the backend loads at runtime to know what operations exist, what order they go in, and what timing/sequence rules to enforce.
 
-**The API is live and deployed:** `https://agtrail-api.onrender.com`
+**The API is live and deployed:** `https://validation.agrolinking.com`
 
-Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. An UptimeRobot monitor pings `/health` every 5 minutes to prevent Render's free tier from spinning down, so cold starts shouldn't normally happen. A GitHub Actions workflow (`.github/workflows/keep-alive.yml`) originally did this job instead, but was switched off its schedule: a private repo only gets 2,000 free Actions minutes a month, and pinging every 10 minutes would have used roughly 4,300, meaning it would have silently stopped partway through most months. UptimeRobot doesn't have that limit and also gives actual uptime monitoring as a bonus. The workflow file is kept as a manual-trigger backup only.
+Try it directly, no setup required, at `https://validation.agrolinking.com/docs`. The service runs on a VPS (containerized via the repo's `Dockerfile`), behind Cloudflare, no cold starts to worry about. `.github/workflows/keep-alive.yml` is kept as a manual-trigger health-check backup.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Client(["Client app"]) -->|"HTTP"| API["FastAPI app<br/>api/main.py"]
+
+    subgraph Engine["engine/ (framework-free, no HTTP knowledge)"]
+        Validator["validator.py<br/>validate_operation()"]
+        Suggestions["suggestions.py<br/>get_next_steps()"]
+        YieldValidator["yield_validator.py<br/>validate_yield()"]
+        History["history.py<br/>parse_and_scope_history()"]
+        Loader["loader.py<br/>load_crop() / get_effective_rules()"]
+    end
+
+    API --> Validator
+    API --> Suggestions
+    API --> YieldValidator
+
+    Validator --> History
+    Suggestions --> History
+    Validator --> Loader
+    Suggestions --> Loader
+    YieldValidator --> Loader
+
+    Loader --> Schema[("knowledge_base/schema.json")]
+    Loader --> Crops[("knowledge_base/crops/*.json<br/>20 crop files")]
+```
+
+`engine/` has no dependency on FastAPI or HTTP at all — `api/` is a thin translation layer on top of it, which is why `engine.validator.validate_operation` can also be called directly in Python or from the CLI (`engine/cli.py`) with no server running.
+
+**What a crop file's `workflow` actually encodes** (maize's, as a concrete example — this is the `step_number` order `validate_operation` enforces):
+
+```mermaid
+flowchart LR
+    S1["1 land_clearing"] --> S2["2 land_preparation"]
+    S2 --> S3["3 planting"]
+    S3 -.-> S4["4 gap_filling<br/>(optional)"]
+    S3 --> S5["5 first_fertilizer"]
+    S5 --> S6["6 weeding_1"]
+    S6 --> S7["7 second_fertilizer"]
+    S7 -.-> S8["8 weeding_2<br/>(optional)"]
+    S7 -.-> S9["9 pest_scouting<br/>(optional)"]
+    S7 -.-> S10["10 harvest_fresh<br/>(optional)"]
+    S7 --> S11["11 harvest"]
+    S11 --> S12["12 drying"]
+    S12 -.-> S13["13 storage<br/>(optional)"]
+
+    classDef optional stroke-dasharray:5,5
+    class S4,S8,S9,S10,S13 optional
+```
+
+Solid arrows are required steps in order; dashed are optional (skippable without blocking later steps). Every crop file defines its own `workflow` the same way — perennials like cocoa never reach a terminal step the way an annual crop does, which is why the "new season" exception in the validation flow below only applies to crops where harvest is a genuine cycle boundary.
 
 ## Project layout
 
@@ -14,25 +67,18 @@ Try it directly, no setup required, at `https://agtrail-api.onrender.com/docs`. 
 agtrail-knowledge-base/
 ├── knowledge_base/
 │   ├── schema.json          # the contract every crop file must follow
-│   └── crops/
-│       ├── maize.json       # template: annual/staple crop
-│       ├── cocoa.json       # template: perennial/tree crop
-│       ├── cassava.json     # template: annual root crop, open-ended harvest window
-│       ├── tomato.json      # template: repeating harvest within one planting cycle
-│       ├── rice.json        # template: paddy/flooded water management, nursery-to-transplant cereal
-│       ├── sesame.json      # first crop sourced directly from the AgTrail Master Agronomist & Validator Ruleset
-│       ├── ginger.json      # missing-prerequisite pattern (splitting before drying)
-│       ├── cashew.json      # perennial tree crop with named fire-risk management
-│       └── hibiscus.json    # completes the High priority tier
+│   └── crops/               # 20 crops: all 5 High-priority + all Medium-priority tiers, plus
+│                             # the earlier maize/cocoa/cassava/tomato/rice templates
 ├── engine/
 │   ├── loader.py            # loads a crop file, applies regional_overrides patches
 │   ├── history.py           # shared FarmOperation parsing + crop-scoping (used by validator and suggestions)
 │   ├── validator.py         # validate_operation(): the core validation function
 │   ├── suggestions.py       # get_next_steps(): what's due next, and whether it's overdue
+│   ├── yield_validator.py   # validate_yield(): is the reported harvest amount plausible
 │   ├── exceptions.py        # CropNotFoundError, InvalidOperationDataError
 │   └── cli.py                # thin CLI wrapper: `agtrail-engine validate <scenario.json>`
 ├── api/
-│   ├── main.py                # FastAPI app: POST /validate, POST /suggestions, GET /crops, GET /health
+│   ├── main.py                # FastAPI app: POST /validate, POST /suggestions, POST /validate-yield, GET /crops, GET /health
 │   └── schemas.py             # request/response models
 ├── scenarios/
 │   └── *.json                # example farm records to try against the engine
@@ -42,11 +88,16 @@ agtrail-knowledge-base/
 │   ├── test_schema_validation.py   # schema + cross-reference checks
 │   ├── test_engine.py              # validation engine behavior, including the stress-test cases
 │   ├── test_suggestions.py         # suggestions engine behavior
+│   ├── test_yield_validator.py     # yield validation behavior
 │   └── test_api.py                  # API behavior, using FastAPI's TestClient
 ├── docs/
 │   ├── knowledge_base_notes.md     # design notes: how each field maps to the
 │   │                                # workflow/validation discussion, and next steps
 │   └── agronomist_review_package.md # plain-language doc for a domain reviewer
+├── .github/workflows/
+│   └── keep-alive.yml       # manual-trigger health-check backup
+├── Dockerfile
+├── .dockerignore
 ├── pyproject.toml
 └── .gitignore
 ```
@@ -112,11 +163,40 @@ history = [
 
 Without tags, the engine can't distinguish which entry belongs to which crop and may pick up the wrong dependency date. This was a real bug caught during testing (documented in `tests/test_engine.py`, `test_mixed_crop_history_without_tags_is_genuinely_ambiguous`) — tagging is the fix, and it's opt-in rather than required, so single-crop callers don't need to change anything.
 
+**How `validate_operation` decides, in order:**
+
+```mermaid
+flowchart TD
+    Start(["New operation submitted"]) --> Known{"Is operation_id<br/>known for this crop?"}
+    Known -- "No" --> B1["BLOCK: engine-unknown-operation"]
+    Known -- "Yes" --> Backdate{"Dated earlier than the most<br/>recently logged operation?"}
+    Backdate -- "Yes" --> B2["BLOCK: global-order"]
+    Backdate -- "No" --> WorkflowPos{"A later, non-repeatable<br/>workflow step already logged?"}
+    WorkflowPos -- "Yes (no new-season exception applies)" --> B3["BLOCK: engine-workflow-order"]
+    WorkflowPos -- "No" --> Rules["Check each matching validation_rule"]
+
+    Rules --> Occ{"Occurrence/frequency rule?<br/>(max N within a day window)"}
+    Occ -- "Yes, over limit" --> Issue["Add issue<br/>(block or warning, per rule)"]
+    Occ -- "No" --> Dep{"Rule has a<br/>dependency operation?"}
+    Dep -- "Required & missing" --> Issue
+    Dep -- "Present, or not required" --> Timing{"days since dependency<br/>vs rule's min/max window"}
+    Timing -- "Outside bounds<br/>(or inside, for interior-band rules)" --> Issue
+    Timing -- "Within bounds" --> Clean["No issue from this rule"]
+
+    B1 --> Report(["ValidationReport<br/>blocked = any block-severity issue"])
+    B2 --> Report
+    B3 --> Report
+    Issue --> Report
+    Clean --> Report
+```
+
+The real logic (`engine/validator.py`) handles more nuance than this diagram shows — the "new season" exception for annual crops, interior-band warning windows, self-referential interval rules — all documented inline in the source and locked in by `tests/test_engine.py`.
+
 **Error handling:** `validate_operation` raises `engine.exceptions.CropNotFoundError` for an unrecognized `crop_id`, and `engine.exceptions.InvalidOperationDataError` for a missing or malformed field (like a bad date format), rather than letting a raw `KeyError` or `ValueError` leak out. An unrecognized `operation_id` (a typo, or an operation that belongs to a different crop) is treated as a normal validation failure, not an exception, it comes back as a blocked `ValidationReport` with a clear message.
 
 ## Running the API
 
-**Live, deployed version:** `https://agtrail-api.onrender.com` — try `/docs` directly in a browser, nothing to install. Deployed via Render using `render.yaml` in the project root; pushing to `main` triggers a redeploy automatically.
+**Live, deployed version:** `https://validation.agrolinking.com` — try `/docs` directly in a browser, nothing to install. Deployed via Docker (`Dockerfile` in the project root) on a VPS.
 
 **Running it locally instead:**
 
@@ -147,6 +227,26 @@ Endpoints:
 
 Error responses: a `404` for a `crop_id` that doesn't exist, a `400` for a malformed field (like a bad date), and a `422` for a request missing a required field entirely (handled by FastAPI's own request validation, before our code even runs). All three are tested in `tests/test_api.py`.
 
+A `POST /validate` request, end to end:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as FastAPI app
+    participant V as engine.validator
+    participant L as engine.loader
+
+    C->>A: POST /validate {crop_id, new_operation, history}
+    A->>V: validate_operation(crop_id, new_operation, history, region)
+    V->>L: load_crop(crop_id)
+    L-->>V: crop JSON (operations, workflow, validation_rules)
+    V->>V: check operation known, order, workflow position, per-rule timing
+    V-->>A: ValidationReport (blocked, issues, warnings)
+    A-->>C: 200 ValidateResponse
+
+    Note over A,V: Unknown crop_id -> CropNotFoundError -> 404<br/>Malformed field -> InvalidOperationDataError -> 400
+```
+
 ## Suggestions: what's due next
 
 Separate from validation. Instead of checking whether a submitted record is valid, this answers "what should this farm do next, and by when."
@@ -176,9 +276,41 @@ curl -X POST http://127.0.0.1:8000/suggestions \
 
 This is a `POST`, even though it's conceptually a read, because it needs to send a `history` array, which doesn't fit into a `GET` request. Documented directly in `api/main.py`.
 
+**How `get_next_steps` decides:**
+
+```mermaid
+flowchart TD
+    Start(["get_next_steps called"]) --> Iterate["Walk workflow steps<br/>in step_number order"]
+    Iterate --> Logged{"Already logged<br/>at least once?"}
+    Logged -- "Yes" --> Iterate
+    Logged -- "No" --> Required{"Is this step<br/>required?"}
+    Required -- "No" --> Iterate
+    Required -- "Yes" --> Next["This is the next step"]
+    Iterate -- "No steps left" --> Done(["cycle_status:<br/>no_outstanding_required_steps"])
+
+    Next --> HasRule{"Timing rule<br/>exists for it?"}
+    HasRule -- "No" --> NoRule(["status: no_timing_rule"])
+    HasRule -- "Yes" --> HasDep{"Its dependency<br/>already logged?"}
+    HasDep -- "No" --> Blocked(["status: blocked_on_prerequisite"])
+    HasDep -- "Yes" --> Window{"Where is today vs. the<br/>narrowest matching rule's window?"}
+    Window -- "Before the window opens" --> Upcoming(["status: upcoming"])
+    Window -- "Inside the window" --> DueNow(["status: due_now"])
+    Window -- "Past the window" --> Overdue(["status: overdue"])
+```
+
 **This is a deliberately narrow v1.** It only looks at the next required, not-yet-logged step in the crop's workflow, and estimates a due window from the matching `validation_rule`. It does **not** model recurring due dates, once an operation has been logged even once, this stops suggesting it, even for operations that realistically need to happen again (a second round of weeding, cocoa's next seasonal harvest). That gap is intentional and documented in `engine/suggestions.py`'s module docstring rather than guessed at, modeling recurrence properly (weeding_2 isn't just "weeding_1 again," cocoa's harvest recurs with no interval currently encoded anywhere in the schema) is a real design problem for a later pass, not something to improvise here.
 
 One more thing worth knowing: "overdue" in a suggestion is relative to whichever rule the engine picks as the *typical* window, which is not always the same as the validator's hard block boundary. Cassava is the clearest example, its suggestion can say "overdue" once a farm passes the 270 to 450 day typical harvest window, even though the validator itself would never reject a late cassava harvest, since cassava's actual block rule has no upper bound at all. A reminder nudging someone past the normal window is still useful even when the crop is more forgiving than that window suggests. This is tested explicitly in `tests/test_suggestions.py`.
+
+## A real bug: operations logged out of workflow order
+
+The tech team reported that Land Preparation, Planting, and Harvest could all be logged on the same date without any flags being raised. This was real, and the root cause was worse than it first sounded: every existing rule only checked an operation's relationship to its *own* declared dependency (e.g. "does planting come after land preparation"), never its position relative to *everything else* already logged. So `land_preparation` submitted *after* `planting` and `harvest` already existed in history passed cleanly, since nothing was checking "has a later workflow step already happened?"
+
+`validate_operation` now includes a workflow-order sanity check: logging a one-time (non-repeatable) operation is blocked if a *later* one-time operation, per the crop's workflow order, has already been logged. This is deliberately more careful than it sounds, because a naive version of this fix would incorrectly block a real, legitimate case: starting a new planting season. Logging `land_clearing` again after a prior harvest is exactly how a farmer begins season two on an annual crop, that must still work.
+
+The fix distinguishes crops where harvest is a genuine cycle boundary (annual, single-harvest crops like maize, cassava, rice) from crops where it isn't (cocoa and cashew's recurring seasonal harvest, tomato and hibiscus's multiple picks within one planting). Only the former get a "new cycle" exception, and even then, only when the newly submitted operation is dated *strictly after* the last harvest, not on the same date as it, since a same-date submission is indistinguishable from the original bug rather than a believable restart. This edge case was caught while building the fix and is tested explicitly (`test_workflow_order_check_new_season_restart_same_date_as_harvest_is_not_trusted`).
+
+Nine tests in `tests/test_engine.py` cover this: the exact reported scenario, the same bug generalized beyond same-date submissions, and every legitimate case that must keep working (new season restart, repeatable operations interleaving freely, perennial crops never getting a cycle reset, and a full valid sequence validated step by step).
 
 ## Yield validation: is the reported harvest amount plausible
 
@@ -220,6 +352,7 @@ One implementation detail worth knowing if you're extending this: some tiers can
 - [x] Cocoa template (sourced v1.1.0 — flags a real conflict between sources on time-to-first-harvest, 18 months per one promotional source vs 3 to 5 years per every research source; yield figures still need their own sourcing pass)
 - [x] Cassava template (sourced, stress-tests an open-ended/no-max-date harvest window — schema needed no changes to support this)
 - [x] Validation tooling (script + tests)
+- [x] Fixed a real bug reported by the tech team: operations could be logged out of workflow order (e.g. land preparation submitted after planting and harvest already existed) without being caught, since no rule checked an operation's position relative to everything else already logged, only its relationship to its own specific dependency. Fixed with a new workflow-order check in `engine/validator.py`, carefully scoped so legitimate new-season restarts still work for annual crops while perennial crops never get an incorrect cycle reset. 9 new tests, confirmed against a live server, see README's "A real bug" section.
 - [x] Workflow/validation engine (`engine/` — core function + CLI, tested against all major stress-test scenarios: regional overrides, open-ended harvest, duplicate harvest, backdating, and now the cocoa 18-month claim)
 - [x] Edge case testing pass on the engine: found and fixed four real issues — an unrecognized operation_id silently passing with no error, raw Python exceptions leaking out for malformed input instead of clear typed errors, and (the most serious one) mixed-crop history on one farm silently picking up the wrong crop's dependency date and producing an incorrect block. All four are now fixed and locked in with tests.
 - [x] API layer (`api/` — FastAPI, `POST /validate`, `GET /crops`, `GET /health`, automatic docs at `/docs`, 8 new tests using FastAPI's TestClient, 32 tests passing total). Tested with a real running server, not just in-process, including both error paths (404 for unknown crop, 400 for malformed data).
@@ -234,6 +367,6 @@ One implementation detail worth knowing if you're extending this: some tiers can
 - [ ] Resolve flagged uncertainties: maize (Leaf Blight, Stem Borer sourcing — may now be resolved by the master ruleset, needs checking), cassava (land prep/planting interval sourcing, CBSD presence in Nigeria unconfirmed), cocoa (yield figures, the 18-month bearing claim, a candidate regional_overrides split for fertilizer by soil zone that CRIN's own literature mentions but doesn't give exact numbers for), sesame/ginger/cashew/hibiscus (missing pest/disease/soil/climate data across all four, flagged individually in each file's own notes)
 - [x] Fourth crop: Tomato, sourced. First crop to test a genuinely repeating harvest within one planting cycle (no once-only rule on the harvest operation), unlike maize/cassava's single terminal harvest or cocoa's separate multi-year seasons. Includes a properly sourced Tuta absoluta pest entry (over 80% documented crop loss in Nigeria, a 2015 national price crisis).
 - [x] Fifth crop: Rice (lowland/transplanted), sourced. First crop to model paddy water management (flooding) as an explicit operation, and the first cereal with a nursery-to-transplant lifecycle. Harvest window uses a clearly flagged derived estimate (converting sowing-based variety duration classes to days-after-transplanting) rather than a directly sourced figure. Deliberately scoped to lowland/transplanted rice only; upland and Fadama rice are explicitly flagged as not covered.
-- [ ] **High priority tier is done.** Next crops should move to Medium priority: Yam, Cowpea, Groundnut, Pepper, Onion, Oil Palm, Rubber, Coffee, Cotton (Maize, Cassava, and Tomato are already built from Medium, though only Maize and Tomato are reconciled against the master ruleset).
+- [x] **Medium priority tier complete.** OFSP, Cowpea, Yam, Groundnut, Pepper, Onion, Oil Palm, Rubber, Coffee, Cotton, and Vitamin A Maize added, bringing the knowledge base to 20 crops total. Maize and Tomato remain the only crops reconciled against the master ruleset; the rest still need that pass (see the reconciliation item above).
 - [ ] Recurrence modeling for suggestions (repeat-interval operations like weeding_2, and cocoa's seasonal harvest cycle)
-- [x] API deployed and live at `https://agtrail-api.onrender.com`, via Render's free tier using `render.yaml`. Verified end to end against the real deployed instance, not just locally: all endpoints, all documented error codes (400, 404, 422), confirmed working through the live `/docs` page.
+- [x] API deployed and live at `https://validation.agrolinking.com`, containerized via `Dockerfile` and running on a VPS. Verified end to end against the real deployed instance, not just locally: all endpoints, all documented error codes (400, 404, 422), confirmed working through the live `/docs` page.
