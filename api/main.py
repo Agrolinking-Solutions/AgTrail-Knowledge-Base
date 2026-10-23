@@ -69,11 +69,28 @@ def get_version() -> dict:
 # Read-only reference data under /v1. The files change only on a deploy, so the
 # responses carry an ETag and a one-hour cache lifetime: callers can keep a copy
 # and ask "has it changed?" with If-None-Match, getting an empty 304 back.
+def _etag_matches(if_none_match: str | None, etag: str) -> bool:
+    """
+    True when the caller already has this version. Uses weak comparison, as
+    HTTP specifies for If-None-Match: a proxy such as the platform's gzip layer
+    turns "abc" into W/"abc" on the way out, so the caller sends back W/"abc",
+    and that must still count as a match. Also accepts a list of tags and "*".
+    """
+    if not if_none_match:
+        return False
+    wanted = etag.removeprefix("W/")
+    for candidate in if_none_match.split(","):
+        candidate = candidate.strip()
+        if candidate == "*" or candidate.removeprefix("W/") == wanted:
+            return True
+    return False
+
+
 def _cached_json(request: Request, payload: dict) -> Response:
     body = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     etag = '"' + hashlib.sha256(body.encode("utf-8")).hexdigest()[:20] + '"'
     headers = {"ETag": etag, "Cache-Control": "public, max-age=3600"}
-    if request.headers.get("if-none-match") == etag:
+    if _etag_matches(request.headers.get("if-none-match"), etag):
         return Response(status_code=304, headers=headers)
     return Response(content=body, media_type="application/json", headers=headers)
 

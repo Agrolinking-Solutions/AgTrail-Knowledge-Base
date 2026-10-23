@@ -142,3 +142,18 @@ def test_the_endpoints_serve_the_files_unchanged():
 def test_existing_endpoints_are_untouched():
     assert client.get("/crops").status_code == 200
     assert "maize" in client.get("/crops").json()["crops"]
+
+
+@pytest.mark.parametrize("path", PATHS)
+def test_a_weak_etag_from_a_proxy_still_counts_as_unchanged(path):
+    # The platform's proxy rewrites "abc" to W/"abc"; the caller sends that back.
+    etag = client.get(path).headers["etag"]
+    assert client.get(path, headers={"If-None-Match": "W/" + etag}).status_code == 304
+
+
+def test_if_none_match_accepts_a_list_and_a_star():
+    etag = client.get("/v1/taxonomy").headers["etag"]
+    assert client.get("/v1/taxonomy", headers={"If-None-Match": f'"old", W/{etag}'}).status_code == 304
+    assert client.get("/v1/taxonomy", headers={"If-None-Match": "*"}).status_code == 304
+    assert client.get("/v1/taxonomy", headers={"If-None-Match": '"old", "older"'}).status_code == 200
+    assert client.get("/v1/taxonomy", headers={"If-None-Match": ""}).status_code == 200
