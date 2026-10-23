@@ -1,0 +1,302 @@
+{
+  "_about": "Maps each of Nigeria's 36 states plus the FCT to geo_zone (the six official geopolitical zones, which PIS uses for price zones) and a default agro_zone (the zone name the Knowledge Base uses in regional_overrides). geo_zone is a standard fact. agro_zone is only a default: agro-ecological zones cross state borders, and a farm can override it. agro_zone is null where the Knowledge Base has no zone-specific rules yet (today only 'Nigeria - Guinea Savanna' and 'Nigeria - Sudan Savanna' exist, in the maize files). Every agro_zone value is UNVERIFIED until an agronomist reviews it. Bauchi, Gombe, Borno and Adamawa are left null on purpose because they straddle zones.",
+  "pis_source": "PIS state prices exist for 12 states (data/external/zones_config.json in Agrolinking-Intelligence)",
+  "states": [
+    {
+      "state": "Abia",
+      "geo_zone": "South East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Adamawa",
+      "geo_zone": "North East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Akwa Ibom",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Anambra",
+      "geo_zone": "South East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Bauchi",
+      "geo_zone": "North East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Bayelsa",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Benue",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Borno",
+      "geo_zone": "North East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Cross River",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Delta",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Ebonyi",
+      "geo_zone": "South East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Edo",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Ekiti",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Enugu",
+      "geo_zone": "South East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "FCT",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Gombe",
+      "geo_zone": "North East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Imo",
+      "geo_zone": "South East",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Jigawa",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Kaduna",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Kano",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Katsina",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Kebbi",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Kogi",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Kwara",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Lagos",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Nasarawa",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Niger",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Ogun",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Ondo",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Osun",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Oyo",
+      "geo_zone": "South West",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Plateau",
+      "geo_zone": "North Central",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Rivers",
+      "geo_zone": "South South",
+      "agro_zone": null,
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": true,
+      "agro_zone_review_status": "no zone rules yet"
+    },
+    {
+      "state": "Sokoto",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Taraba",
+      "geo_zone": "North East",
+      "agro_zone": "Nigeria - Guinea Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Yobe",
+      "geo_zone": "North East",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": true,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    },
+    {
+      "state": "Zamfara",
+      "geo_zone": "North West",
+      "agro_zone": "Nigeria - Sudan Savanna",
+      "agro_zone_crosses_borders": false,
+      "has_pis_state_prices": false,
+      "agro_zone_review_status": "UNVERIFIED"
+    }
+  ]
+}
