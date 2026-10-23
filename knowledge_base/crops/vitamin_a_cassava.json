@@ -436,7 +436,7 @@
   "version_history": [
     {
       "version": "1.0.0",
-      "date": "2026-10-24",
+      "date": "2026-10-23",
       "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
       "summary": "Initial file for Vitamin A Cassava, the last ruleset crop with no file. Timing rules follow section 5 of the ruleset (standard cassava) exactly, plus an optional 'Certified Stem Source' operation from section 22. Soil, weather, disease and pest entries are copied from cassava.json. NOT enforceable by the current engine, and therefore recorded here only: (0) the soft warning when no certified stem source is recorded before planting (the engine can only block or skip when an earlier operation is missing, never warn); (1) the garri rule that sun-drying during the roasting phase is a hard block, because roasting and sun-drying are not separate loggable steps; (2) the staggered-harvest check that cumulative harvested area cannot exceed 100% of the plot, because the engine does not track area. Harvest is therefore allowed to repeat, as the ruleset describes. Workflow 'required' flags are provisional.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"

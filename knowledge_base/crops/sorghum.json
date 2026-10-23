@@ -469,7 +469,7 @@
   "version_history": [
     {
       "version": "1.0.0",
-      "date": "2026-10-24",
+      "date": "2026-10-23",
       "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
       "summary": "Initial file for Sorghum, one of three ruleset crops that had no file (with Pearl Millet and Vitamin A Cassava). Operations, timing limits and yield bands come from the AgTrail Master Agronomist & Validator Ruleset. Soil, pests and diseases come from the web sources cited on each entry, with lower confidence. Workflow 'required' flags are provisional.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"

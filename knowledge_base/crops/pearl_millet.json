@@ -360,7 +360,7 @@
   "version_history": [
     {
       "version": "1.0.0",
-      "date": "2026-10-24",
+      "date": "2026-10-23",
       "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
       "summary": "Initial file for Pearl Millet, one of three ruleset crops that had no file (with Sorghum, added earlier, and Vitamin A Cassava). Operations, timing limits and yield bands come from the ruleset. Disease and pest entries come from cited ICRISAT and survey sources at lower confidence; no rainfall, temperature or pH figures were found, so none are entered. Workflow 'required' flags are provisional.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
