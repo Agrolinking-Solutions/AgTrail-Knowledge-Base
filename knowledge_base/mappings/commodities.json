@@ -147,6 +147,14 @@
       "review_status": "UNVERIFIED"
     },
     {
+      "crop_id": "soybean",
+      "pis_commodity": "Soybeans",
+      "conversion_factor": 1.0,
+      "conversion_note": "Yield is tonnes of soybean grain and PIS prices soybeans per tonne. Confirm the PIS price is for grain.",
+      "price_status": "priced",
+      "review_status": "UNVERIFIED"
+    },
+    {
       "crop_id": "tomato",
       "pis_commodity": null,
       "conversion_factor": null,
@@ -172,7 +180,6 @@
     }
   ],
   "pis_commodities_without_a_crop_file": {
-    "Soybeans": "Grown on about 47 AgTrail farms but has no Knowledge Base crop file. First candidate to add.",
     "Wheat": "No Knowledge Base crop file.",
     "Beans (white)": "Also used by cowpea above, once decided.",
     "Beans (red)": "Also used by cowpea above, once decided.",

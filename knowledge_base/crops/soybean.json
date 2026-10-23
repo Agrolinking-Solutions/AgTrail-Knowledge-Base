@@ -1,0 +1,453 @@
+{
+  "metadata": {
+    "crop_id": "soybean",
+    "name": "Soybean (Glycine max)",
+    "scientific_name": "Glycine max",
+    "category": "legume",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 105,
+    "regions": [
+      "Nigeria - Guinea Savanna",
+      "Nigeria - Sudan Savanna"
+    ],
+    "current_version": "1.0.0"
+  },
+  "growth_stages": [
+    {
+      "stage_id": "establishment",
+      "name": "Germination & Early Growth",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 14,
+      "description": "Emergence and seedling establishment, up to the first weeding at about 2 weeks after planting. Seedlings depend on soil nitrogen until nodulation starts, and Phytophthora seedling blight shows up at this stage in poorly drained fields."
+    },
+    {
+      "stage_id": "vegetative",
+      "name": "Vegetative Growth",
+      "starts_day_after_planting": 15,
+      "ends_day_after_planting": 42,
+      "description": "Weed-sensitive period, ending with the second weeding at 5-6 weeks after planting. The crop is very tolerant of caterpillars but very susceptible to silverleaf whitefly, which also carries the soybean virus diseases."
+    },
+    {
+      "stage_id": "flowering_pod_fill",
+      "name": "Flowering & Pod Fill",
+      "starts_day_after_planting": 43,
+      "ends_day_after_planting": 89,
+      "description": "From flowering onwards the crop attracts pod-sucking bugs that can seriously reduce seed quality. The source gives no day numbers for flowering, so this window simply bridges the weeding times and the maturity period it states."
+    },
+    {
+      "stage_id": "maturity",
+      "name": "Maturity & Harvest",
+      "starts_day_after_planting": 90,
+      "ends_day_after_planting": 120,
+      "description": "Soybean matures within 3-4 months after planting. Harvest when about 85% of pods have turned brown (80% for shattering varieties)."
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Clear all vegetation before land preparation.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Prepare the seedbed by hoe, animal-drawn implement or tractor; plant on ridges or flat. Well-prepared land gives good germination and fewer weeds.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "phosphorus_application",
+      "name": "Phosphorus & Basal Fertilizer",
+      "category": "input_application",
+      "description": "Incorporate single super phosphate (30 kg P/ha) plus compound NPK 15:15:15 at land preparation, during harrowing and levelling. Nitrogen and potassium only where deficiency is obvious.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "seed_selection_treatment",
+      "name": "Seed Selection & Dressing",
+      "category": "land_prep",
+      "description": "Use seed under 12 months old with germination of 85% or more, and dress it with a fungicide (Captan, Apron Plus or Thiram) before planting.",
+      "requires_evidence": false,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting",
+      "category": "planting",
+      "description": "Plant as soon as the rains are well established, seeds 2-5 cm deep. 75 cm between rows and 10 cm between stands, or drill at 50-75 cm by 5 cm. Early-maturing varieties respond better to 50 cm rows.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "First weeding at about 2 weeks after planting. Avoid weeding straight after rain, which replants the weeds.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "weeding_2",
+      "name": "Second Weeding",
+      "category": "crop_management",
+      "description": "Second weeding at 5-6 weeks after planting. If a herbicide was applied at planting, this is the only weeding needed.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Insect Control",
+      "category": "pest_disease_control",
+      "description": "A single spray of cypermethrin plus dimethoate (10 EC) from flowering controls pod-sucking bugs. A foliar fungicide is seldom warranted except on high-value or seed fields.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest",
+      "category": "harvest",
+      "description": "Cut at ground level (do not pull by hand) when about 85% of pods are brown.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "drying_threshing",
+      "name": "Drying & Threshing",
+      "category": "post_harvest",
+      "description": "Stack the cut plants loosely on a tarpaulin and dry in the open for 2 weeks before threshing, by hand for small scale or by machine, then winnow.",
+      "requires_evidence": false,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "storage",
+      "name": "Storage",
+      "category": "post_harvest",
+      "description": "Store at 10% moisture or less. Grain is about 14% at harvest: dry to 13% for 6-12 months of storage and to 10-11% for longer. Keep bags on a rack in shade.",
+      "requires_evidence": false,
+      "can_repeat": false
+    }
+  ],
+  "workflow": [
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "phosphorus_application",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "seed_selection_treatment",
+      "required": false
+    },
+    {
+      "step_number": 5,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 6,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding_2",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 9,
+      "operation_id": "harvest",
+      "required": true
+    },
+    {
+      "step_number": 10,
+      "operation_id": "drying_threshing",
+      "required": false
+    },
+    {
+      "step_number": 11,
+      "operation_id": "storage",
+      "required": false
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "soybean_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing. The 30-day interval is the cross-crop default.",
+      "source": "General cross-crop default (same pattern as maize.json and cowpea.json), not independently sourced to a soybean-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "soybean_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Planting more than 30 days after land preparation is flagged because weeds re-establish. Planting before land preparation is caught by the global sequencing rule (soybean_r11). The 30 days is the cross-crop default; the IITA guide only says well-prepared land gives good germination.",
+      "source": "General cross-crop default (same pattern as maize.json and cowpea.json), not independently sourced to a soybean-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "soybean_r4",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 7,
+      "max_days_after_dependency": 21,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "IITA recommends the first weeding at 2 weeks after planting. The window of 1 to 3 weeks around that is a proposal, not a figure in the guide: a delayed first weeding can cut yield significantly, so late weeding is flagged, never blocked. Flagged for agronomist review.",
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com). Window width is a proposal."
+    },
+    {
+      "rule_id": "soybean_r5",
+      "operation_id": "weeding_2",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 35,
+      "max_days_after_dependency": 42,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "IITA recommends the second weeding at 5-6 weeks after planting (35-42 days). Outside that is flagged, never blocked.",
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "rule_id": "soybean_r8",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 90,
+      "max_days_after_dependency": 120,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Soybean matures within 3-4 months after planting, so 90-120 days is the expected window. Outside it is flagged so the farmer can confirm the variety's maturity. No hard-block floor or ceiling is given in the source: the agronomist should set one.",
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com). No hard limits stated."
+    },
+    {
+      "rule_id": "soybean_r9",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first.",
+      "source": "Same rule as maize_r9."
+    },
+    {
+      "rule_id": "soybean_r10",
+      "operation_id": "drying_threshing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "IITA says to dry the cut plants in the open for 2 weeks before threshing. Threshing logged sooner than 14 days after harvest is flagged.",
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "rule_id": "soybean_r11",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Same rule as maize_r11."
+    }
+  ],
+  "soil_requirements": {
+    "ph_min": 4.5,
+    "ph_max": 8.5,
+    "texture": [
+      "any except sandy, gravelly or shallow soils"
+    ],
+    "drainage": "well-drained (avoid waterlogged soils and soils whose surface crusts)",
+    "nitrogen_needs": "low"
+  },
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 700,
+    "notes": "Performs well in the southern and northern Guinea savannas where rainfall is more than 700 mm. Short-duration varieties can thrive in the drier Sudan savanna if sown early with even rainfall through the season; early and extra-early varieties are strongly recommended there. A short-day plant: it flowers as days shorten, so planting time depends on temperature and day length. No temperature range is stated in the source, so none is entered. Recommended planting: early June to early July (moist and southern Guinea savanna), mid-June to early July (northern Guinea to Sudan savanna), and the first two weeks of July (Sudan savanna). Do not plant too early (a dry spell after planting can wilt the crop) or too late (late-season pests and early end of rains)."
+  },
+  "diseases": [
+    {
+      "name": "Asian soybean rust (Phakopsora pachyrhizi)",
+      "risk_stage_ids": [
+        "vegetative",
+        "flowering_pod_fill"
+      ],
+      "symptoms": "Small tan to dark brown lesions with raised pustules on the underside of leaves; severe infection causes early leaf drop and yield losses up to 80%. Most important in the derived and southern Guinea savanna, where rainfall and humidity are high.",
+      "management": "Plant resistant varieties (TGX 1835-10E is rust resistant), use a good seedbed, treat seed with fungicide, and rotate with maize. A foliar fungicide is seldom warranted except on high-value or seed fields.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "name": "Bacterial pustule (Xanthomonas axonopodis pv. glycines)",
+      "risk_stage_ids": [
+        "vegetative",
+        "flowering_pod_fill"
+      ],
+      "symptoms": "Specks to large irregular spots with raised light pustules on the underside of leaves; lesions join and tear away, giving ragged leaves. Can look like rust.",
+      "management": "Resistant varieties (TGX 1835-10E and TGX 1485-1D are pustule resistant), good seedbed, treated seed, rotation with maize.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "name": "Phytophthora seedling blight and root and stem rot (Phytophthora sojae)",
+      "risk_stage_ids": [
+        "establishment",
+        "vegetative"
+      ],
+      "symptoms": "Young seedlings turn yellow, wilt and die; brown discolouration rises from the soil line. The root rot phase is described as rapidly becoming very destructive in Nigeria and can kill plants at any stage. Occurs in poorly drained fields, or normally well-drained fields waterlogged for 7-14 days.",
+      "management": "Resistant varieties, a good seedbed, avoid poorly drained or compacted soil, fungicide-treated seed, rotation with maize.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "name": "Frogeye leaf spot (Cercospora sojina)",
+      "risk_stage_ids": [
+        "vegetative",
+        "flowering_pod_fill"
+      ],
+      "symptoms": "Brown circular to irregular leaf spots with narrow reddish brown margins and grey centres; can reach stems and pods, and infected seed shows grey or brown discolouration. Survives in infected residue and seed.",
+      "management": "Resistant varieties, good seedbed, treated seed, rotation with maize.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "name": "Virus diseases (soybean mosaic, yellow mosaic, dwarf)",
+      "risk_stage_ids": [
+        "establishment",
+        "vegetative"
+      ],
+      "symptoms": "Mosaic, mottling, leaf curling and stunting. Cowpea mild mottle virus, carried by whitefly, is the most common; yellow mosaic is a whitefly-carried begomovirus; dwarf plants make no pods. Plants infected before flowering are worst hit.",
+      "management": "Resistant varieties; certified seed (many viruses are seed-transmitted); never plant seed from mosaic-affected plants; rogue symptomatic plants; clear weeds nearby; treat seed with a systemic insecticide and apply one or two foliar insecticide sprays before flowering to cut vector activity.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    }
+  ],
+  "pests": [
+    {
+      "name": "Pod-sucking bugs (Nezara viridula, Riptortus dentipes, Anoplocnemis curvipes and others)",
+      "risk_stage_ids": [
+        "flowering_pod_fill"
+      ],
+      "symptoms": "From flowering onwards the crop attracts pod-sucking bugs that can seriously reduce seed quality. Early pod fill is the most sensitive stage. A 1988 citation reports yield losses of 25-60% from stink bugs in Nigeria; a Samaru study found populations often stayed below the economic threshold.",
+      "management": "A single spray of cypermethrin plus dimethoate 10 EC at 100 mL in 15 L of water (IITA). Sow date matters: late sowing raised bug numbers in Maiduguri trials.",
+      "confidence": 0.75,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com); International Journal of Tropical Insect Science, pod-sucking bugs on soybean and cowpea in Benue State; Kubanni (ABU) study of soybean insect pests at Samaru, Zaria."
+    },
+    {
+      "name": "Silverleaf whitefly (Bemisia tabaci)",
+      "risk_stage_ids": [
+        "establishment",
+        "vegetative"
+      ],
+      "symptoms": "In the vegetative stage the crop is very susceptible to whitefly attack, and whitefly carries the mosaic and yellow mosaic viruses.",
+      "management": "Seed treatment with a systemic insecticide and one or two foliar sprays before flowering (IITA, under virus management).",
+      "confidence": 0.85,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "name": "Weeds (annual and perennial)",
+      "risk_stage_ids": [
+        "establishment",
+        "vegetative"
+      ],
+      "symptoms": "A problem in the early growth stages. Poor hoe weeding or delay can cause significant yield reductions.",
+      "management": "Weed at about 2 weeks and again at 5-6 weeks after planting, or apply a herbicide within 2 days of planting and weed once at 5-6 weeks. Close row spacing helps smother weeds.",
+      "confidence": 0.9,
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    }
+  ],
+  "yield_model": {
+    "expected_yield_per_hectare": "0.8 - 2.5",
+    "unit": "tonnes",
+    "factors": [
+      "variety and seed quality",
+      "phosphorus fertilizer",
+      "inoculation with Rhizobium",
+      "weed control timing",
+      "plant population",
+      "water availability (irrigated Ibadan trials gave the highest yield)",
+      "rust and Phytophthora pressure"
+    ],
+    "confidence": 0.5,
+    "notes": "Not stated in the IITA guide, so taken from web sources. IITA project report: farmer yields from developed varieties 0.8-1.2 t/ha. IITA-partnered trials of TGx 1448-2E: 2.0-2.5 t/ha on average, ranging from 0.7 t/ha (Badeggi) to 2.8 t/ha (Ibadan, irrigated). A study citing Ronner et al. 2016 gives Nigeria's average as below 1 t/ha against a potential above 3 t/ha. Sources: iita.org news item 15511; bulletin.iita.org soybean business incubation article. Flagged for agronomist review."
+  },
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.7,
+        "severity": "warning",
+        "message": "Below the lowest site yield in the IITA-partnered trials (0.7 t/ha); verify plot area, rust and Phytophthora pressure, and weeding history."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.7,
+        "max": 3.0,
+        "severity": "pass",
+        "message": "Farmer-to-good-practice range reported for Nigeria."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 3.0,
+        "severity": "warning",
+        "message": "Above the potential yield of about 3 t/ha reported for Nigeria; requires manual review of seed, irrigation and plot area. Check the unit is not kilograms."
+      }
+    ],
+    "source": "Web sources only (iita.org news item 15511; bulletin.iita.org; a study citing Ronner et al. 2016), because the Master Ruleset has no soybean section and the IITA guide states no yields. NO HARD-BLOCK CEILING IS GIVEN: no source was found for a biological maximum, so one has deliberately not been invented. The agronomist should set it. GPS-anchored-area caveat as for the other crops."
+  },
+  "regional_overrides": [],
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - new crop, sourced from the web because the master ruleset has none",
+      "summary": "Initial file for Soybean, the second most common crop on AgTrail farms (about 47 farms) and a PIS-priced commodity. Agronomy comes from IITA's Farmers' Guide to Soybean Production in Northern Nigeria (2009). Yields come from IITA web reports. No hard-block yield ceiling is set, and the first-weeding window width is a proposal. Not reviewed by an agronomist: treat all intervals as provisional.",
+      "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    }
+  ]
+}
