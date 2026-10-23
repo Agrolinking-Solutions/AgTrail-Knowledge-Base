@@ -42,6 +42,32 @@ def regions() -> dict:
     return _load_mapping("regions.json")
 
 
+def crop_steps(crop_id: str) -> dict:
+    """
+    The steps a crop's rules know about, in workflow order, each with its shared
+    signal category. This is what lets a caller that only knows broad categories
+    ("weeding") work out which step a logged operation is ("weeding_1").
+    Raises CropNotFoundError for a crop with no file.
+    """
+    from .loader import load_crop
+
+    crop = load_crop(crop_id)
+    names = {op["operation_id"]: op["name"] for op in crop.get("operations", [])}
+    steps = []
+    for step in sorted(crop.get("workflow", []), key=lambda w: w["step_number"]):
+        operation_id = step["operation_id"]
+        steps.append(
+            {
+                "step_number": step["step_number"],
+                "operation_id": operation_id,
+                "name": names.get(operation_id, operation_id),
+                "signal_category": signal_category_for(crop_id, operation_id),
+                "required": bool(step.get("required", False)),
+            }
+        )
+    return {"crop_id": crop_id, "steps": steps}
+
+
 def signal_categories() -> list[str]:
     return [c["id"] for c in taxonomy()["categories"]]
 
