@@ -117,10 +117,21 @@ def get_region_mapping(request: Request) -> Response:
 
 
 @app.get("/crops", response_model=CropsResponse)
+@app.get("/v1/crops", response_model=CropsResponse, tags=["reference data"])
 def get_crops() -> CropsResponse:
     return CropsResponse(crops=list_crops())
 
 
+@app.get("/v1/crops/{crop_id}/steps", responses={**_NOT_MODIFIED, 404: {"description": "Unrecognized crop_id"}}, tags=["reference data"])
+def get_crop_steps(crop_id: str, request: Request) -> Response:
+    """The crop's steps in workflow order, each with its shared signal category."""
+    try:
+        return _cached_json(request, taxonomy_data.crop_steps(crop_id))
+    except CropNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.post("/v1/validate", tags=["validation"], response_model=ValidateResponse, include_in_schema=True)
 @app.post(
     "/validate",
     response_model=ValidateResponse,
@@ -160,6 +171,7 @@ def validate(request: ValidateRequest) -> ValidateResponse:
 # There's no standard, broadly-supported way to send a body with a GET
 # request (most HTTP clients strip it), so POST is the pragmatic choice here,
 # same as how complex read queries are commonly handled in real APIs.
+@app.post("/v1/suggestions", tags=["validation"], response_model=SuggestionsResponse)
 @app.post(
     "/suggestions",
     response_model=SuggestionsResponse,
@@ -211,6 +223,7 @@ def suggestions(request: SuggestionsRequest) -> SuggestionsResponse:
     )
 
 
+@app.post("/v1/validate-yield", tags=["validation"], response_model=YieldValidateResponse)
 @app.post(
     "/validate-yield",
     response_model=YieldValidateResponse,
