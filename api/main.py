@@ -14,10 +14,13 @@ the server is running.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from datetime import date
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
 
+from engine import taxonomy as taxonomy_data
 from engine.exceptions import CropNotFoundError, InvalidOperationDataError
 from engine.loader import list_crops
 from engine.suggestions import get_next_steps
@@ -49,6 +52,51 @@ app = FastAPI(
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
+
+
+@app.get("/v1/version", tags=["reference data"])
+def get_version() -> dict:
+    """
+    What version of the knowledge base is running. kb_version changes whenever
+    any crop or mapping file changes, so callers that stamp their results with
+    it know when to recompute them. commit is only present when the deploy
+    platform provides it. (Kept off /health on purpose: /health stays exactly
+    as monitors already expect it.)
+    """
+    return {"kb_version": taxonomy_data.kb_version(), "commit": taxonomy_data.source_commit()}
+
+
+# Read-only reference data under /v1. The files change only on a deploy, so the
+# responses carry an ETag and a one-hour cache lifetime: callers can keep a copy
+# and ask "has it changed?" with If-None-Match, getting an empty 304 back.
+def _cached_json(request: Request, payload: dict) -> Response:
+    body = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    etag = '"' + hashlib.sha256(body.encode("utf-8")).hexdigest()[:20] + '"'
+    headers = {"ETag": etag, "Cache-Control": "public, max-age=3600"}
+    if request.headers.get("if-none-match") == etag:
+        return Response(status_code=304, headers=headers)
+    return Response(content=body, media_type="application/json", headers=headers)
+
+
+_NOT_MODIFIED = {304: {"description": "Unchanged since the ETag in If-None-Match"}}
+
+
+@app.get("/v1/taxonomy", responses=_NOT_MODIFIED, tags=["reference data"])
+def get_taxonomy(request: Request) -> Response:
+    """The shared operation categories and the operation_id mapping. Every row is UNVERIFIED until approved."""
+    return _cached_json(request, taxonomy_data.taxonomy())
+
+
+@app.get("/v1/mappings/commodities", responses=_NOT_MODIFIED, tags=["reference data"])
+def get_commodity_mapping(request: Request) -> Response:
+    """Which PIS commodity prices each crop, and the yield conversion factor."""
+    return _cached_json(request, taxonomy_data.commodities())
+
+
+@app.get("/v1/mappings/regions", responses=_NOT_MODIFIED, tags=["reference data"])
+def get_region_mapping(request: Request) -> Response:
+    """Each state's geopolitical zone and default agro-ecological zone."""
+    return _cached_json(request, taxonomy_data.regions())
 
 
 @app.get("/crops", response_model=CropsResponse)

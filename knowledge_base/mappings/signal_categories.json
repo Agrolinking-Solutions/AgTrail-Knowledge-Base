@@ -1,0 +1,442 @@
+{
+  "_about": "The shared list of farm operation types used by the Knowledge Base, AgTrail and the monitoring hub, and the mapping of every Knowledge Base operation_id onto it. The mapping is by operation_id and is the same for every crop unless crop_overrides says otherwise. review_status 'proposed' means a clear mapping waiting for approval and 'needs-decision' means an agronomist must choose. Nothing here is approved yet, so the whole file is UNVERIFIED. satellite_evidence is informational and comes from the integration plan; it is also UNVERIFIED.",
+  "review_status": "UNVERIFIED",
+  "categories": [
+    {
+      "id": "land_preparation",
+      "description": "Clearing and preparing the plot.",
+      "satellite_evidence": "good (bare soil)"
+    },
+    {
+      "id": "planting",
+      "description": "Putting seed or seedlings in the field.",
+      "satellite_evidence": "delayed (green-up 2 to 4 weeks later)"
+    },
+    {
+      "id": "weeding",
+      "description": "Removing weeds.",
+      "satellite_evidence": "weak (a small dip is normal)"
+    },
+    {
+      "id": "fertilizer_application",
+      "description": "Nutrient inputs.",
+      "satellite_evidence": "weak (growth continues)"
+    },
+    {
+      "id": "pest_control",
+      "description": "Treating pests or disease.",
+      "satellite_evidence": "medium (dip, then recovery)"
+    },
+    {
+      "id": "harvesting",
+      "description": "Harvest.",
+      "satellite_evidence": "strong (sharp drop)"
+    },
+    {
+      "id": "sorting_grading",
+      "description": "After harvest: sorting and grading.",
+      "satellite_evidence": "none"
+    },
+    {
+      "id": "cleaning_drying",
+      "description": "After harvest: cleaning and drying.",
+      "satellite_evidence": "none"
+    },
+    {
+      "id": "processing",
+      "description": "After harvest: processing.",
+      "satellite_evidence": "none"
+    },
+    {
+      "id": "storage",
+      "description": "After harvest: storage.",
+      "satellite_evidence": "none"
+    },
+    {
+      "id": "other",
+      "description": "Anything else, such as irrigation, pruning or thinning.",
+      "satellite_evidence": "not used"
+    }
+  ],
+  "operations": {
+    "calcium_application": {
+      "name": "Calcium (Gypsum) Application",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "A nutrient input."
+    },
+    "cover_crop_establishment": {
+      "name": "Legume Cover Crop Establishment",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Sowing a cover crop is not planting the main crop."
+    },
+    "curing": {
+      "name": "Curing (Field Curing)",
+      "kb_category": "post_harvest",
+      "signal_category": "cleaning_drying",
+      "review_status": "needs-decision",
+      "reason": "Curing onions or sweet potatoes is a drying step."
+    },
+    "curing_storage": {
+      "name": "Curing & Storage",
+      "kb_category": "post_harvest",
+      "signal_category": "storage",
+      "review_status": "proposed",
+      "reason": "Curing and storing together."
+    },
+    "drying": {
+      "name": "Drying",
+      "kb_category": "post_harvest",
+      "signal_category": "cleaning_drying",
+      "review_status": "proposed",
+      "reason": "Drying the harvest."
+    },
+    "drying_threshing": {
+      "name": "Drying & Threshing",
+      "kb_category": "post_harvest",
+      "signal_category": "cleaning_drying",
+      "review_status": "needs-decision",
+      "reason": "Drying plus threshing. Threshing could be processing."
+    },
+    "fermentation": {
+      "name": "Fermentation",
+      "kb_category": "post_harvest",
+      "signal_category": "processing",
+      "review_status": "proposed",
+      "reason": "Fermenting cocoa is processing."
+    },
+    "fertilizer_application": {
+      "name": "Fertilizer Application (NPK)",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "Same name."
+    },
+    "field_draining": {
+      "name": "Field Draining",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Draining a flooded field. No matching category."
+    },
+    "fire_trace_maintenance": {
+      "name": "Fire-Trace Maintenance",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Firebreaks round a tree crop. No matching category."
+    },
+    "first_fertilizer": {
+      "name": "First Fertilizer Application (Basal)",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "First fertilizer."
+    },
+    "gap_filling": {
+      "name": "Gap Filling / Replanting",
+      "kb_category": "planting",
+      "signal_category": "planting",
+      "review_status": "needs-decision",
+      "reason": "Replanting missing stands. Partly a planting, but it only changes part of the field."
+    },
+    "girth_monitoring": {
+      "name": "Girth Monitoring",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Measuring trees, a check not an operation."
+    },
+    "harvest": {
+      "name": "Harvest",
+      "kb_category": "harvest",
+      "signal_category": "harvesting",
+      "review_status": "proposed",
+      "reason": "Same meaning."
+    },
+    "harvest_fresh": {
+      "name": "Harvest (Fresh/Green Cob)",
+      "kb_category": "harvest",
+      "signal_category": "harvesting",
+      "review_status": "proposed",
+      "reason": "Early or fresh harvest."
+    },
+    "irrigation": {
+      "name": "Irrigation",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "proposed",
+      "reason": "The shared list puts irrigation under other."
+    },
+    "isolation_verification": {
+      "name": "Isolation Distance Verification",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "A check, not a field operation."
+    },
+    "land_clearing": {
+      "name": "Land Clearing",
+      "kb_category": "land_prep",
+      "signal_category": "land_preparation",
+      "review_status": "proposed",
+      "reason": "Clearing the plot is land preparation."
+    },
+    "land_preparation": {
+      "name": "Land Preparation (Mounding/Ridging)",
+      "kb_category": "land_prep",
+      "signal_category": "land_preparation",
+      "review_status": "proposed",
+      "reason": "Same name as the category."
+    },
+    "milling": {
+      "name": "Milling",
+      "kb_category": "post_harvest",
+      "signal_category": "processing",
+      "review_status": "proposed",
+      "reason": "Milling is processing."
+    },
+    "mulching": {
+      "name": "Mulching",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Covering the soil. No matching category."
+    },
+    "nitrogen_application": {
+      "name": "Nitrogen Application",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "A nutrient input."
+    },
+    "nursery_establishment": {
+      "name": "Nursery Establishment",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "A nursery is not the field planting. A planting signal expects green-up in the field 2 to 4 weeks later, which a nursery would not cause."
+    },
+    "pest_disease_control": {
+      "name": "Pest & Disease Scouting/Control",
+      "kb_category": "pest_disease_control",
+      "signal_category": "pest_control",
+      "review_status": "proposed",
+      "reason": "Same meaning."
+    },
+    "pest_scouting": {
+      "name": "Pest & Disease Scouting/Control",
+      "kb_category": "pest_disease_control",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Looking for pests, not controlling them. Satellite would show no change."
+    },
+    "phosphorus_application": {
+      "name": "Phosphorus Fertilizer Application (SSP/DAP)",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "A nutrient input."
+    },
+    "planting": {
+      "name": "Planting",
+      "kb_category": "planting",
+      "signal_category": "planting",
+      "review_status": "proposed",
+      "reason": "Same name as the category."
+    },
+    "planting_material_sourcing": {
+      "name": "Planting Material Sourcing",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Buying or collecting material, not a field operation."
+    },
+    "post_harvest_handling": {
+      "name": "Post-Harvest Handling",
+      "kb_category": "post_harvest",
+      "signal_category": "sorting_grading",
+      "review_status": "needs-decision",
+      "reason": "A general handling step. Sorting is the closest category."
+    },
+    "processing": {
+      "name": "Processing (Wet-Pulp or Dry)",
+      "kb_category": "post_harvest",
+      "signal_category": "processing",
+      "review_status": "proposed",
+      "reason": "Same name."
+    },
+    "pruning": {
+      "name": "Pruning",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "proposed",
+      "reason": "The shared list puts pruning under other."
+    },
+    "reridging": {
+      "name": "Re-ridging / Hilling",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Earthing up ridges, often done with weeding. No matching category."
+    },
+    "ring_weeding": {
+      "name": "Ring Weeding",
+      "kb_category": "crop_management",
+      "signal_category": "weeding",
+      "review_status": "proposed",
+      "reason": "Weeding round each tree."
+    },
+    "second_fertilizer": {
+      "name": "Second Fertilizer Application (Top-dress)",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "Second fertilizer."
+    },
+    "seed_selection": {
+      "name": "Seed/Variety Selection",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Preparation with no visible change on the farm."
+    },
+    "seed_selection_treatment": {
+      "name": "Seed Selection & Treatment",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Preparation with no visible change on the farm."
+    },
+    "seed_yam_selection": {
+      "name": "Seed Yam Selection & Treatment",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Preparation with no visible change on the farm."
+    },
+    "shade_management": {
+      "name": "Shade Management",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Managing shade trees. No matching category."
+    },
+    "shade_tree_establishment": {
+      "name": "Shade Tree Establishment",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Perennial shade trees, not the main crop."
+    },
+    "split_fertilizer": {
+      "name": "Split Fertilizer Application",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "Fertilizer in split doses."
+    },
+    "splitting": {
+      "name": "Washing & Splitting",
+      "kb_category": "post_harvest",
+      "signal_category": "processing",
+      "review_status": "proposed",
+      "reason": "Splitting ginger or cashew is processing."
+    },
+    "staking": {
+      "name": "Staking",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Supporting plants. No matching category."
+    },
+    "stimulation": {
+      "name": "Ethephon Stimulation",
+      "kb_category": "input_application",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Rubber latex stimulation is a chemical on the tree, not a fertilizer."
+    },
+    "storage": {
+      "name": "Storage",
+      "kb_category": "post_harvest",
+      "signal_category": "storage",
+      "review_status": "proposed",
+      "reason": "Same name."
+    },
+    "tapping": {
+      "name": "Tapping",
+      "kb_category": "harvest",
+      "signal_category": "harvesting",
+      "review_status": "needs-decision",
+      "reason": "Rubber latex is harvested by tapping many times. Satellite evidence would not apply to a tree crop."
+    },
+    "thinning": {
+      "name": "Thinning",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "proposed",
+      "reason": "The shared list puts thinning under other."
+    },
+    "third_fertilizer": {
+      "name": "Third Fertilizer (Potassium, fruiting)",
+      "kb_category": "input_application",
+      "signal_category": "fertilizer_application",
+      "review_status": "proposed",
+      "reason": "Third fertilizer."
+    },
+    "transplanting": {
+      "name": "Transplanting",
+      "kb_category": "planting",
+      "signal_category": "planting",
+      "review_status": "proposed",
+      "reason": "Moving seedlings to the field is the field planting."
+    },
+    "vine_sourcing": {
+      "name": "Vine Cutting Sourcing / Selection",
+      "kb_category": "land_prep",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Buying or collecting material, not a field operation."
+    },
+    "water_management": {
+      "name": "Water Management (Flooding)",
+      "kb_category": "crop_management",
+      "signal_category": "other",
+      "review_status": "needs-decision",
+      "reason": "Water control. Probably irrigation-like, but the name is broad."
+    },
+    "weeding": {
+      "name": "Circle Weeding",
+      "kb_category": "crop_management",
+      "signal_category": "weeding",
+      "review_status": "proposed",
+      "reason": "Same name."
+    },
+    "weeding_1": {
+      "name": "First Weeding",
+      "kb_category": "crop_management",
+      "signal_category": "weeding",
+      "review_status": "proposed",
+      "reason": "First weeding."
+    },
+    "weeding_2": {
+      "name": "Second Weeding",
+      "kb_category": "crop_management",
+      "signal_category": "weeding",
+      "review_status": "proposed",
+      "reason": "Second weeding."
+    },
+    "weeding_mulching": {
+      "name": "Weeding & Mulching",
+      "kb_category": "crop_management",
+      "signal_category": "weeding",
+      "review_status": "proposed",
+      "reason": "Weeding combined with mulching."
+    }
+  },
+  "crop_overrides": {}
+}
