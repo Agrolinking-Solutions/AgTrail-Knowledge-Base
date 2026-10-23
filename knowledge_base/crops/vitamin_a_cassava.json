@@ -1,0 +1,445 @@
+{
+  "metadata": {
+    "crop_id": "vitamin_a_cassava",
+    "name": "Vitamin A Cassava (Pro-Vitamin A / Yellow Cassava)",
+    "scientific_name": "Manihot esculenta",
+    "category": "tuber",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 365,
+    "regions": [
+      "Nigeria - Southwest",
+      "Nigeria - South-South",
+      "Nigeria - Middle Belt"
+    ],
+    "current_version": "1.0.0"
+  },
+  "growth_stages": [
+    {
+      "stage_id": "sprouting",
+      "name": "Sprouting",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 30,
+      "description": "Stakes sprout. Only certified yellow-flesh stems keep the beta-carotene trait."
+    },
+    {
+      "stage_id": "establishment",
+      "name": "Establishment",
+      "starts_day_after_planting": 31,
+      "ends_day_after_planting": 90,
+      "description": "First weeding (by 3-4 weeks) and the NPK application (4-8 weeks) fall here. Keep the field weed-free for the first 3-4 months."
+    },
+    {
+      "stage_id": "canopy_root_bulking",
+      "name": "Canopy Closure & Root Bulking",
+      "starts_day_after_planting": 91,
+      "ends_day_after_planting": 270,
+      "description": "Canopy closes and the roots bulk. Cassava Mosaic Disease and Bacterial Blight must be controlled through clean cuttings and by rogueing infected plants early."
+    },
+    {
+      "stage_id": "maturity_in_ground",
+      "name": "Maturity & In-Ground Storage",
+      "starts_day_after_planting": 271,
+      "ends_day_after_planting": 730,
+      "description": "Roots can stay in the ground. 9-12 months for food use, up to 15-18 months for industrial use."
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Clear the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Clear, plough and harrow; make ridges or mounds on heavy or waterlogged soils to prevent tuber rot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "planting_material_sourcing",
+      "name": "Certified Stem Source",
+      "category": "land_prep",
+      "description": "Record the certified IITA/HarvestPlus yellow-flesh stem source (for example TMS 011368, TMS 070593 or UMUCASS 36/38/44). Uncertified stems dilute the beta-carotene trait.",
+      "requires_evidence": true,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting",
+      "category": "planting",
+      "description": "Plant 20-25 cm stakes (5-7 nodes) cut from the mature middle of 8-12-month-old disease-free plants, at 45 degrees or upright, two-thirds buried, 1 m x 1 m, at the onset of rains. Reject stems showing CMD or CBB.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "First weeding by 3-4 weeks after planting.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "fertilizer_application",
+      "name": "NPK Application",
+      "category": "input_application",
+      "description": "Apply NPK at 4-8 weeks after planting (28-56 days ideal). Canopy closure makes late application impractical.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_2",
+      "name": "Further Weeding",
+      "category": "crop_management",
+      "description": "Keep the field weed-free through the first 3-4 months.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Disease Control",
+      "category": "pest_disease_control",
+      "description": "Manage Cassava Mosaic Disease and Bacterial Blight through clean cuttings and resistant varieties, and rogue infected plants early.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest",
+      "category": "harvest",
+      "description": "Harvest 9-12 months after planting for food, up to 15-18 months for industrial use. Several partial harvests can belong to one planting.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "processing",
+      "name": "Processing (garri)",
+      "category": "post_harvest",
+      "description": "Roots spoil rapidly: process within 24-48 hours. Beta-carotene is destroyed by UV light and extreme heat, so use shade-drying or controlled roasting; sun-drying during the roasting phase turns yellow garri white.",
+      "requires_evidence": false,
+      "can_repeat": true
+    }
+  ],
+  "workflow": [
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "planting_material_sourcing",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 5,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 6,
+      "operation_id": "fertilizer_application",
+      "required": false
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding_2",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 9,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 10,
+      "operation_id": "processing",
+      "required": false
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "vitamin_a_cassava_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 45,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing. The 45-day interval is carried over from cassava.json, not stated in the ruleset.",
+      "source": "cassava.json (this knowledge base); not in the master ruleset."
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 45,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Planting before land preparation is a hard block, caught by the global sequencing rule. Planting more than 45 days after land preparation is flagged.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r3",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 28,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "The first weeding is expected by 3-4 weeks after planting. See vitamin_a_cassava_r3_floor for the hard block.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r3_floor",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the first weeding is logged before 14 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r4",
+      "operation_id": "fertilizer_application",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 28,
+      "max_days_after_dependency": 56,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NPK is expected at 4-8 weeks after planting (28-56 days).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r4_floor",
+      "operation_id": "fertilizer_application",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 90,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if fertilizer is logged before 21 or after 90 days after planting: canopy closure makes late application impractical.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r6",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 180,
+      "max_days_after_dependency": 730,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if harvest is logged before 180 or after 730 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r6b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 270,
+      "max_days_after_dependency": 450,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Flagged before 270 or after 450 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r8",
+      "operation_id": "processing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Roots spoil rapidly: process within 24-48 hours. Flagged beyond 2 days after harvest.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r8_ceiling",
+      "operation_id": "processing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 4,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if processing is logged more than 4 days after harvest.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    },
+    {
+      "rule_id": "vitamin_a_cassava_r11",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Same rule as maize_r11."
+    }
+  ],
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "texture": [
+      "sandy loam",
+      "loam"
+    ],
+    "drainage": "well-drained (ridges/mounds specifically used to improve drainage and root formation)",
+    "nitrogen_needs": "low"
+  },
+  "weather_preferences": {
+    "rainfall_mm_min_cycle": 1000,
+    "rainfall_mm_max_cycle": 1500,
+    "temp_c_min": 25,
+    "temp_c_max": 29,
+    "notes": "More drought-tolerant than cereal crops like maize; this is a large part of why it's grown across a wider range of Nigerian agroecologies. Rainfall figures here are general and not cross-checked against a Nigeria-cassava-specific source -- flagged for review."
+  },
+  "diseases": [
+    {
+      "name": "Cassava Mosaic Disease (CMD)",
+      "risk_stage_ids": [
+        "sprouting",
+        "establishment",
+        "canopy_bulking"
+      ],
+      "symptoms": "Mosaic/mottled yellow-green pattern on leaves, leaf distortion, stunted growth.",
+      "management": "Use certified disease-free planting cuttings, rogue (remove) infected plants, control whitefly vector, plant CMD-resistant varieties from IITA/NRCRI.",
+      "confidence": 0.9,
+      "source": "Wikifarmer, Major Pests and Diseases of Cassava; APSnet, Cassava Mosaic Disease review -- described as the primary cassava disease threat in Nigeria, causing 20-90% yield loss depending on severity and variety susceptibility"
+    },
+    {
+      "name": "Cassava Brown Streak Disease (CBSD)",
+      "risk_stage_ids": [
+        "canopy_bulking",
+        "maturity_storage"
+      ],
+      "symptoms": "Brown streaking on stems, necrotic root rot (often invisible until harvest).",
+      "management": "Use certified clean planting material; avoid moving cuttings from affected regions.",
+      "confidence": 0.3,
+      "source": "One source (Wikifarmer) lists this as a major Nigerian cassava disease, but CBSD is more established as an East/Southern African problem and its presence/severity in Nigeria specifically is not corroborated by the other sources reviewed here. Treat this entry as unverified and confirm with an agronomist or plant pathologist before using it to drive farmer-facing alerts -- an incorrect CBSD alert could cause farmers to needlessly destroy healthy plants."
+    }
+  ],
+  "pests": [
+    {
+      "name": "Cassava Mealybug (Phenacoccus manihoti)",
+      "risk_stage_ids": [
+        "establishment",
+        "canopy_bulking"
+      ],
+      "symptoms": "Stunted, bunched 'rosette' shoot tips, leaf curling and yellowing, honeydew/sooty mold.",
+      "management": "Biological control using the parasitoid wasp Anagyrus lopezi has been highly effective at continental scale in Africa (one of IITA's best-documented biocontrol successes); avoid broad-spectrum insecticides that kill the parasitoid.",
+      "confidence": 0.8,
+      "source": "General IITA biocontrol program knowledge -- worth confirming current status/availability of Anagyrus lopezi release programs with IITA directly rather than assuming universal availability"
+    },
+    {
+      "name": "Whitefly (Bemisia tabaci)",
+      "risk_stage_ids": [
+        "sprouting",
+        "establishment",
+        "canopy_bulking"
+      ],
+      "symptoms": "Direct feeding damage is minor; primary importance is as the vector transmitting Cassava Mosaic Disease.",
+      "management": "Use CMD-resistant varieties (reduces whitefly's practical impact even without directly controlling the insect), remove volunteer/infected plants that serve as inoculum sources.",
+      "confidence": 0.85,
+      "source": "Wikifarmer; APSnet Cassava Mosaic Disease review"
+    }
+  ],
+  "yield_model": {
+    "expected_yield_per_hectare": "5 - 30",
+    "unit": "tonnes fresh roots",
+    "factors": [
+      "certified yellow-flesh stems",
+      "Cassava Mosaic Disease and Bacterial Blight",
+      "weed control in the first 3-4 months",
+      "harvest timing"
+    ],
+    "confidence": 0.6,
+    "notes": "Yield bands follow standard cassava in the master ruleset. Fresh-root basis."
+  },
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 5.0,
+        "severity": "warning",
+        "message": "Severe failure."
+      },
+      {
+        "condition_type": "range",
+        "min": 5.0,
+        "max": 30.0,
+        "severity": "pass",
+        "message": "Standard cassava range."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 30.0,
+        "severity": "warning",
+        "message": "Exceptional; flag for validation."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 50.0,
+        "severity": "block",
+        "message": "Biologically improbable; data-entry error."
+      }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava). Bands follow standard cassava."
+  },
+  "regional_overrides": [],
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
+      "summary": "Initial file for Vitamin A Cassava, the last ruleset crop with no file. Timing rules follow section 5 of the ruleset (standard cassava) exactly, plus an optional 'Certified Stem Source' operation from section 22. Soil, weather, disease and pest entries are copied from cassava.json. NOT enforceable by the current engine, and therefore recorded here only: (0) the soft warning when no certified stem source is recorded before planting (the engine can only block or skip when an earlier operation is missing, never warn); (1) the garri rule that sun-drying during the roasting phase is a hard block, because roasting and sun-drying are not separate loggable steps; (2) the staggered-harvest check that cumulative harvested area cannot exceed 100% of the plot, because the engine does not track area. Harvest is therefore allowed to repeat, as the ruleset describes. Workflow 'required' flags are provisional.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, sections 5 and 22 (Cassava; Vitamin A Cassava)"
+    }
+  ]
+}
