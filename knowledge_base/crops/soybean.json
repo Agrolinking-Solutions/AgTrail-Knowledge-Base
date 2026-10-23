@@ -10,7 +10,7 @@
       "Nigeria - Guinea Savanna",
       "Nigeria - Sudan Savanna"
     ],
-    "current_version": "1.0.0"
+    "current_version": "1.1.0"
   },
   "growth_stages": [
     {
@@ -436,9 +436,15 @@
         "min": 3.0,
         "severity": "warning",
         "message": "Above the potential yield of about 3 t/ha reported for Nigeria; requires manual review of seed, irrigation and plot area. Check the unit is not kilograms."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 6.0,
+        "severity": "block",
+        "message": "Above 6 t/ha is not believable for soybean in Nigeria; almost certainly a unit error (kilograms entered as tonnes). Hard maximum set by the CEO."
       }
     ],
-    "source": "Web sources only (iita.org news item 15511; bulletin.iita.org; a study citing Ronner et al. 2016), because the Master Ruleset has no soybean section and the IITA guide states no yields. NO HARD-BLOCK CEILING IS GIVEN: no source was found for a biological maximum, so one has deliberately not been invented. The agronomist should set it. GPS-anchored-area caveat as for the other crops."
+    "source": "Web sources only (iita.org news item 15511; bulletin.iita.org; a study citing Ronner et al. 2016), because the Master Ruleset has no soybean section and the IITA guide states no yields. The hard-block ceiling of 6 t/ha was set by the CEO acting as agronomist (2026-10-24). No published source gives a biological maximum. GPS-anchored-area caveat as for the other crops."
   },
   "regional_overrides": [],
   "version_history": [
@@ -448,6 +454,13 @@
       "changed_by": "AgTrail Knowledge Base - new crop, sourced from the web because the master ruleset has none",
       "summary": "Initial file for Soybean, the second most common crop on AgTrail farms (about 47 farms) and a PIS-priced commodity. Agronomy comes from IITA's Farmers' Guide to Soybean Production in Northern Nigeria (2009). Yields come from IITA web reports. No hard-block yield ceiling is set, and the first-weeding window width is a proposal. Not reviewed by an agronomist: treat all intervals as provisional.",
       "source": "Dugje, I.Y., Omoigui, L.O., Ekeleme, F., Bandyopadhyay, R., Lava Kumar, P. and Kamara, A.Y. 2009. Farmers' Guide to Soybean Production in Northern Nigeria. IITA, Ibadan (tropicallegumeshub.com)"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-24",
+      "changed_by": "CEO, acting as agronomist, via the Farm Jobs Check page (answers received 2026-10-24)",
+      "summary": "Added the hard-block yield ceiling: more than 6 t/ha is blocked as a probable unit error. Everything else is unchanged and still provisional.",
+      "source": "CEO answer to the soybean ceiling question."
     }
   ]
 }

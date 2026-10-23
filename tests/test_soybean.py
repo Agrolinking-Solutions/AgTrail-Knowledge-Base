@@ -99,15 +99,13 @@ def test_backdating_is_blocked():
 
 
 @pytest.mark.parametrize("tonnes, severity",
-    [(0.0, "block"), (0.5, "warning"), (0.7, "pass"), (1.2, "pass"), (2.8, "pass"), (3.5, "warning")])
+    [(0.0, "block"), (0.5, "warning"), (0.7, "pass"), (1.2, "pass"), (2.8, "pass"), (3.5, "warning"), (6.0, "warning"), (6.1, "block")])
 def test_yield_bands(tonnes, severity):
     assert validate_yield("soybean", tonnes).severity == severity
 
 
-def test_an_absurd_yield_is_at_least_warned_even_though_no_hard_ceiling_exists_yet():
-    # No source gives a biological maximum, so none was invented. A very large
-    # number still gets flagged for manual review.
-    assert validate_yield("soybean", 40.0).severity == "warning"
+def test_an_absurd_yield_is_blocked_above_the_ceiling_the_ceo_set():
+    assert validate_yield("soybean", 40.0).severity == "block"
 
 
 def test_a_zero_yield_is_a_loss_event():
