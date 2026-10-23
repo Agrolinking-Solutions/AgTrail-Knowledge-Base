@@ -1,0 +1,29 @@
+{
+  "crop_id": "soybean",
+  "history": [
+    {
+      "operation_id": "land_clearing",
+      "date": "2026-06-01"
+    },
+    {
+      "operation_id": "land_preparation",
+      "date": "2026-06-08"
+    },
+    {
+      "operation_id": "planting",
+      "date": "2026-06-20"
+    },
+    {
+      "operation_id": "weeding_1",
+      "date": "2026-07-04"
+    },
+    {
+      "operation_id": "weeding_2",
+      "date": "2026-07-29"
+    }
+  ],
+  "new_operation": {
+    "operation_id": "harvest",
+    "date": "2026-10-03"
+  }
+}

@@ -1,0 +1,478 @@
+{
+  "metadata": {
+    "crop_id": "sorghum",
+    "name": "Sorghum (Guinea Corn / Sorghum bicolor)",
+    "scientific_name": "Sorghum bicolor",
+    "category": "cereal",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 120,
+    "regions": [
+      "Nigeria - North",
+      "Nigeria - Sudan Savanna",
+      "Nigeria - Guinea Savanna"
+    ],
+    "current_version": "1.0.0"
+  },
+  "growth_stages": [
+    {
+      "stage_id": "germination_seedling",
+      "name": "Germination & Seedling",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 15,
+      "description": "Emergence and establishment. Thin to 1-2 plants per stand after establishment."
+    },
+    {
+      "stage_id": "vegetative",
+      "name": "Vegetative",
+      "starts_day_after_planting": 16,
+      "ends_day_after_planting": 50,
+      "description": "Active vegetative growth. The nitrogen top-dress window (21-45 days after planting) and the first weeding fall here, and Striga must be removed before it attaches to the roots."
+    },
+    {
+      "stage_id": "booting_heading",
+      "name": "Booting & Heading",
+      "starts_day_after_planting": 51,
+      "ends_day_after_planting": 70,
+      "description": "Panicle development and heading. Nitrogen applied after heading gives no yield benefit."
+    },
+    {
+      "stage_id": "flowering_grain_fill",
+      "name": "Flowering & Grain Fill",
+      "starts_day_after_planting": 71,
+      "ends_day_after_planting": 100,
+      "description": "Flowering and grain filling. Bird scaring should be in place from here: Quelea flocks can strip grain heads within days."
+    },
+    {
+      "stage_id": "maturity",
+      "name": "Maturity",
+      "starts_day_after_planting": 101,
+      "ends_day_after_planting": 130,
+      "description": "Physiological maturity. Improved varieties follow a 110-130 day curve; traditional photoperiod-sensitive landraces can run 150+ days depending on planting date."
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Plough and harrow to a clean tilth; make ridges to aid water capture in drier zones.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting",
+      "category": "planting",
+      "description": "Certified, Striga-tolerant improved seed at 75 cm x 20-30 cm; thin to 1-2 plants per stand after establishment.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "first_fertilizer",
+      "name": "Basal Fertilizer (NPK)",
+      "category": "input_application",
+      "description": "Basal NPK at planting for early vigour.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "Early weeding and Striga removal. Weed early (14-30 days after planting).",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "second_fertilizer",
+      "name": "Top-dress (Urea)",
+      "category": "input_application",
+      "description": "Nitrogen top-dress during active vegetative growth, 21-45 days after planting.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_2",
+      "name": "Second Weeding",
+      "category": "crop_management",
+      "description": "Further weeding. Fewer than three hoe-weedings is linked to heavier Striga infestation in north-eastern Nigeria.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest",
+      "category": "harvest",
+      "description": "Harvest at physiological maturity, about 100-130 days after planting.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "drying_threshing",
+      "name": "Drying & Threshing",
+      "category": "post_harvest",
+      "description": "Dry the heads, thresh and winnow.",
+      "requires_evidence": false,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "storage",
+      "name": "Storage",
+      "category": "post_harvest",
+      "description": "Store dry; keep bird and rodent protection in the store.",
+      "requires_evidence": false,
+      "can_repeat": false
+    }
+  ],
+  "workflow": [
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 4,
+      "operation_id": "first_fertilizer",
+      "required": false
+    },
+    {
+      "step_number": 5,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 6,
+      "operation_id": "second_fertilizer",
+      "required": false
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding_2",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "harvest",
+      "required": true
+    },
+    {
+      "step_number": 9,
+      "operation_id": "drying_threshing",
+      "required": false
+    },
+    {
+      "step_number": 10,
+      "operation_id": "storage",
+      "required": false
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "sorghum_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing. The 30-day interval is the cross-crop default, not a sorghum figure.",
+      "source": "General cross-crop default (same pattern as maize.json and cowpea.json), not independently sourced to a sorghum-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "sorghum_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Planting before land preparation is blocked by the global sequencing rule (sorghum_r11). Planting more than 30 days after land preparation is flagged because weeds re-establish and the seedbed degrades. The 30 days is the cross-crop default; the master ruleset states it for maize and describes the same GAP structure for every crop.",
+      "source": "General cross-crop default (same pattern as maize.json and cowpea.json), not independently sourced to a sorghum-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "sorghum_r3",
+      "operation_id": "first_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 14,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "The ruleset says to apply basal NPK at planting but gives no day limit for sorghum. Logged later than 14 days after planting is flagged, using the maize figure as a stand-in.",
+      "source": "General cross-crop default (same pattern as maize.json and cowpea.json), not independently sourced to a sorghum-specific figure. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "sorghum_r4",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 30,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Weed early. The first weeding is flagged if logged before 14 or after 30 days after planting. See sorghum_r4_ceiling for the hard block.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r4_ceiling",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 60,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the first weeding is logged after 60 days after planting: Striga must be removed before it attaches to the roots.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r5",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 45,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Urea top-dress belongs at 21-45 days after planting, during active vegetative growth. Outside that window but inside the hard-block range is flagged.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r5_floor",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 65,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the top-dress is logged before 14 or after 65 days after planting. Nitrogen after heading gives no yield benefit.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r8",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 85,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if harvest is logged before 85 days after planting. The master ruleset gives no upper hard block for sorghum, only the warning in sorghum_r8b.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r8b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 100,
+      "max_days_after_dependency": 150,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Harvest is expected at 100-130 days at physiological maturity. Flagged before 100 or after 150 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "rule_id": "sorghum_r9",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first.",
+      "source": "Same rule as maize_r9."
+    },
+    {
+      "rule_id": "sorghum_r11",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Same rule as maize_r11."
+    }
+  ],
+  "soil_requirements": {
+    "ph_min": 5.5,
+    "ph_max": 8.5,
+    "texture": [
+      "loam"
+    ],
+    "drainage": "well-drained",
+    "nitrogen_needs": "medium"
+  },
+  "weather_preferences": {
+    "notes": "A warm-weather crop that needs high temperature for good germination and growth, and medium to good, fairly stable rainfall spread evenly through the season. Roots can use water from deep in the soil (reported to 270 cm), which helps it through dry spells. No rainfall or temperature figures are given: the sources found state none, so none are entered. Source: ICRISAT, Handbook on Sorghum production for the north-east (as quoted in a search summary; the PDF could not be opened directly). Flagged for agronomist review."
+  },
+  "diseases": [
+    {
+      "name": "Anthracnose (Colletotrichum graminicola) and other leaf spots",
+      "risk_stage_ids": [
+        "vegetative",
+        "booting_heading",
+        "flowering_grain_fill"
+      ],
+      "symptoms": "The commonest leaf disease in a survey of Nigerian sorghum fields (1990): at least 40% of leaf area was covered or destroyed by lesions in 70% of surveyed fields. Oval leaf spot, sooty stripe and grey leaf spot were also widely distributed.",
+      "management": "Resistant varieties are the main route. Seed-borne pathogens are controlled by fungicide seed treatment. No current Nigeria-specific spray guidance was found.",
+      "confidence": 0.55,
+      "source": "ICRISAT Open Access Repository, survey of sorghum diseases in Nigeria (oar.icrisat.org/3116); Marley and Ajayi 2002 on anthracnose resistance in Nigeria, cited there. Old survey: flagged for review."
+    },
+    {
+      "name": "Head smut and covered or loose kernel smuts",
+      "risk_stage_ids": [
+        "booting_heading",
+        "flowering_grain_fill"
+      ],
+      "symptoms": "Common in the same survey at roughly 1-10% incidence.",
+      "management": "Fungicide seed treatment (smuts are seed-borne). No further guidance found.",
+      "confidence": 0.5,
+      "source": "ICRISAT Open Access Repository (oar.icrisat.org/3116); FUNAAB crop protection lecture notes on seed-borne pathogens."
+    },
+    {
+      "name": "Grain mould (Phoma, Fusarium, Curvularia)",
+      "risk_stage_ids": [
+        "flowering_grain_fill",
+        "maturity"
+      ],
+      "symptoms": "Grain mycoflora in West and Central African trials was dominated by Phoma and Fusarium, then Curvularia. Not observed in the 1990 Nigerian field survey.",
+      "management": "Resistant cultivars: in regional trials IS 14384 and CGM 39/17-2-2 showed consistently high resistance to both grain mould and head bugs.",
+      "confidence": 0.5,
+      "source": "International Journal of Tropical Insect Science, incidence and distribution of the sorghum head bug and other panicle pests in West and Central Africa (cambridge.org); ICRISAT Crop Protection 22(6) 837-851, 2003."
+    }
+  ],
+  "pests": [
+    {
+      "name": "Striga hermonthica (parasitic witchweed)",
+      "risk_stage_ids": [
+        "germination_seedling",
+        "vegetative",
+        "booting_heading"
+      ],
+      "symptoms": "A major constraint to sorghum in the savanna zones of north-eastern Nigeria. Infestation is promoted by long continuous sorghum cropping, inadequate nitrogen, early planting, and fewer than three hoe-weedings.",
+      "management": "Use certified Striga-tolerant improved seed. Weed early and remove Striga before it attaches to the roots. Rotate with, or intercrop with, a legume, and weed by hoe at least three times. Apply adequate nitrogen.",
+      "confidence": 0.8,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum); IITA Research Repository study of Striga infestation in north-eastern Nigeria (biblio1.iita.org)."
+    },
+    {
+      "name": "Quelea birds (red-billed quelea)",
+      "risk_stage_ids": [
+        "flowering_grain_fill",
+        "maturity"
+      ],
+      "symptoms": "Flocks can wipe grain heads within days near maturity. Bird attack is also listed among the main constraints to sorghum production in Nigeria.",
+      "management": "Deploy bird scaring near maturity and keep bird and rodent protection in storage.",
+      "confidence": 0.8,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum); ICRISAT Handbook on Sorghum production for the north-east."
+    },
+    {
+      "name": "Stem borers (Busseola fusca, Chilo partellus, Sesamia calamistis) and shoot fly (Atherigona soccata)",
+      "risk_stage_ids": [
+        "germination_seedling",
+        "vegetative"
+      ],
+      "symptoms": "Listed as key sorghum pests in West Africa. No Nigeria-specific damage figures found.",
+      "management": "Not stated in the sources found. Flagged for agronomist review.",
+      "confidence": 0.45,
+      "source": "ICRISAT Open Access Repository and FUNAAB crop protection lecture notes (summaries only)."
+    },
+    {
+      "name": "Sorghum midge (Stenodiplosis sorghicola) and head bugs (Eurystylus oldi)",
+      "risk_stage_ids": [
+        "flowering_grain_fill"
+      ],
+      "symptoms": "Midge larvae feed on the young grains in the panicle, and midge damage was reported as very high on farmers' fields in Burkina Faso, Niger and Nigeria. Head bugs were more abundant on improved cultivars than on local long-glume types.",
+      "management": "Resistant lines: IS 14384 and CGM 39/17-2-2 showed consistent resistance to head bugs. No spray guidance found.",
+      "confidence": 0.5,
+      "source": "International Journal of Tropical Insect Science (cambridge.org); ICRISAT Open Access Repository."
+    }
+  ],
+  "yield_model": {
+    "expected_yield_per_hectare": "0.5 - 2.5",
+    "unit": "tonnes",
+    "factors": [
+      "variety (improved SAMSORG lines vs traditional landraces)",
+      "Striga infestation level",
+      "Quelea bird damage near maturity",
+      "timing of the first weeding",
+      "timing of the nitrogen top-dress",
+      "rainfall distribution through the season"
+    ],
+    "confidence": 0.6,
+    "notes": "Range is the Pass tier of the AgTrail Master Agronomist & Validator Ruleset (smallholder to GAP-improved). Grain yield per hectare, anchored to the GPS-mapped area."
+  },
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event (Quelea wipeout or severe drought), not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.5,
+        "severity": "warning",
+        "message": "Near-total failure on degraded soil or with a heavy Striga load; verify plot area and inputs."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.5,
+        "max": 3.0,
+        "severity": "pass",
+        "message": "Smallholder-to-GAP improved range."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 3.0,
+        "severity": "warning",
+        "message": "Exceptional; verify hybrid seed and the full fertilizer regime."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 6.0,
+        "severity": "block",
+        "message": "Exceeds the rainfed maximum; almost certainly a kg/tonne unit typo or inflated area."
+      }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum). The ruleset states Pass as 0.5-2.5 and the first warning above 3.0, which leaves 2.5-3.0 undefined; the Pass band is extended to 3.0 to close that gap, as other crop files in this knowledge base do. GPS-anchored-area caveat as for the other crops."
+  },
+  "regional_overrides": [],
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
+      "summary": "Initial file for Sorghum, one of three ruleset crops that had no file (with Pearl Millet and Vitamin A Cassava). Operations, timing limits and yield bands come from the AgTrail Master Agronomist & Validator Ruleset. Soil, pests and diseases come from the web sources cited on each entry, with lower confidence. Workflow 'required' flags are provisional.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    }
+  ]
+}
