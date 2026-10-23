@@ -51,9 +51,20 @@ def test_no_mapped_operation_is_unused():
     assert stale == set(), "mapping lists operations no crop file uses"
 
 
-def test_nothing_is_marked_approved_until_a_person_approves_it():
-    assert taxonomy.taxonomy()["review_status"] == "UNVERIFIED"
-    assert all(e["review_status"] != "approved" for e in taxonomy.taxonomy()["operations"].values())
+def test_approval_is_recorded_and_only_the_two_unanswered_operations_are_open():
+    data = taxonomy.taxonomy()
+    open_ops = {i for i, e in data["operations"].items() if e["review_status"] != "approved"}
+
+    assert data["review_status"] == "PARTLY_APPROVED"
+    assert open_ops == {"cover_crop_establishment", "gap_filling"} == set(data["approval"]["still_open"])
+    assert data["approval"]["approved_by"]
+
+
+def test_the_ceo_changed_two_operations_to_planting():
+    assert taxonomy.signal_category_for(None, "nursery_establishment") == "planting"
+    assert taxonomy.signal_category_for(None, "shade_tree_establishment") == "planting"
+    assert taxonomy.signal_category_for(None, "stimulation") == "other"
+    assert taxonomy.signal_category_for(None, "tapping") == "harvesting"
 
 
 def test_unknown_operation_has_no_category():
