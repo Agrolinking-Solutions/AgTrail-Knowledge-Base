@@ -107,6 +107,14 @@
       "review_status": "reviewed-by-data"
     },
     {
+      "crop_id": "pearl_millet",
+      "pis_commodity": null,
+      "conversion_factor": null,
+      "conversion_note": "PIS has no pearl millet price series yet. Show tonnes only and the message 'no price series yet'.",
+      "price_status": "unpriced",
+      "review_status": "reviewed-by-data"
+    },
+    {
       "crop_id": "pepper",
       "pis_commodity": null,
       "conversion_factor": null,
@@ -159,6 +167,14 @@
       "pis_commodity": null,
       "conversion_factor": null,
       "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
+      "price_status": "unpriced",
+      "review_status": "reviewed-by-data"
+    },
+    {
+      "crop_id": "vitamin_a_cassava",
+      "pis_commodity": null,
+      "conversion_factor": null,
+      "conversion_note": "PIS has no cassava price series yet. Show tonnes only and the message 'no price series yet'.",
       "price_status": "unpriced",
       "review_status": "reviewed-by-data"
     },

@@ -1,0 +1,369 @@
+{
+  "metadata": {
+    "crop_id": "pearl_millet",
+    "name": "Pearl Millet (Pennisetum glaucum)",
+    "scientific_name": "Pennisetum glaucum",
+    "category": "cereal",
+    "crop_cycle_type": "annual",
+    "typical_duration_days": 80,
+    "regions": [
+      "Nigeria - Sudan Savanna",
+      "Nigeria - Sahel (extreme North)"
+    ],
+    "current_version": "1.0.0"
+  },
+  "growth_stages": [
+    {
+      "stage_id": "germination_seedling",
+      "name": "Germination & Seedling",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 10,
+      "description": "Emergence. Sow several seeds per hill so the stand can be thinned later."
+    },
+    {
+      "stage_id": "tillering_vegetative",
+      "name": "Tillering & Vegetative",
+      "starts_day_after_planting": 11,
+      "ends_day_after_planting": 35,
+      "description": "Thin to 2-3 plants per stand by week 2-3. Millet is extremely sensitive to early weed competition, so thinning and the first weeding belong here."
+    },
+    {
+      "stage_id": "booting_flowering",
+      "name": "Booting & Flowering",
+      "starts_day_after_planting": 36,
+      "ends_day_after_planting": 55,
+      "description": "Panicle development and flowering."
+    },
+    {
+      "stage_id": "grain_fill_maturity",
+      "name": "Grain Fill & Maturity",
+      "starts_day_after_planting": 56,
+      "ends_day_after_planting": 85,
+      "description": "Grain fill and ripening. Harvest at 75-90 days; milk-stage grains rot if cut too early and ripe heads shatter if left too late."
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Clear the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Minimal tillage on light sandy soils. Clear and open planting hills at the first reliable rain.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting",
+      "category": "planting",
+      "description": "Downy-mildew-resistant certified seed, in hills 75 cm x 50-100 cm apart, several seeds per hill for later thinning.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "Thinning & First Weeding",
+      "category": "crop_management",
+      "description": "Thin to 2-3 plants per stand and weed, by week 2-3 after planting.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "nitrogen_application",
+      "name": "Nitrogen Application",
+      "category": "input_application",
+      "description": "A modest amount of nitrogen. Millet yields where richer cereals fail but responds to light fertility on very poor soils.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest",
+      "category": "harvest",
+      "description": "Cut the heads at 75-90 days after planting.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "drying_threshing",
+      "name": "Drying & Threshing",
+      "category": "post_harvest",
+      "description": "Sun-dry the cut heads and thresh.",
+      "requires_evidence": false,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "storage",
+      "name": "Storage",
+      "category": "post_harvest",
+      "description": "Store dry.",
+      "requires_evidence": false,
+      "can_repeat": false
+    }
+  ],
+  "workflow": [
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 4,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 5,
+      "operation_id": "nitrogen_application",
+      "required": false
+    },
+    {
+      "step_number": 6,
+      "operation_id": "harvest",
+      "required": true
+    },
+    {
+      "step_number": 7,
+      "operation_id": "drying_threshing",
+      "required": false
+    },
+    {
+      "step_number": 8,
+      "operation_id": "storage",
+      "required": false
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "pearl_millet_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing. The 30-day interval is the cross-crop default.",
+      "source": "General cross-crop default (same pattern as the other crop files), not independently sourced to a figure for this crop. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "pearl_millet_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Planting more than 30 days after land preparation is flagged. Planting before land preparation is blocked by the global sequencing rule. The 30 days is the cross-crop default.",
+      "source": "General cross-crop default (same pattern as the other crop files), not independently sourced to a figure for this crop. Flagged for agronomist review."
+    },
+    {
+      "rule_id": "pearl_millet_r4",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 21,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Flag the first weeding or thinning if logged after 21 days after planting: millet is extremely sensitive to early weed competition.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    },
+    {
+      "rule_id": "pearl_millet_r4_floor",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 5,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the first weeding or thinning is logged before 5 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    },
+    {
+      "rule_id": "pearl_millet_r8",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 65,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if harvest is logged before 65 days after planting: milk-stage grains rot. The ruleset gives no upper hard block, only the warning in pearl_millet_r8b.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    },
+    {
+      "rule_id": "pearl_millet_r8b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 75,
+      "max_days_after_dependency": 100,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Harvest is expected at 75-90 days. Flagged before 75 or after 100 days after planting (heads shatter).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    },
+    {
+      "rule_id": "pearl_millet_r9",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first.",
+      "source": "Same rule as maize_r9."
+    },
+    {
+      "rule_id": "pearl_millet_r11",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "source": "Same rule as maize_r11."
+    }
+  ],
+  "soil_requirements": {
+    "texture": [
+      "light sandy soils"
+    ],
+    "nitrogen_needs": "low"
+  },
+  "weather_preferences": {
+    "notes": "The most drought-resistant cereal in Nigeria, grown in the extreme North (Sahel and Sudan savanna) where sorghum and maize struggle, and it matures very fast: extra-early types in about 75 days for short-rains windows. Often grown with groundnut, cowpea, sorghum or maize. No rainfall or temperature figures are entered because the sources found give none. Sources: master ruleset section 4; ICRISAT, Lake Chad Research Institute and Nigeria's Federal Ministry of Agriculture handbook on pearl millet in north-eastern Nigeria (2020, front matter only seen)."
+  },
+  "diseases": [
+    {
+      "name": "Downy mildew",
+      "risk_stage_ids": [
+        "tillering_vegetative",
+        "booting_flowering"
+      ],
+      "symptoms": "The most serious pearl millet disease in Nigeria and Niger, with yield losses of up to 50% reported from western Africa. The ruleset names downy-mildew wipeout as a cause of near-total failure.",
+      "management": "Use certified downy-mildew-resistant seed. In a Nigerian trial the variety PEO 5984 showed lower severity and higher yield than Super SOSAT, and severity was lower at Bauchi than at Maiduguri.",
+      "confidence": 0.75,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet); ICRISAT Open Access Repository, incidence of pearl millet diseases in relation to time of sowing in Niger and Nigeria (oar.icrisat.org/4857); a Nigerian downy mildew variety trial."
+    },
+    {
+      "name": "Smut and ergot",
+      "risk_stage_ids": [
+        "booting_flowering",
+        "grain_fill_maturity"
+      ],
+      "symptoms": "Smut and ergot are widespread in Nigeria and Niger alongside downy mildew. No incidence figures found.",
+      "management": "Not stated in the sources found. Flagged for agronomist review.",
+      "confidence": 0.5,
+      "source": "ICRISAT Open Access Repository, pearl millet disease incidence in Niger and Nigeria (oar.icrisat.org/4857)."
+    }
+  ],
+  "pests": [
+    {
+      "name": "Striga (witchweed)",
+      "risk_stage_ids": [
+        "germination_seedling",
+        "tillering_vegetative"
+      ],
+      "symptoms": "A major constraint named by farmers in a Jigawa State survey of 143 farmers, with low soil fertility, downy mildew and labour cost.",
+      "management": "Farmers mainly hand-pull Striga or hoe-weed. No further Striga guidance found.",
+      "confidence": 0.6,
+      "source": "Participatory rural appraisal of pearl millet farmers in Jigawa State (core.ac.uk)."
+    },
+    {
+      "name": "Early weed competition",
+      "risk_stage_ids": [
+        "germination_seedling",
+        "tillering_vegetative"
+      ],
+      "symptoms": "Millet is extremely sensitive to early weed competition.",
+      "management": "Thin to 2-3 plants per stand and weed by week 2-3 after planting; the first weeding is blocked before 5 days and flagged after 21 days.",
+      "confidence": 0.85,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    }
+  ],
+  "yield_model": {
+    "expected_yield_per_hectare": "0.3 - 1.5",
+    "unit": "tonnes",
+    "factors": [
+      "downy mildew pressure",
+      "drought",
+      "timing of thinning and first weeding",
+      "soil fertility",
+      "Striga infestation"
+    ],
+    "confidence": 0.6,
+    "notes": "Pass tier of the master ruleset: lower per hectare than maize or sorghum, but it survives where they fail."
+  },
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.3,
+        "severity": "warning",
+        "message": "Severe drought or downy-mildew wipeout; verify plot area and the disease history."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.3,
+        "max": 2.5,
+        "severity": "pass",
+        "message": "Standard range, lower per hectare than maize or sorghum but it survives where they fail."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 2.5,
+        "severity": "warning",
+        "message": "Exceptional yield; flag for verification."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 4.5,
+        "severity": "block",
+        "message": "Improbable for West African rainfed millet; almost certainly a unit typo."
+      }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet). The ruleset states Pass as 0.3-1.5 and the first warning above 2.5, leaving 1.5-2.5 undefined, so the Pass band is extended to 2.5, as other crop files do. The ruleset has no zero-yield hard block for millet beyond a general loss-event log; the loss-event rule used by every other crop is kept."
+  },
+  "regional_overrides": [],
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
+      "summary": "Initial file for Pearl Millet, one of three ruleset crops that had no file (with Sorghum, added earlier, and Vitamin A Cassava). Operations, timing limits and yield bands come from the ruleset. Disease and pest entries come from cited ICRISAT and survey sources at lower confidence; no rainfall, temperature or pH figures were found, so none are entered. Workflow 'required' flags are provisional.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 4 (Pearl Millet)"
+    }
+  ]
+}
