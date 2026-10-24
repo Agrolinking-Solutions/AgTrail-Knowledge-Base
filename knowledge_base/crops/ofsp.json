@@ -11,7 +11,7 @@
       "Nigeria - South-South",
       "Nigeria - Middle Belt"
     ],
-    "current_version": "1.1.0"
+    "current_version": "1.2.0"
   },
   "growth_stages": [
     {
@@ -248,60 +248,48 @@
       "operation_id": "weeding_1",
       "depends_on_operation_id": "planting",
       "min_days_after_dependency": 14,
-      "max_days_after_dependency": 30,
+      "max_days_after_dependency": 45,
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "First weeding recommended 2-4 weeks after planting, before vine spread is sufficient to self-suppress weeds. IITA's Weeds Management Project has documented unmanaged weed infestation reducing sweet potato harvest by 50% or more.",
-      "source": "IITA Weeds Management Project (via FarmOrganics Nigeria, How to grow orange-fleshed sweet potatoes in Nigeria)."
+      "condition": "Weeding or earthing-up is flagged after 45 days after planting (and before 14). See ofsp_r3_ceiling for the hard block.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     },
     {
       "rule_id": "ofsp_r4",
       "operation_id": "reridging",
       "depends_on_operation_id": "planting",
       "min_days_after_dependency": 30,
-      "max_days_after_dependency": 60,
+      "max_days_after_dependency": 45,
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "Re-ridging/hilling is recommended around 30 and again around 60 days after planting, to keep bulking storage roots covered as soil settles and roots push upward -- exposed roots are both a weevil entry point and prone to greening.",
-      "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (re-ridging schedule at 30 and 60 DAP, cited alongside weevil-control practices)."
+      "condition": "Re-heaping soil around the base is flagged after 45 days after planting (and before 30). See ofsp_r4_ceiling for the hard block.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     },
     {
       "rule_id": "ofsp_r5",
       "operation_id": "harvest",
       "depends_on_operation_id": "planting",
       "min_days_after_dependency": 75,
-      "max_days_after_dependency": 180,
+      "max_days_after_dependency": null,
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "Harvest cannot be logged before 75 days after planting -- storage roots have not meaningfully bulked before this even for the earliest-maturing improved varieties (some hybrid OFSP varieties reach maturity within 90 days; a small number of very early lines are bred closer to 75). Upper bound of 180 days is a hard outer limit -- past this, a harvest record almost certainly reflects a data error or an atypical variety, not normal practice.",
-      "source": "TAAT Clearinghouse OFSP Technology Toolkit (hybrid varieties reaching maturity within 90 days); Guardian Nigeria (Mothers Delight variety matures in ~75 days / 2.5 months); African Farming (4-5 months / 120-150 days for standard varieties in warm areas)."
+      "condition": "Hard block if harvest is logged before 75 days after planting. The ruleset gives no upper hard block; the earlier 180-day block was removed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     },
     {
       "rule_id": "ofsp_r5b",
       "operation_id": "harvest",
       "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 90,
-      "max_days_after_dependency": 150,
+      "min_days_after_dependency": 85,
+      "max_days_after_dependency": 130,
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "90-150 days (roughly 3-5 months) is the typical harvest window across the varieties commonly grown in Nigeria. Harvest logged inside the hard block range but outside this typical window is flagged rather than blocked, since variety maturity class varies genuinely (Mothers Delight at ~75 days vs. local/standard varieties at up to 150 days) and this schema does not yet capture variety identity as a field.",
-      "source": "Guardian Nigeria; African Farming; PDF field guide (105-110 day harvest figure for one widely documented variety)."
-    },
-    {
-      "rule_id": "ofsp_r5c_weevil",
-      "operation_id": "harvest",
-      "depends_on_operation_id": "planting",
-      "min_days_after_dependency": null,
-      "max_days_after_dependency": 150,
-      "can_repeat": false,
-      "allow_backdate": false,
-      "severity": "warning",
-      "condition": "NEW rule, specific to this crop file: distinct from cassava, where delayed harvest is a low-cost farmer choice, delayed OFSP harvest carries a real and quantified cost -- sweet potato weevil (Cylas spp.) damage escalates sharply the longer roots sit in the ground past maturity, with published sources citing harvest delay as a primary driver of weevil losses that can reach up to 100% in severe cases (typically 20-55% on average) and general guidance to harvest within about 4 months to limit weevil damage. This rule flags (does not block) harvest beyond 150 days specifically as a weevil-risk advisory, distinct from ofsp_r5b's broader maturity-window flag.",
-      "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (20-55% average tuber loss to weevil, up to 100% in severe/delayed cases); PlantVillage, Sweet Potato (recommendation to harvest within 4 months to avoid weevil damage)."
+      "condition": "Harvest is expected at 90-120 days. Flagged before 85 or after 130 days after planting: tubers left past 130 days invite near-total weevil loss.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     },
     {
       "rule_id": "ofsp_r6",
@@ -338,6 +326,30 @@
       "severity": "block",
       "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
       "source": "Inherited convention from maize.json / cassava.json."
+    },
+    {
+      "rule_id": "ofsp_r3_ceiling",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 60,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the first weeding is logged after 60 days after planting: late disturbance damages the expanding tubers.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
+    },
+    {
+      "rule_id": "ofsp_r4_ceiling",
+      "operation_id": "reridging",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 60,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if earthing-up is logged after 60 days after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     }
   ],
   "soil_requirements": {
@@ -456,6 +468,13 @@
       "date": "2026-10-24",
       "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
       "summary": "Replaced the yield thresholds with the master ruleset's, which the earlier ones (taken from general or global sources) did not match. The ruleset gives a Soft Warning below 4.0, Pass 5.0-18.0 and a Soft Warning above 25.0, leaving 4.0-5.0 and 18.0-25.0 undefined; the Pass band is extended to 4.0-25.0. A true zero is a loss event, as for every crop.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
+      "summary": "Timing rules aligned with the ruleset: weeding and earthing-up flagged after 45 days and blocked after 60; harvest flagged before 85 or after 130 days (was 90-150) with no upper block (was 180). The separate weevil warning after 150 days was removed because the 130-day flag now covers it.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     }
   ]

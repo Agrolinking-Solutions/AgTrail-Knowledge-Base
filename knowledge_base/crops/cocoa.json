@@ -10,7 +10,7 @@
       "Nigeria - Southwest rainforest belt",
       "Nigeria - Cross River"
     ],
-    "current_version": "1.2.0"
+    "current_version": "1.3.0"
   },
   "growth_stages": [
     {
@@ -229,12 +229,12 @@
       "operation_id": "transplanting",
       "depends_on_operation_id": "nursery_establishment",
       "min_days_after_dependency": 90,
-      "max_days_after_dependency": 210,
+      "max_days_after_dependency": 180,
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "Seedlings need time in the nursery before they can survive transplanting. Sources genuinely disagree on how long: one gives 3 to 6 months, another gives 6 to 7 months. Rather than pick one, this rule uses the full combined range, 90 to 210 days, as the block boundary, and treats the middle of that range as the expected case.",
-      "source": "MarNat StudySpace, Cocoa Production in Nigeria (3 to 6 months); UKEssays, Cocoa Cultivation Practices in Nigeria (6 to 7 months)"
+      "condition": "Hard block if the nursery period is under 90 or over 180 days. See cocoa_r2b for the flag.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     },
     {
       "rule_id": "cocoa_r3",
@@ -252,25 +252,25 @@
       "rule_id": "cocoa_r4",
       "operation_id": "harvest",
       "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 730,
+      "min_days_after_dependency": 540,
       "max_days_after_dependency": null,
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "This block boundary is deliberately kept conservative at 730 days, roughly 2 years. One farm input marketing source claims CRIN hybrid seedlings can bear pods in as little as 18 months, about 547 days, but this claim only appears in one promotional source and is not confirmed by any of the scientific or research literature reviewed, which consistently describes 3 to 5 years to first bearing across varieties. Until that 18 month claim is independently confirmed, the block stays at 2 years rather than being lowered on the strength of one marketing source. See rule cocoa_r4b for the typical window. Once past the block threshold, harvest can repeat every bearing season and does not require a new planting record, unlike an annual crop.",
-      "source": "FarmPays 2026, Cocoa Farming In Nigeria (18 month hybrid claim, flagged as unconfirmed); How to Plant Cocoa in Nigeria (Floratalk), MarNat StudySpace, and general cacao literature (3 to 5 years to first bearing, consistent across multiple sources)"
+      "condition": "Hard block if the first harvest is logged before 540 days (1.5 years) after transplanting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     },
     {
       "rule_id": "cocoa_r4b",
       "operation_id": "harvest",
       "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 1095,
-      "max_days_after_dependency": 1825,
+      "min_days_after_dependency": 730,
+      "max_days_after_dependency": null,
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "3 to 5 years (1095 to 1825 days) is the typical window for first bearing across the sources reviewed. A harvest logged inside the hard block range above but earlier than this window is flagged as unusually early rather than treated as a data error, since it could genuinely be a fast hybrid variety worth noting, not necessarily a mistake.",
-      "source": "Consistent across MarNat StudySpace, Floratalk, and FarmPays (despite the 18 month outlier claim in the same FarmPays source)"
+      "condition": "Hybrids bear from about 2 years. Flagged if the first harvest is logged before 730 days after transplanting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     },
     {
       "rule_id": "cocoa_r5",
@@ -288,13 +288,13 @@
       "rule_id": "cocoa_r6",
       "operation_id": "drying",
       "depends_on_operation_id": "fermentation",
-      "min_days_after_dependency": 5,
-      "max_days_after_dependency": 7,
+      "min_days_after_dependency": 4,
+      "max_days_after_dependency": 8,
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "Drying normally follows 5 to 7 days of fermentation. Outside this window flavor and quality are affected, but the record itself is not treated as invalid.",
-      "source": "MarNat StudySpace, Cocoa Production in Nigeria; How to Plant Cocoa in Nigeria (Floratalk); both independently give the same 5 to 7 day figure"
+      "condition": "Fermentation is expected to last 5-7 days. Flagged if drying is logged under 4 or over 8 days after fermentation was logged. See cocoa_r6_block for the hard block.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     },
     {
       "rule_id": "cocoa_r7",
@@ -330,6 +330,30 @@
       "severity": "warning",
       "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    },
+    {
+      "rule_id": "cocoa_r2b",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 100,
+      "max_days_after_dependency": 150,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Nursery period is expected at 4-5 months. Flagged under 100 or over 150 days: over-aged seedlings become root-bound.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
+    },
+    {
+      "rule_id": "cocoa_r6_block",
+      "operation_id": "drying",
+      "depends_on_operation_id": "fermentation",
+      "min_days_after_dependency": 3,
+      "max_days_after_dependency": 10,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if fermentation lasts under 3 or over 10 days (drying logged that long after fermentation). Drying logged before fermentation is a hard block through the missing dependency.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     }
   ],
   "soil_requirements": {
@@ -460,6 +484,13 @@
       "date": "2026-10-24",
       "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
       "summary": "Added the yield limits (hard block at 0 and above the biological maximum, soft warnings around the standard range) from the master ruleset; the file had none. Yield is dry beans per hectare.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
+      "summary": "Nursery hard block now over 180 days (was 210) with a flag under 100 or over 150. First harvest is blocked before 540 days (was 730) and flagged before 730 days (the old 1095-1825 day flag was removed). Fermentation is flagged under 4 or over 8 days (was outside 5-7) and blocked under 3 or over 10.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     }
   ],

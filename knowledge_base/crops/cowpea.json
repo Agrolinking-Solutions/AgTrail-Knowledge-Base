@@ -11,7 +11,7 @@
       "Nigeria - Middle Belt",
       "Nigeria - Sudan Savanna"
     ],
-    "current_version": "1.1.0"
+    "current_version": "1.2.0"
   },
   "growth_stages": [
     {
@@ -144,6 +144,15 @@
       "requires_evidence": false,
       "can_repeat": false,
       "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Insecticide Application (Maruca IPM)",
+      "category": "pest_disease_control",
+      "description": "A chemical application against Maruca pod borer, targeted at flowering and podding (about 35-45 days after planting onward). Looking for pests is pest_scouting and has no early limit.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
     }
   ],
   "workflow": [
@@ -192,16 +201,22 @@
     },
     {
       "step_number": 9,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 10,
       "operation_id": "harvest",
       "required": true
     },
     {
-      "step_number": 10,
+      "step_number": 11,
       "operation_id": "drying_threshing",
       "required": false
     },
     {
-      "step_number": 11,
+      "step_number": 12,
       "operation_id": "storage",
       "required": false
     }
@@ -283,25 +298,25 @@
       "rule_id": "cowpea_r5",
       "operation_id": "harvest",
       "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 55,
-      "max_days_after_dependency": 120,
+      "min_days_after_dependency": 60,
+      "max_days_after_dependency": null,
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "Harvest cannot be logged before 55 days after planting -- cowpea is one of the fastest-maturing grain legumes and some early varieties are ready close to 60 days, but nothing meaningful is ready before this floor. Upper bound of 120 days is a hard outer limit for a crop whose full range across varieties runs 60-90 days.",
-      "source": "Foraminifera Market Research, Cowpea (Beans) Farming in Nigeria (60-90 day maturity range, multiple planting cycles per year)."
+      "condition": "Hard block if harvest is logged before 60 days after planting. The ruleset gives no upper hard block; the earlier 120-day block was removed.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
     },
     {
       "rule_id": "cowpea_r5b",
       "operation_id": "harvest",
       "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 60,
-      "max_days_after_dependency": 90,
+      "min_days_after_dependency": 70,
+      "max_days_after_dependency": 100,
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "60-90 days after planting is the typical maturity window across cowpea varieties grown in Nigeria. Harvest logged inside the hard block range but outside this window is flagged so the farmer can confirm variety maturity class rather than being blocked outright.",
-      "source": "Foraminifera Market Research, Cowpea (Beans) Farming in Nigeria."
+      "condition": "Harvest is expected at 70-90 days for dry pods. Flagged before 70 or after 100 days after planting (pods shatter).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
     },
     {
       "rule_id": "cowpea_r6",
@@ -338,6 +353,42 @@
       "severity": "block",
       "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
       "source": "Inherited convention from maize.json / cassava.json / sesame.json."
+    },
+    {
+      "rule_id": "cowpea_r_insecticide_floor",
+      "operation_id": "pest_disease_control",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if an insecticide is logged before 21 days after planting: early sprays are wasted.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
+    },
+    {
+      "rule_id": "cowpea_r_insecticide",
+      "operation_id": "pest_disease_control",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 30,
+      "max_days_after_dependency": 60,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Insecticide is expected from flowering and podding. Flagged before 30 or after 60 days after planting: late sprays leave residue at harvest.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
+    },
+    {
+      "rule_id": "cowpea_r_storage_after_drying",
+      "operation_id": "storage",
+      "depends_on_operation_id": "drying_threshing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 7,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Storage or packaging cannot be logged without a drying step first (a hard block through the missing dependency). Flagged if storage is logged more than 7 days after drying and threshing.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
     }
   ],
   "soil_requirements": {
@@ -498,6 +549,13 @@
       "date": "2026-10-24",
       "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
       "summary": "Replaced the yield thresholds with the master ruleset's, which the earlier ones (taken from general or global sources) did not match. The ruleset gives Pass 0.3-1.5 and the first warning above 2.0, leaving 1.5-2.0 undefined; the Pass band is extended to 2.0.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
+      "summary": "Harvest block now starts at 60 days (was 55) with no upper block (was 120), and the flag window is 70-100 days (was 60-90). Added an insecticide operation with a hard block before 21 days and a flag outside 30-60 days, and the rule that storage needs a drying step first, flagged after 7 days.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 9 (Cowpea)"
     }
   ]
