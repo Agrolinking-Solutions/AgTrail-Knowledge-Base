@@ -136,23 +136,30 @@ def test_cassava_harvest_before_minimum_is_still_blocked():
     assert any(i.rule_id == "cassava_r6" for i in report.blocking_issues)
 
 
-def test_cocoa_18_month_harvest_claim_is_blocked_despite_marketing_source():
+def test_cocoa_18_month_harvest_is_flagged_not_blocked_per_the_master_ruleset():
     """
-    One promotional source claims CRIN hybrids can bear pods in 18 months
-    (547 days). That claim is not corroborated by any other source reviewed,
-    so the block stays at the conservative 2 year (730 day) threshold. This
-    test locks in that deliberate choice: it should block, with a warning
-    explaining why, not silently pass because of the unconfirmed claim.
+    The master ruleset blocks a first cocoa harvest before 540 days (1.5 years) and flags
+    it before 730 days. A harvest 547 days after transplanting (the 18 month claim made by
+    one promotional source) is therefore allowed but flagged. An earlier version of this
+    file blocked everything under 730 days; the ruleset is the CEO's document, so it wins.
     """
-    report = validate_operation(
-        crop_id="cocoa",
-        history=[
-            {"operation_id": "land_clearing", "date": "2025-01-01"},
-            {"operation_id": "nursery_establishment", "date": "2025-01-15"},
-            {"operation_id": "transplanting", "date": "2025-06-01"},
-        ],
-        new_operation={"operation_id": "harvest", "date": "2026-11-30"},
-    )
+    history = [
+        {"operation_id": "land_clearing", "date": "2025-01-01"},
+        {"operation_id": "nursery_establishment", "date": "2025-01-15"},
+        {"operation_id": "transplanting", "date": "2025-06-01"},
+    ]
+    report = validate_operation(crop_id="cocoa", history=history, new_operation={"operation_id": "harvest", "date": "2026-11-30"})
+    assert not report.blocked
+    assert any(i.rule_id == "cocoa_r4b" for i in report.warnings)
+
+
+def test_cocoa_harvest_before_540_days_is_blocked():
+    history = [
+        {"operation_id": "land_clearing", "date": "2025-01-01"},
+        {"operation_id": "nursery_establishment", "date": "2025-01-15"},
+        {"operation_id": "transplanting", "date": "2025-06-01"},
+    ]
+    report = validate_operation(crop_id="cocoa", history=history, new_operation={"operation_id": "harvest", "date": "2026-11-20"})
     assert report.blocked
     assert any(i.rule_id == "cocoa_r4" for i in report.blocking_issues)
 

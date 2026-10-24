@@ -6,136 +6,539 @@
     "category": "cereal",
     "crop_cycle_type": "annual",
     "typical_duration_days": 110,
-    "regions": ["Nigeria - Guinea Savanna", "Nigeria - Sudan Savanna"],
-    "current_version": "1.0.4"
+    "regions": [
+      "Nigeria - Guinea Savanna",
+      "Nigeria - Sudan Savanna"
+    ],
+    "current_version": "1.1.0"
   },
-
   "growth_stages": [
-    { "stage_id": "germination", "name": "Germination", "starts_day_after_planting": 0, "ends_day_after_planting": 7, "description": "Seed imbibes water and radicle emerges. Same as conventional maize -- the provitamin A trait affects grain composition, not germination physiology." },
-    { "stage_id": "seedling", "name": "Seedling / V-stage establishment", "starts_day_after_planting": 8, "ends_day_after_planting": 20, "description": "Emergence through early leaf development." },
-    { "stage_id": "vegetative", "name": "Vegetative growth", "starts_day_after_planting": 21, "ends_day_after_planting": 52, "description": "Rapid leaf and stalk growth, highest nutrient demand." },
-    { "stage_id": "tasseling_silking", "name": "Tasseling / Silking", "starts_day_after_planting": 53, "ends_day_after_planting": 68, "description": "Reproductive stage; also the stage during which cross-pollination with non-target maize pollen can compromise provitamin A trait purity in saved/replanted seed -- see isolation_verification operation." },
-    { "stage_id": "grain_fill", "name": "Grain filling", "starts_day_after_planting": 69, "ends_day_after_planting": 99, "description": "Kernel development, milk to dough stage. Carotenoid (provitamin A) accumulation in the kernel occurs through this stage; research found no significant change in carotenoid content from 45 days post-pollination through harvest, so grain-fill timing itself does not need special validation rules.", "source": "Postharvest carotenoid stability study, biofortified maize (see version_history)." },
-    { "stage_id": "maturity", "name": "Physiological maturity", "starts_day_after_planting": 100, "ends_day_after_planting": 110, "description": "Black layer formation, ready for harvest. From this point on, provitamin A retention -- not timing -- becomes the main quality risk; see drying/storage rules below." }
-  ],
-
-  "operations": [
-    { "operation_id": "isolation_verification", "name": "Isolation Distance Verification", "category": "land_prep", "description": "NEW operation, specific to this crop file: farmer/field-agent confirmation (with GPS/photo evidence) that the plot is adequately isolated from other maize varieties before planting. Vitamin A Maize is typically an open-pollinated variety (OPV); its provitamin A trait is only reliably preserved across seasons if the seed lot is not cross-pollinated by non-biofortified maize pollen. This matters specifically for farmers who intend to save and replant grain as seed rather than buying fresh certified seed each season, which is a common smallholder practice.", "requires_evidence": true, "can_repeat": false, "optional": true },
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing/harrowing and ridging/bed formation.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "planting", "name": "Planting", "category": "planting", "description": "Sowing of Vitamin A Maize seed.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing failed stands.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "first_fertilizer", "name": "First Fertilizer Application (Basal)", "category": "input_application", "description": "NPK basal application.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual/chemical weed control.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "second_fertilizer", "name": "Second Fertilizer Application (Top-dress)", "category": "input_application", "description": "Urea top-dressing at vegetative stage.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "weeding_2", "name": "Second Weeding", "category": "crop_management", "description": "Follow-up weed control.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "pest_scouting", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Fall armyworm and other pest management.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "harvest_fresh", "name": "Harvest (Fresh/Green Cob)", "category": "harvest", "description": "Harvesting for fresh/green eating corn at the milk-to-dough stage.", "requires_evidence": true, "can_repeat": false, "optional": true },
-    { "operation_id": "harvest", "name": "Harvest (Dry Grain)", "category": "harvest", "description": "Dry grain harvesting at physiological maturity.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "drying", "name": "Drying", "category": "post_harvest", "description": "Field or platform drying to safe moisture content. Traditional drying itself causes only minimal carotenoid loss (under 9%), so this step is not the main provitamin A risk -- what happens after drying is.", "requires_evidence": false, "can_repeat": false, "source": "Burt et al., postharvest carotenoid stability research on biofortified maize (see version_history)." },
-    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Shelling and storage/bagging. This is the operation where most provitamin A loss actually occurs, driven by storage duration, temperature, and humidity -- not by anything the farmer did wrong upstream.", "requires_evidence": false, "can_repeat": false }
-  ],
-
-  "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "land_preparation", "required": true },
-    { "step_number": 3, "operation_id": "isolation_verification", "required": false },
-    { "step_number": 4, "operation_id": "planting", "required": true },
-    { "step_number": 5, "operation_id": "gap_filling", "required": false },
-    { "step_number": 6, "operation_id": "first_fertilizer", "required": true },
-    { "step_number": 7, "operation_id": "weeding_1", "required": true, "repeat_until": "harvest" },
-    { "step_number": 8, "operation_id": "second_fertilizer", "required": true },
-    { "step_number": 9, "operation_id": "weeding_2", "required": false, "repeat_until": "harvest" },
-    { "step_number": 10, "operation_id": "pest_scouting", "required": false, "repeat_until": "harvest" },
-    { "step_number": 11, "operation_id": "harvest_fresh", "required": false },
-    { "step_number": 12, "operation_id": "harvest", "required": true },
-    { "step_number": 13, "operation_id": "drying", "required": true },
-    { "step_number": 14, "operation_id": "storage", "required": false }
-  ],
-
-  "validation_rules": [
     {
-      "rule_id": "vitamin_a_maize_r_land_prep_gate", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
-      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
+      "stage_id": "germination",
+      "name": "Germination",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 7,
+      "description": "Seed imbibes water and radicle emerges. Same as conventional maize -- the provitamin A trait affects grain composition, not germination physiology."
     },
     {
-      "rule_id": "va_maize_r_isolation", "operation_id": "isolation_verification", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, specific to this crop file. When the farmer intends to save/replant grain as seed (common smallholder practice for OPVs), the plot should be isolated by at least 200-300m from any other maize field, or use a temporal isolation of roughly 4-6 weeks difference in planting/flowering date, to prevent wind-borne cross-pollination from diluting the provitamin A trait in the next generation's seed. This is a warning, not a block: the engine cannot itself verify neighboring-field distance without GPS-polygon data AgTrail does not yet capture (same limitation noted elsewhere in this knowledge base), and isolation only matters at all if the farmer is saving seed rather than buying fresh seed each season -- which this schema also cannot yet distinguish.",
+      "stage_id": "seedling",
+      "name": "Seedling / V-stage establishment",
+      "starts_day_after_planting": 8,
+      "ends_day_after_planting": 20,
+      "description": "Emergence through early leaf development."
+    },
+    {
+      "stage_id": "vegetative",
+      "name": "Vegetative growth",
+      "starts_day_after_planting": 21,
+      "ends_day_after_planting": 52,
+      "description": "Rapid leaf and stalk growth, highest nutrient demand."
+    },
+    {
+      "stage_id": "tasseling_silking",
+      "name": "Tasseling / Silking",
+      "starts_day_after_planting": 53,
+      "ends_day_after_planting": 68,
+      "description": "Reproductive stage; also the stage during which cross-pollination with non-target maize pollen can compromise provitamin A trait purity in saved/replanted seed -- see isolation_verification operation."
+    },
+    {
+      "stage_id": "grain_fill",
+      "name": "Grain filling",
+      "starts_day_after_planting": 69,
+      "ends_day_after_planting": 99,
+      "description": "Kernel development, milk to dough stage. Carotenoid (provitamin A) accumulation in the kernel occurs through this stage; research found no significant change in carotenoid content from 45 days post-pollination through harvest, so grain-fill timing itself does not need special validation rules.",
+      "source": "Postharvest carotenoid stability study, biofortified maize (see version_history)."
+    },
+    {
+      "stage_id": "maturity",
+      "name": "Physiological maturity",
+      "starts_day_after_planting": 100,
+      "ends_day_after_planting": 110,
+      "description": "Black layer formation, ready for harvest. From this point on, provitamin A retention -- not timing -- becomes the main quality risk; see drying/storage rules below."
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "isolation_verification",
+      "name": "Isolation Distance Verification",
+      "category": "land_prep",
+      "description": "NEW operation, specific to this crop file: farmer/field-agent confirmation (with GPS/photo evidence) that the plot is adequately isolated from other maize varieties before planting. Vitamin A Maize is typically an open-pollinated variety (OPV); its provitamin A trait is only reliably preserved across seasons if the seed lot is not cross-pollinated by non-biofortified maize pollen. This matters specifically for farmers who intend to save and replant grain as seed rather than buying fresh certified seed each season, which is a common smallholder practice.",
+      "requires_evidence": true,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Ploughing/harrowing and ridging/bed formation.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting",
+      "category": "planting",
+      "description": "Sowing of Vitamin A Maize seed.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "gap_filling",
+      "name": "Gap Filling / Replanting",
+      "category": "planting",
+      "description": "Replacing failed stands.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "first_fertilizer",
+      "name": "First Fertilizer Application (Basal)",
+      "category": "input_application",
+      "description": "NPK basal application.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "Manual/chemical weed control.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "second_fertilizer",
+      "name": "Second Fertilizer Application (Top-dress)",
+      "category": "input_application",
+      "description": "Urea top-dressing at vegetative stage.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_2",
+      "name": "Second Weeding",
+      "category": "crop_management",
+      "description": "Follow-up weed control.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "pest_scouting",
+      "name": "Pest & Disease Scouting/Control",
+      "category": "pest_disease_control",
+      "description": "Fall armyworm and other pest management.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest_fresh",
+      "name": "Harvest (Fresh/Green Cob)",
+      "category": "harvest",
+      "description": "Harvesting for fresh/green eating corn at the milk-to-dough stage.",
+      "requires_evidence": true,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Dry Grain)",
+      "category": "harvest",
+      "description": "Dry grain harvesting at physiological maturity.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "drying",
+      "name": "Drying",
+      "category": "post_harvest",
+      "description": "Field or platform drying to safe moisture content. Traditional drying itself causes only minimal carotenoid loss (under 9%), so this step is not the main provitamin A risk -- what happens after drying is.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "source": "Burt et al., postharvest carotenoid stability research on biofortified maize (see version_history)."
+    },
+    {
+      "operation_id": "storage",
+      "name": "Storage",
+      "category": "post_harvest",
+      "description": "Shelling and storage/bagging. This is the operation where most provitamin A loss actually occurs, driven by storage duration, temperature, and humidity -- not by anything the farmer did wrong upstream.",
+      "requires_evidence": false,
+      "can_repeat": false
+    }
+  ],
+  "workflow": [
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "isolation_verification",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 5,
+      "operation_id": "gap_filling",
+      "required": false
+    },
+    {
+      "step_number": 6,
+      "operation_id": "first_fertilizer",
+      "required": true
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 8,
+      "operation_id": "second_fertilizer",
+      "required": true
+    },
+    {
+      "step_number": 9,
+      "operation_id": "weeding_2",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 10,
+      "operation_id": "pest_scouting",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 11,
+      "operation_id": "harvest_fresh",
+      "required": false
+    },
+    {
+      "step_number": 12,
+      "operation_id": "harvest",
+      "required": true
+    },
+    {
+      "step_number": 13,
+      "operation_id": "drying",
+      "required": true
+    },
+    {
+      "step_number": 14,
+      "operation_id": "storage",
+      "required": false
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "vitamin_a_maize_r_land_prep_gate",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: planting before land preparation is a hard block, but that case is already caught by the global backdate rule (maize_r11), since land preparation would be the most recently logged operation. This rule's own severity should therefore be warning, for the case of planting more than 30 days after land preparation (soil loses tilth/moisture advantage), not a block at 14 days as the previous version incorrectly stated.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r_isolation",
+      "operation_id": "isolation_verification",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, specific to this crop file. When the farmer intends to save/replant grain as seed (common smallholder practice for OPVs), the plot should be isolated by at least 200-300m from any other maize field, or use a temporal isolation of roughly 4-6 weeks difference in planting/flowering date, to prevent wind-borne cross-pollination from diluting the provitamin A trait in the next generation's seed. This is a warning, not a block: the engine cannot itself verify neighboring-field distance without GPS-polygon data AgTrail does not yet capture (same limitation noted elsewhere in this knowledge base), and isolation only matters at all if the farmer is saving seed rather than buying fresh seed each season -- which this schema also cannot yet distinguish.",
       "source": "FAO/SADC-GTZ, Open-Pollinated Maize Seed Production Handbook (300m spatial isolation, 400m under strong prevailing wind); CIMMYT, Community-Based Seed Production of Open-Pollinated Maize Varieties (400:200m foundation:certified seed isolation, 4-6 week temporal isolation alternative); EU minimum standard of 200m for certified seed isolation."
     },
     {
-      "rule_id": "va_maize_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation cannot be logged before land clearing, and should not be logged more than 30 days after it. Same physical-crop logic as maize.json -- inherited unchanged since the provitamin A trait does not affect land prep timing.",
+      "rule_id": "va_maize_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing, and should not be logged more than 30 days after it. Same physical-crop logic as maize.json -- inherited unchanged since the provitamin A trait does not affect land prep timing.",
       "source": "Inherited from maize.json (same species; land prep is trait-independent)."
     },
     {
-      "rule_id": "va_maize_r4_floor", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 7, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Weeding logged before 7 days after planting is a hard block -- there is nothing meaningful to weed yet. Inherited from maize.json.",
+      "rule_id": "va_maize_r4_floor",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 7,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Weeding logged before 7 days after planting is a hard block -- there is nothing meaningful to weed yet. Inherited from maize.json.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (inherited from maize.json)."
     },
     {
-      "rule_id": "va_maize_r7_floor", "operation_id": "pest_scouting", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": null, "max_days_after_dependency": 65, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Pesticide application after tasseling (65 days after planting) is a hard block. Inherited from maize.json.",
+      "rule_id": "va_maize_r7_floor",
+      "operation_id": "pest_scouting",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 65,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Pesticide application after tasseling (65 days after planting) is a hard block. Inherited from maize.json.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (inherited from maize.json)."
     },
     {
-      "rule_id": "va_maize_r8", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 85, "max_days_after_dependency": 160, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Harvest cannot be logged before 85 days after planting -- floor raised slightly from conventional maize's 80 days since most released Vitamin A Maize varieties are medium-to-late maturing OPVs/hybrids (typical_duration_days 110) rather than the extra-early hybrids conventional maize.json also has to cover.",
-      "source": "HarvestPlus / CIMMYT / IITA Vitamin A Maize variety descriptions (medium-to-late maturity classes); floor adapted from maize.json's cross-referenced 80-day floor."
+      "rule_id": "va_maize_r8",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 80,
+      "max_days_after_dependency": 160,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest cannot be logged before 85 days after planting -- floor raised slightly from conventional maize's 80 days since most released Vitamin A Maize varieties are medium-to-late maturing OPVs/hybrids (typical_duration_days 110) rather than the extra-early hybrids conventional maize.json also has to cover.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
     },
     {
-      "rule_id": "va_maize_r9", "operation_id": "harvest", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first. Inherited from maize.json.",
+      "rule_id": "va_maize_r9",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest can only be logged once per planting cycle for an annual crop; a second harvest record requires a new planting record first. Inherited from maize.json.",
       "source": "Inherited from maize.json."
     },
     {
-      "rule_id": "va_maize_r_drying", "operation_id": "drying", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 5, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, tighter than conventional maize.json's 0-10 day drying window. Provitamin A degradation begins immediately after harvest and is fastest in the first two weeks (one Zambian field study measured beta-carotene-equivalent retention already down to 52-56% after just 15 days of storage as kernels/ears). Prompt drying does not stop this degradation but delayed drying compounds it, since undried grain sits at higher moisture/humidity, which independently accelerates carotenoid loss.",
-      "source": "Li et al., Carotenoid Retention of Biofortified Provitamin A Maize after Zambian Traditional Methods of Milling, Cooking and Storage, J. Agric. Food Chem. 2014, 62, 6317-6325; Burt et al., postharvest drying-method carotenoid loss study (<9% loss from traditional drying itself, 15-45% immediate loss from higher-heat drying methods)."
+      "rule_id": "va_maize_r_drying",
+      "operation_id": "drying",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 10,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, tighter than conventional maize.json's 0-10 day drying window. Provitamin A degradation begins immediately after harvest and is fastest in the first two weeks (one Zambian field study measured beta-carotene-equivalent retention already down to 52-56% after just 15 days of storage as kernels/ears). Prompt drying does not stop this degradation but delayed drying compounds it, since undried grain sits at higher moisture/humidity, which independently accelerates carotenoid loss.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
     },
     {
-      "rule_id": "va_maize_r_storage_duration", "operation_id": "storage", "depends_on_operation_id": "drying",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 180, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule: this does not block storage past 180 days (grain is still safe and edible), but flags it so the farmer/program can be shown a freshness advisory. Published retention studies found provitamin A content stabilizing at roughly 30-33% of its original level by 6 months of storage under typical smallholder (non-refrigerated) conditions, even when drying and handling were done correctly -- so a farmer or buyer relying on the crop for its vitamin A benefit specifically (as opposed to just as staple grain) should be alerted that a long-stored batch is nutritionally different from a freshly harvested one. This is a known, physically inevitable degradation curve, not a farmer error, which is why it is a warning rather than a block.",
+      "rule_id": "va_maize_r_storage_duration",
+      "operation_id": "storage",
+      "depends_on_operation_id": "drying",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 180,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule: this does not block storage past 180 days (grain is still safe and edible), but flags it so the farmer/program can be shown a freshness advisory. Published retention studies found provitamin A content stabilizing at roughly 30-33% of its original level by 6 months of storage under typical smallholder (non-refrigerated) conditions, even when drying and handling were done correctly -- so a farmer or buyer relying on the crop for its vitamin A benefit specifically (as opposed to just as staple grain) should be alerted that a long-stored batch is nutritionally different from a freshly harvested one. This is a known, physically inevitable degradation curve, not a farmer error, which is why it is a warning rather than a block.",
       "source": "Li et al., J. Agric. Food Chem. 2014, 62, 6317-6325 (Zambian traditional storage, stabilizing 30-33% BCE retention by 6 months); Taleon et al./ACS Omega household cooking retention study (up to 60-65% loss by 6 months under traditional conditions); Wageningen postharvest storage study (16% retention at 180 days under the worst-case 37C/paper-bag condition, illustrating the temperature/packaging sensitivity of this figure)."
     },
     {
-      "rule_id": "va_maize_r11", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence). Inherited from maize.json.",
+      "rule_id": "va_maize_r11",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence). Inherited from maize.json.",
       "source": "Inherited from maize.json."
     },
     {
-      "rule_id": "vitamin_a_maize_r_seq_first_fertilizer_weeding_1", "operation_id": "weeding_1", "depends_on_operation_id": "first_fertilizer",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding_1 could previously be logged with no first_fertilizer in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "vitamin_a_maize_r_seq_first_fertilizer_weeding_1",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "first_fertilizer",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding_1 could previously be logged with no first_fertilizer in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     },
     {
-      "rule_id": "vitamin_a_maize_r_seq_weeding_1_second_fertilizer", "operation_id": "second_fertilizer", "depends_on_operation_id": "weeding_1",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- second_fertilizer could previously be logged with no weeding_1 in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "vitamin_a_maize_r_seq_weeding_1_second_fertilizer",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "weeding_1",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- second_fertilizer could previously be logged with no weeding_1 in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+    },
+    {
+      "rule_id": "va_maize_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: planting before land preparation is a hard block, but that case is already caught by the global backdate rule (maize_r11), since land preparation would be the most recently logged operation. This rule's own severity should therefore be warning, for the case of planting more than 30 days after land preparation (soil loses tilth/moisture advantage), not a block at 14 days as the previous version incorrectly stated.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r3",
+      "operation_id": "first_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 14,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Basal NPK (e.g. 15:15:15) should be applied at planting or within the first 1-2 weeks after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r4",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 21,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "The critical weed-free window is 14-21 days after planting; logged outside that but still at or after 7 days is flagged. See maize_r4_floor for the separate hard block under 7 days.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r5",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 42,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Base/umbrella typical window, now 21-42 days per the AgTrail Master Agronomist & Validator Ruleset (previously 21-35, sourced only from IITA's regional figures). The precise window still differs by zone -- see regional_overrides: Guinea savanna is 28-35 days, Sudan savanna (extra-early varieties) is 21-28 days, both of which sit inside this broader typical window. See maize_r5_floor for the hard block boundary, which did not exist in the previous version of this file.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r5_floor",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "NEW rule: top-dress logged before 14 days or after 60 days after planting is a hard block. The previous version of this file had no hard block at all for this operation, only the warning-severity typical-window rule, meaning an absurdly late top-dress (e.g. day 100) would have passed with only a soft flag.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r6",
+      "operation_id": "weeding_2",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 28,
+      "max_days_after_dependency": 35,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Second manual weeding is recommended 4-5 weeks after planting.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r7",
+      "operation_id": "pest_scouting",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 21,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Fall Armyworm control is most effective when insecticide is applied weekly during the first 3 weeks after planting; scouting/control logged well outside this window is flagged since FAW damage compounds quickly if missed early. The Master Agronomist & Validator Ruleset frames this differently: it calls for calendar/routine sprays to be blocked entirely, only allowing a spray once scouting confirms 5-10%+ damage. AgTrail's schema does not yet have a field to represent 'evidence of scouting threshold met' as a precondition on an operation, so that specific requirement cannot be enforced yet -- flagged as a real, current limitation rather than silently ignored. See maize_r7_floor for the one piece of that guidance this schema CAN enforce: a hard block on spraying after tasseling.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r8b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 90,
+      "max_days_after_dependency": 130,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "90-130 days covers physiological maturity through the point where loss to birds/rot becomes a real concern. Upper bound CORRECTED from 120 to 130 days per the master ruleset ('flag after 130 DAP'). Harvest logged inside the hard block range (80-160 days) but outside this typical window is flagged so the farmer can confirm their variety's maturity class rather than being blocked outright.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r8_fresh",
+      "operation_id": "harvest_fresh",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 60,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "NEW rule: fresh/green cob harvest cannot be logged before 60 days after planting. No upper block -- past a certain point a late 'fresh' harvest just becomes a de facto dry grain harvest instead, which is covered by the separate harvest operation.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r8b_fresh",
+      "operation_id": "harvest_fresh",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 65,
+      "max_days_after_dependency": 75,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule: 65-75 days after planting is the typical milk-to-dough stage window for fresh/green cob harvest. Outside this but past the 60-day floor is flagged rather than blocked.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
+    },
+    {
+      "rule_id": "va_maize_r8_fresh_once",
+      "operation_id": "harvest_fresh",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Fresh/green cob harvest can only be logged once per planting cycle, same reasoning as dry grain harvest.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
     }
   ],
-
   "soil_requirements": {
     "ph_min": 5.5,
     "ph_max": 7.0,
-    "texture": ["sandy loam", "loam", "clay loam"],
+    "texture": [
+      "sandy loam",
+      "loam",
+      "clay loam"
+    ],
     "drainage": "well-drained",
     "nitrogen_needs": "high"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 500,
     "rainfall_mm_max_cycle": 800,
@@ -143,37 +546,104 @@
     "temp_c_max": 33,
     "notes": "Same climatic requirements as conventional maize (same species). Sensitive to moisture stress during tasseling/silking; waterlogging is harmful at all stages."
   },
-
   "diseases": [
-    { "name": "Maize Streak Virus", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Chlorotic streaking along leaf veins, stunted growth.", "management": "Use resistant/tolerant varieties, control leafhopper vectors, plant early with the onset of rains.", "confidence": 0.85, "source": "Inherited from maize.json (IITA / USAID, Growing Maize in Nigeria)." },
-    { "name": "Aflatoxin contamination (Aspergillus flavus)", "risk_stage_ids": ["maturity"], "symptoms": "Not always visually detectable; may show as grey-green mold on kernels in advanced contamination. Risk rises with poor drying and humid storage.", "management": "Prompt drying to safe moisture content, clean/dry storage, avoid kernel damage during harvest and handling. Included specifically for this crop file because provitamin A maize breeding programs have an active research interest in whether high-provitamin-A lines also show reduced aflatoxin susceptibility, though this is not yet an established management difference from conventional maize and should not be treated as one.", "confidence": 0.5, "source": "Chen et al., Performance of testers with contrasting provitamin A content to evaluate provitamin A maize for resistance to Aspergillus flavus infection and aflatoxin production (research-stage finding, not yet field-management guidance)." }
+    {
+      "name": "Maize Streak Virus",
+      "risk_stage_ids": [
+        "seedling",
+        "vegetative"
+      ],
+      "symptoms": "Chlorotic streaking along leaf veins, stunted growth.",
+      "management": "Use resistant/tolerant varieties, control leafhopper vectors, plant early with the onset of rains.",
+      "confidence": 0.85,
+      "source": "Inherited from maize.json (IITA / USAID, Growing Maize in Nigeria)."
+    },
+    {
+      "name": "Aflatoxin contamination (Aspergillus flavus)",
+      "risk_stage_ids": [
+        "maturity"
+      ],
+      "symptoms": "Not always visually detectable; may show as grey-green mold on kernels in advanced contamination. Risk rises with poor drying and humid storage.",
+      "management": "Prompt drying to safe moisture content, clean/dry storage, avoid kernel damage during harvest and handling. Included specifically for this crop file because provitamin A maize breeding programs have an active research interest in whether high-provitamin-A lines also show reduced aflatoxin susceptibility, though this is not yet an established management difference from conventional maize and should not be treated as one.",
+      "confidence": 0.5,
+      "source": "Chen et al., Performance of testers with contrasting provitamin A content to evaluate provitamin A maize for resistance to Aspergillus flavus infection and aflatoxin production (research-stage finding, not yet field-management guidance)."
+    }
   ],
-
   "pests": [
-    { "name": "Fall Armyworm (FAW)", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Ragged leaf feeding, sawdust-like frass in the whorl.", "management": "Scout from emergence; approved insecticides applied once per week for the first 3 weeks after planting.", "confidence": 0.9, "source": "Inherited from maize.json (IITA, Guide to Maize Production in Northern Nigeria, 2020)." },
-    { "name": "Striga (Striga hermonthica)", "risk_stage_ids": ["seedling", "vegetative"], "symptoms": "Parasitic weed attaching to maize roots; severe stunting and yield loss.", "management": "Resistant/tolerant varieties, crop rotation, balanced soil fertility, timely weeding.", "confidence": 0.9, "source": "Inherited from maize.json (IITA, Guide to Maize Production in Northern Nigeria, 2020)." }
+    {
+      "name": "Fall Armyworm (FAW)",
+      "risk_stage_ids": [
+        "seedling",
+        "vegetative"
+      ],
+      "symptoms": "Ragged leaf feeding, sawdust-like frass in the whorl.",
+      "management": "Scout from emergence; approved insecticides applied once per week for the first 3 weeks after planting.",
+      "confidence": 0.9,
+      "source": "Inherited from maize.json (IITA, Guide to Maize Production in Northern Nigeria, 2020)."
+    },
+    {
+      "name": "Striga (Striga hermonthica)",
+      "risk_stage_ids": [
+        "seedling",
+        "vegetative"
+      ],
+      "symptoms": "Parasitic weed attaching to maize roots; severe stunting and yield loss.",
+      "management": "Resistant/tolerant varieties, crop rotation, balanced soil fertility, timely weeding.",
+      "confidence": 0.9,
+      "source": "Inherited from maize.json (IITA, Guide to Maize Production in Northern Nigeria, 2020)."
+    }
   ],
-
   "yield_model": {
     "expected_yield_per_hectare": "1.0 - 3.0",
     "unit": "tonnes",
-    "factors": ["variety (OPV vs. hybrid)", "fertilizer regime adherence", "Striga pressure", "Fall Armyworm control timing", "rainfall / planting date adherence", "isolation from cross-pollination if seed is being saved"],
+    "factors": [
+      "variety (OPV vs. hybrid)",
+      "fertilizer regime adherence",
+      "Striga pressure",
+      "Fall Armyworm control timing",
+      "rainfall / planting date adherence",
+      "isolation from cross-pollination if seed is being saved"
+    ],
     "confidence": 0.6,
     "notes": "Slightly wider downward range than conventional maize.json (1.2-3.5) because several released Vitamin A Maize varieties are OPVs, which are generally somewhat lower-yielding than modern hybrids, though breeding programs report newer releases increasingly combine competitive yield with higher provitamin A content."
   },
-
   "yield_validation": {
     "unit": "t/ha",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
-      { "condition_type": "less_than", "max": 0.8, "severity": "warning", "message": "Near-total crop failure; verify plot area and inputs." },
-      { "condition_type": "range", "min": 0.8, "max": 5.0, "severity": "pass", "message": "Standard Nigerian smallholder-to-commercial range for this crop." },
-      { "condition_type": "greater_than", "min": 5.0, "severity": "warning", "message": "Exceptional; requires manual review of seed and management." },
-      { "condition_type": "greater_than", "min": 10.0, "severity": "block", "message": "Approaches the biological limit for rainfed maize -- almost certainly a kg/tonne unit typo or inflated area." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.8,
+        "severity": "warning",
+        "message": "Near-total crop failure; verify plot area and inputs."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.8,
+        "max": 5.0,
+        "severity": "pass",
+        "message": "Standard Nigerian smallholder-to-commercial range for this crop."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 5.0,
+        "severity": "warning",
+        "message": "Exceptional; requires manual review of seed and management."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 10.0,
+        "severity": "block",
+        "message": "Approaches the biological limit for rainfed maize -- almost certainly a kg/tonne unit typo or inflated area."
+      }
     ],
     "source": "Inherited from maize.json (same species, same biological yield ceiling; assumes reported area is trustworthy, which depends on GPS-polygon-anchored area tracking that AgTrail does not yet implement)."
   },
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -209,6 +679,13 @@
       "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
       "summary": "Added vitamin_a_maize_r_seq_first_fertilizer_weeding_1, vitamin_a_maize_r_seq_weeding_1_second_fertilizer. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
+      "summary": "Timing now follows standard maize, as the ruleset says. Added: va_maize_r2, va_maize_r3, va_maize_r4, va_maize_r5, va_maize_r5_floor, va_maize_r6, va_maize_r7, va_maize_r8b, va_maize_r8_fresh, va_maize_r8b_fresh, va_maize_r8_fresh_once. Changed to maize's numbers: va_maize_r8, va_maize_r_drying, vitamin_a_maize_r_land_prep_gate.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 23 (Vitamin A Maize), timing identical to section 1 (Maize)"
     }
   ]
 }

@@ -11,7 +11,7 @@
       "Nigeria - South-South",
       "Nigeria - Middle Belt"
     ],
-    "current_version": "1.1.0"
+    "current_version": "1.2.0"
   },
   "growth_stages": [
     {
@@ -216,12 +216,12 @@
       "operation_id": "planting",
       "depends_on_operation_id": "land_preparation",
       "min_days_after_dependency": 0,
-      "max_days_after_dependency": 21,
+      "max_days_after_dependency": 45,
       "can_repeat": false,
       "allow_backdate": false,
-      "severity": "block",
-      "condition": "Planting cannot occur before ridges/mounds are formed.",
-      "source": "General cassava extension guidance -- interval not independently sourced; flagged for agronomist review, same caveat as cassava_r1."
+      "severity": "warning",
+      "condition": "Planting before land preparation is a hard block, caught by the global sequencing rule. Planting more than 45 days after land preparation is flagged.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
     },
     {
       "rule_id": "cassava_r3",
@@ -316,6 +316,42 @@
       "allow_backdate": false,
       "severity": "block",
       "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+    },
+    {
+      "rule_id": "cassava_r3_floor",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the first weeding is logged before 14 days after planting (nothing to weed yet).",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
+    },
+    {
+      "rule_id": "cassava_r4_floor",
+      "operation_id": "fertilizer_application",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 90,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if fertilizer is logged before 21 or after 90 days after planting: canopy closure makes late application impractical.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
+    },
+    {
+      "rule_id": "cassava_r8_ceiling",
+      "operation_id": "processing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 4,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if processing is logged more than 4 days after harvest; flagged beyond 2 days by cassava_r8.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
     }
   ],
   "soil_requirements": {
@@ -412,6 +448,13 @@
       "date": "2026-10-24",
       "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
       "summary": "Added the yield limits (hard block at 0 and above the biological maximum, soft warnings around the standard range) from the master ruleset; the file had none.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
+      "summary": "Planting more than 45 days after land preparation is now a flag, not a block at 21 days. Added the ruleset's hard blocks: first weeding before 14 days, fertilizer before 21 or after 90 days, processing more than 4 days after harvest. The harvest block (240 days, no maximum) was NOT changed: the ruleset says block before 180 and after 730 days, and the earlier file chose no maximum on purpose, so this is left for the CEO to decide.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 5 (Cassava)"
     }
   ],
