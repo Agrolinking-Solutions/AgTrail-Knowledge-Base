@@ -55,7 +55,9 @@ def test_exactly_ten_is_still_a_warning_not_a_block():
     assert result.severity == "warning"
 
 
-def test_crop_without_yield_validation_data_raises_clear_error():
+def test_crop_without_yield_validation_data_raises_clear_error(monkeypatch):
+    # Every crop file has yield limits now, so a crop without them is simulated.
+    monkeypatch.setattr("engine.yield_validator.load_crop", lambda crop_id: {"metadata": {"crop_id": crop_id}})
     with pytest.raises(ValueError, match="no yield_validation data"):
         validate_yield("cassava", 5.0)
 

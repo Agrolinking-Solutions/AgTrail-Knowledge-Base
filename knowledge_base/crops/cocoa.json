@@ -6,117 +6,342 @@
     "category": "tree_crop",
     "crop_cycle_type": "perennial",
     "typical_duration_days": 1095,
-    "regions": ["Nigeria - Southwest rainforest belt", "Nigeria - Cross River"],
-    "current_version": "1.1.2"
+    "regions": [
+      "Nigeria - Southwest rainforest belt",
+      "Nigeria - Cross River"
+    ],
+    "current_version": "1.2.0"
   },
-
   "growth_stages": [
-    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -210, "ends_day_after_planting": 0, "description": "Seeds sown in nursery bags, typically December to February, then grown for 3 to 7 months before transplanting. Day 0 is transplanting, not seed sowing." },
-    { "stage_id": "establishment", "name": "Establishment (immature)", "starts_day_after_planting": 0, "ends_day_after_planting": 1095, "description": "Young tree growth under shade, not yet bearing. Multiple sources place first bearing at 3 to 5 years after transplanting." },
-    { "stage_id": "early_bearing", "name": "Early bearing", "starts_day_after_planting": 1096, "ends_day_after_planting": 2920, "description": "Pod bearing has begun but yield is still climbing toward the tree's mature potential." },
-    { "stage_id": "full_bearing", "name": "Full bearing (recurring)", "starts_day_after_planting": 2921, "ends_day_after_planting": 10950, "description": "Full productivity, reached 8 to 10 years after transplanting per general guidance. Annual flowering and harvest cycle repeats for roughly 25 to 30 years." }
+    {
+      "stage_id": "nursery",
+      "name": "Nursery",
+      "starts_day_after_planting": -210,
+      "ends_day_after_planting": 0,
+      "description": "Seeds sown in nursery bags, typically December to February, then grown for 3 to 7 months before transplanting. Day 0 is transplanting, not seed sowing."
+    },
+    {
+      "stage_id": "establishment",
+      "name": "Establishment (immature)",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 1095,
+      "description": "Young tree growth under shade, not yet bearing. Multiple sources place first bearing at 3 to 5 years after transplanting."
+    },
+    {
+      "stage_id": "early_bearing",
+      "name": "Early bearing",
+      "starts_day_after_planting": 1096,
+      "ends_day_after_planting": 2920,
+      "description": "Pod bearing has begun but yield is still climbing toward the tree's mature potential."
+    },
+    {
+      "stage_id": "full_bearing",
+      "name": "Full bearing (recurring)",
+      "starts_day_after_planting": 2921,
+      "ends_day_after_planting": 10950,
+      "description": "Full productivity, reached 8 to 10 years after transplanting per general guidance. Annual flowering and harvest cycle repeats for roughly 25 to 30 years."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Clearing of plot, retaining or planting shade trees.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sowing seed in nursery bags/beds.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Moving seedlings from nursery to field. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing dead stands.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "shade_management", "name": "Shade Management", "category": "crop_management", "description": "Thinning/adjusting shade cover as tree matures.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "fertilizer_application", "name": "Fertilizer Application", "category": "input_application", "description": "NPK or organic nutrient application.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "weeding", "name": "Weeding", "category": "crop_management", "description": "Manual/chemical weed control around base.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "pruning", "name": "Pruning", "category": "crop_management", "description": "Formation pruning (immature) or maintenance pruning (bearing).", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Control", "category": "pest_disease_control", "description": "Black pod, capsid, and other control measures.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "harvest", "name": "Harvest (Pod Break)", "category": "harvest", "description": "Ripe pod harvesting. Recurs every bearing season once mature.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "fermentation", "name": "Fermentation", "category": "post_harvest", "description": "Bean fermentation in heaps/boxes, typically 5-7 days.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "drying", "name": "Drying", "category": "post_harvest", "description": "Sun-drying beans to safe moisture content.", "requires_evidence": false, "can_repeat": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Clearing of plot, retaining or planting shade trees.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "nursery_establishment",
+      "name": "Nursery Establishment",
+      "category": "land_prep",
+      "description": "Sowing seed in nursery bags/beds.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "transplanting",
+      "name": "Transplanting",
+      "category": "planting",
+      "description": "Moving seedlings from nursery to field. This is day 0 of the field lifecycle.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "gap_filling",
+      "name": "Gap Filling / Replanting",
+      "category": "planting",
+      "description": "Replacing dead stands.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "shade_management",
+      "name": "Shade Management",
+      "category": "crop_management",
+      "description": "Thinning/adjusting shade cover as tree matures.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "fertilizer_application",
+      "name": "Fertilizer Application",
+      "category": "input_application",
+      "description": "NPK or organic nutrient application.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "weeding",
+      "name": "Weeding",
+      "category": "crop_management",
+      "description": "Manual/chemical weed control around base.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "pruning",
+      "name": "Pruning",
+      "category": "crop_management",
+      "description": "Formation pruning (immature) or maintenance pruning (bearing).",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Control",
+      "category": "pest_disease_control",
+      "description": "Black pod, capsid, and other control measures.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Pod Break)",
+      "category": "harvest",
+      "description": "Ripe pod harvesting. Recurs every bearing season once mature.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "fermentation",
+      "name": "Fermentation",
+      "category": "post_harvest",
+      "description": "Bean fermentation in heaps/boxes, typically 5-7 days.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "drying",
+      "name": "Drying",
+      "category": "post_harvest",
+      "description": "Sun-drying beans to safe moisture content.",
+      "requires_evidence": false,
+      "can_repeat": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "nursery_establishment", "required": true },
-    { "step_number": 3, "operation_id": "transplanting", "required": true },
-    { "step_number": 4, "operation_id": "gap_filling", "required": false },
-    { "step_number": 5, "operation_id": "shade_management", "required": false, "repeat_until": null },
-    { "step_number": 6, "operation_id": "fertilizer_application", "required": true, "repeat_until": null },
-    { "step_number": 7, "operation_id": "weeding", "required": true, "repeat_until": null },
-    { "step_number": 8, "operation_id": "pruning", "required": true, "repeat_until": null },
-    { "step_number": 9, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
-    { "step_number": 10, "operation_id": "harvest", "required": true, "repeat_until": null },
-    { "step_number": 11, "operation_id": "fermentation", "required": true, "repeat_until": null },
-    { "step_number": 12, "operation_id": "drying", "required": true, "repeat_until": null }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "nursery_establishment",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "transplanting",
+      "required": true
+    },
+    {
+      "step_number": 4,
+      "operation_id": "gap_filling",
+      "required": false
+    },
+    {
+      "step_number": 5,
+      "operation_id": "shade_management",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 6,
+      "operation_id": "fertilizer_application",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pruning",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 9,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 10,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 11,
+      "operation_id": "fermentation",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 12,
+      "operation_id": "drying",
+      "required": true,
+      "repeat_until": null
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "cocoa_r1", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Nursery is normally started around the time land clearing and shade preparation begins. Large gaps are flagged but not blocked since the nursery can run on a different plot while the main field is still being prepared.",
+      "rule_id": "cocoa_r1",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Nursery is normally started around the time land clearing and shade preparation begins. Large gaps are flagged but not blocked since the nursery can run on a different plot while the main field is still being prepared.",
       "source": "Interval itself is still not tied to a specific named source. Flagged for further confirmation, same as before."
     },
     {
-      "rule_id": "cocoa_r2", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 90, "max_days_after_dependency": 210, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Seedlings need time in the nursery before they can survive transplanting. Sources genuinely disagree on how long: one gives 3 to 6 months, another gives 6 to 7 months. Rather than pick one, this rule uses the full combined range, 90 to 210 days, as the block boundary, and treats the middle of that range as the expected case.",
+      "rule_id": "cocoa_r2",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 90,
+      "max_days_after_dependency": 210,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Seedlings need time in the nursery before they can survive transplanting. Sources genuinely disagree on how long: one gives 3 to 6 months, another gives 6 to 7 months. Rather than pick one, this rule uses the full combined range, 90 to 210 days, as the block boundary, and treats the middle of that range as the expected case.",
       "source": "MarNat StudySpace, Cocoa Production in Nigeria (3 to 6 months); UKEssays, Cocoa Cultivation Practices in Nigeria (6 to 7 months)"
     },
     {
-      "rule_id": "cocoa_r3", "operation_id": "fertilizer_application", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "An initial application of organic manure is applied directly into the planting hole at the time of transplanting itself, not weeks later. This is a real change from the previous draft, which assumed a 30 day wait. Later applications then follow roughly every six months as the tree grows.",
+      "rule_id": "cocoa_r3",
+      "operation_id": "fertilizer_application",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 14,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "An initial application of organic manure is applied directly into the planting hole at the time of transplanting itself, not weeks later. This is a real change from the previous draft, which assumed a 30 day wait. Later applications then follow roughly every six months as the tree grows.",
       "source": "How to Plant Cocoa in Nigeria (Floratalk): organic manure applied during transplanting, with additional fertilizer roughly every six months afterward"
     },
     {
-      "rule_id": "cocoa_r4", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 730, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "This block boundary is deliberately kept conservative at 730 days, roughly 2 years. One farm input marketing source claims CRIN hybrid seedlings can bear pods in as little as 18 months, about 547 days, but this claim only appears in one promotional source and is not confirmed by any of the scientific or research literature reviewed, which consistently describes 3 to 5 years to first bearing across varieties. Until that 18 month claim is independently confirmed, the block stays at 2 years rather than being lowered on the strength of one marketing source. See rule cocoa_r4b for the typical window. Once past the block threshold, harvest can repeat every bearing season and does not require a new planting record, unlike an annual crop.",
+      "rule_id": "cocoa_r4",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 730,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "This block boundary is deliberately kept conservative at 730 days, roughly 2 years. One farm input marketing source claims CRIN hybrid seedlings can bear pods in as little as 18 months, about 547 days, but this claim only appears in one promotional source and is not confirmed by any of the scientific or research literature reviewed, which consistently describes 3 to 5 years to first bearing across varieties. Until that 18 month claim is independently confirmed, the block stays at 2 years rather than being lowered on the strength of one marketing source. See rule cocoa_r4b for the typical window. Once past the block threshold, harvest can repeat every bearing season and does not require a new planting record, unlike an annual crop.",
       "source": "FarmPays 2026, Cocoa Farming In Nigeria (18 month hybrid claim, flagged as unconfirmed); How to Plant Cocoa in Nigeria (Floratalk), MarNat StudySpace, and general cacao literature (3 to 5 years to first bearing, consistent across multiple sources)"
     },
     {
-      "rule_id": "cocoa_r4b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 1095, "max_days_after_dependency": 1825, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "3 to 5 years (1095 to 1825 days) is the typical window for first bearing across the sources reviewed. A harvest logged inside the hard block range above but earlier than this window is flagged as unusually early rather than treated as a data error, since it could genuinely be a fast hybrid variety worth noting, not necessarily a mistake.",
+      "rule_id": "cocoa_r4b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 1095,
+      "max_days_after_dependency": 1825,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "3 to 5 years (1095 to 1825 days) is the typical window for first bearing across the sources reviewed. A harvest logged inside the hard block range above but earlier than this window is flagged as unusually early rather than treated as a data error, since it could genuinely be a fast hybrid variety worth noting, not necessarily a mistake.",
       "source": "Consistent across MarNat StudySpace, Floratalk, and FarmPays (despite the 18 month outlier claim in the same FarmPays source)"
     },
     {
-      "rule_id": "cocoa_r5", "operation_id": "fermentation", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Fermentation should begin within a day or two of pod break to avoid quality loss.",
+      "rule_id": "cocoa_r5",
+      "operation_id": "fermentation",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Fermentation should begin within a day or two of pod break to avoid quality loss.",
       "source": "General cacao post harvest guidance, consistent across sources reviewed, though not tied to one specific named study"
     },
     {
-      "rule_id": "cocoa_r6", "operation_id": "drying", "depends_on_operation_id": "fermentation",
-      "min_days_after_dependency": 5, "max_days_after_dependency": 7, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Drying normally follows 5 to 7 days of fermentation. Outside this window flavor and quality are affected, but the record itself is not treated as invalid.",
+      "rule_id": "cocoa_r6",
+      "operation_id": "drying",
+      "depends_on_operation_id": "fermentation",
+      "min_days_after_dependency": 5,
+      "max_days_after_dependency": 7,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Drying normally follows 5 to 7 days of fermentation. Outside this window flavor and quality are affected, but the record itself is not treated as invalid.",
       "source": "MarNat StudySpace, Cocoa Production in Nigeria; How to Plant Cocoa in Nigeria (Floratalk); both independently give the same 5 to 7 day figure"
     },
     {
-      "rule_id": "cocoa_r7", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm. Backdating that would reorder the sequence is not allowed."
+      "rule_id": "cocoa_r7",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm. Backdating that would reorder the sequence is not allowed."
     },
     {
-      "rule_id": "cocoa_r_seq_fertilizer_application_weeding", "operation_id": "weeding", "depends_on_operation_id": "fertilizer_application",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "cocoa_r_seq_fertilizer_application_weeding",
+      "operation_id": "weeding",
+      "depends_on_operation_id": "fertilizer_application",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     },
     {
-      "rule_id": "cocoa_r_seq_weeding_pruning", "operation_id": "pruning", "depends_on_operation_id": "weeding",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "cocoa_r_seq_weeding_pruning",
+      "operation_id": "pruning",
+      "depends_on_operation_id": "weeding",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
-
   "soil_requirements": {
     "ph_min": 5.5,
     "ph_max": 7.5,
-    "texture": ["loam", "sandy loam"],
+    "texture": [
+      "loam",
+      "sandy loam"
+    ],
     "drainage": "well-drained, deep soil",
     "nitrogen_needs": "medium"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 1500,
     "rainfall_mm_max_cycle": 2000,
@@ -124,28 +349,83 @@
     "temp_c_max": 32,
     "notes": "Requires shade in early years; sensitive to prolonged dry season without irrigation."
   },
-
   "diseases": [
-    { "name": "Black Pod Disease", "risk_stage_ids": ["early_bearing", "full_bearing"], "symptoms": "Brown to black lesions spreading over the pod surface, rotting beans inside.", "management": "Resistant or tolerant varieties are the most sustainable control. Chemical control works but is expensive relative to typical production value and requires real skill to apply correctly. Sanitation (removing infected pods) and pruning to improve airflow also help.", "confidence": 0.9, "source": "Cocoa Research Institute of Nigeria research literature: caused mainly by Phytophthora megakarya (over 80 percent of cases in Nigeria) and Phytophthora palmivora (under 20 percent). P. megakarya is the more aggressive of the two. Yield losses run around 30 percent from P. palmivora and up to 80 to 90 percent in poorly maintained farms affected by P. megakarya, with 90 to 100 percent losses recorded in wetter regions." },
-    { "name": "Cocoa Swollen Shoot Virus (CSSV)", "risk_stage_ids": ["establishment", "early_bearing", "full_bearing"], "symptoms": "Swelling of shoots and roots, red vein banding on leaves, dieback.", "management": "There is no cure once a tree is infected. The only effective response is to identify and remove infected trees and replant with disease free material. Controlling the mealybug vector helps slow spread but does not treat existing infection.", "confidence": 0.9, "source": "Multiple sources confirm eradication as the only effective treatment for CSSV, including a Ghana focused field study and a Nigeria specific incidence survey. CSSV was first identified in Nigeria in 1944 near Ibadan and is spread tree to tree by several mealybug species." }
+    {
+      "name": "Black Pod Disease",
+      "risk_stage_ids": [
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Brown to black lesions spreading over the pod surface, rotting beans inside.",
+      "management": "Resistant or tolerant varieties are the most sustainable control. Chemical control works but is expensive relative to typical production value and requires real skill to apply correctly. Sanitation (removing infected pods) and pruning to improve airflow also help.",
+      "confidence": 0.9,
+      "source": "Cocoa Research Institute of Nigeria research literature: caused mainly by Phytophthora megakarya (over 80 percent of cases in Nigeria) and Phytophthora palmivora (under 20 percent). P. megakarya is the more aggressive of the two. Yield losses run around 30 percent from P. palmivora and up to 80 to 90 percent in poorly maintained farms affected by P. megakarya, with 90 to 100 percent losses recorded in wetter regions."
+    },
+    {
+      "name": "Cocoa Swollen Shoot Virus (CSSV)",
+      "risk_stage_ids": [
+        "establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Swelling of shoots and roots, red vein banding on leaves, dieback.",
+      "management": "There is no cure once a tree is infected. The only effective response is to identify and remove infected trees and replant with disease free material. Controlling the mealybug vector helps slow spread but does not treat existing infection.",
+      "confidence": 0.9,
+      "source": "Multiple sources confirm eradication as the only effective treatment for CSSV, including a Ghana focused field study and a Nigeria specific incidence survey. CSSV was first identified in Nigeria in 1944 near Ibadan and is spread tree to tree by several mealybug species."
+    }
   ],
-
   "pests": [
-    { "name": "Mirids / Capsids", "risk_stage_ids": ["establishment", "early_bearing", "full_bearing"], "symptoms": "Sucking insects that cause dark, sunken sap lesions on young shoots and pods, which often become infected with disease afterward. Young, unshaded trees are especially vulnerable.", "management": "Insecticide spraying remains the main control method and is still widely used despite decades of research effort. Maintaining adequate shade in the early years reduces vulnerability.", "confidence": 0.85, "source": "A Southwest Nigeria field survey recorded cocoa mirid presence in 11.44 percent of trees sampled. The two species most implicated across West Africa are Distantiella theobroma and Sahlbergella singularis." },
-    { "name": "Mealybugs", "risk_stage_ids": ["establishment", "early_bearing", "full_bearing"], "symptoms": "Direct feeding damage is minor. Primary importance is as the insect vector that spreads Cocoa Swollen Shoot Virus between trees.", "management": "Vector control matters more than direct mealybug control. Removing infected neighboring trees reduces the reservoir of virus available for mealybugs to spread.", "confidence": 0.85, "source": "Planococcoides njalensis and Planococcus citri are identified as the most significant vector species in the Nigeria specific CSSV literature reviewed." },
-    { "name": "Termites", "risk_stage_ids": ["establishment", "early_bearing", "full_bearing"], "symptoms": "Not detailed in the sources reviewed beyond general presence.", "management": "Not detailed in the sources reviewed. Flagged as an area needing further research before any farmer facing guidance is written for it.", "confidence": 0.4, "source": "The same Southwest Nigeria field survey that recorded mirid incidence recorded termites at 13.16 percent of trees sampled, higher than mirids, but the source did not go into management detail." }
+    {
+      "name": "Mirids / Capsids",
+      "risk_stage_ids": [
+        "establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Sucking insects that cause dark, sunken sap lesions on young shoots and pods, which often become infected with disease afterward. Young, unshaded trees are especially vulnerable.",
+      "management": "Insecticide spraying remains the main control method and is still widely used despite decades of research effort. Maintaining adequate shade in the early years reduces vulnerability.",
+      "confidence": 0.85,
+      "source": "A Southwest Nigeria field survey recorded cocoa mirid presence in 11.44 percent of trees sampled. The two species most implicated across West Africa are Distantiella theobroma and Sahlbergella singularis."
+    },
+    {
+      "name": "Mealybugs",
+      "risk_stage_ids": [
+        "establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Direct feeding damage is minor. Primary importance is as the insect vector that spreads Cocoa Swollen Shoot Virus between trees.",
+      "management": "Vector control matters more than direct mealybug control. Removing infected neighboring trees reduces the reservoir of virus available for mealybugs to spread.",
+      "confidence": 0.85,
+      "source": "Planococcoides njalensis and Planococcus citri are identified as the most significant vector species in the Nigeria specific CSSV literature reviewed."
+    },
+    {
+      "name": "Termites",
+      "risk_stage_ids": [
+        "establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Not detailed in the sources reviewed beyond general presence.",
+      "management": "Not detailed in the sources reviewed. Flagged as an area needing further research before any farmer facing guidance is written for it.",
+      "confidence": 0.4,
+      "source": "The same Southwest Nigeria field survey that recorded mirid incidence recorded termites at 13.16 percent of trees sampled, higher than mirids, but the source did not go into management detail."
+    }
   ],
-
   "yield_model": {
     "expected_yield_per_hectare": "0.3 - 0.8 (immature/early bearing), 0.6 - 1.2 (full bearing)",
     "unit": "tonnes dry beans",
-    "factors": ["tree age", "variety/hybrid", "shade management", "black pod pressure", "fertilizer regime"],
+    "factors": [
+      "tree age",
+      "variety/hybrid",
+      "shade management",
+      "black pod pressure",
+      "fertilizer regime"
+    ],
     "confidence": 0.4,
     "notes": "These figures were not independently re-sourced during this revision. They remain from the original draft and confidence has been lowered slightly rather than raised, since the sourcing pass this time focused on timing rules and pest and disease data, not yield numbers specifically. Treat this as still needing its own dedicated sourcing pass."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -174,6 +454,50 @@
       "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
       "summary": "Added cocoa_r_seq_fertilizer_application_weeding, cocoa_r_seq_weeding_pruning. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
+      "summary": "Added the yield limits (hard block at 0 and above the biological maximum, soft warnings around the standard range) from the master ruleset; the file had none. Yield is dry beans per hectare.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
     }
-  ]
+  ],
+  "yield_validation": {
+    "unit": "t/ha",
+    "tiers": [
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a loss event."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.1,
+        "severity": "warning",
+        "message": "Severe Black Pod wipeout or fire."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.1,
+        "max": 1.5,
+        "severity": "pass",
+        "message": "Aging plantations to well-pruned hybrids (dry beans)."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 1.5,
+        "severity": "warning",
+        "message": "Highly optimized yield; flag for review."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 3.5,
+        "severity": "block",
+        "message": "Impossible at Nigerian densities; likely wet beans logged as dry."
+      }
+    ],
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa). Yield is dry beans per hectare. The file had no yield limits before."
+  }
 }

@@ -221,7 +221,9 @@ def test_validate_yield_zero_is_a_loss_event():
     assert body["severity"] == "block"
 
 
-def test_validate_yield_crop_without_data_returns_400():
+def test_validate_yield_crop_without_data_returns_400(monkeypatch):
+    # Every crop file has yield limits now, so a crop without them is simulated.
+    monkeypatch.setattr("engine.yield_validator.load_crop", lambda crop_id: {"metadata": {"crop_id": crop_id}})
     resp = client.post("/validate-yield", json={"crop_id": "cassava", "tonnes_per_hectare": 5})
     assert resp.status_code == 400
 

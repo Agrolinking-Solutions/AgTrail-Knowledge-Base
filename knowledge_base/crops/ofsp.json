@@ -6,123 +6,351 @@
     "category": "tuber",
     "crop_cycle_type": "annual",
     "typical_duration_days": 105,
-    "regions": ["Nigeria - Southwest", "Nigeria - South-South", "Nigeria - Middle Belt"],
-    "current_version": "1.0.1"
+    "regions": [
+      "Nigeria - Southwest",
+      "Nigeria - South-South",
+      "Nigeria - Middle Belt"
+    ],
+    "current_version": "1.1.0"
   },
-
   "growth_stages": [
-    { "stage_id": "establishment", "name": "Establishment (vine rooting)", "starts_day_after_planting": 0, "ends_day_after_planting": 20, "description": "Planted vine cuttings root and put out initial shoots. Unlike cassava's stem cuttings, OFSP is propagated from leafy vine cuttings, so early wilting/establishment failure is visible within days, not weeks." },
-    { "stage_id": "vine_development", "name": "Vine development / canopy spread", "starts_day_after_planting": 21, "ends_day_after_planting": 45, "description": "Vines spread and begin covering the ridge; this is the critical weed-competition window before the canopy closes." },
-    { "stage_id": "canopy_closure", "name": "Canopy closure & root initiation", "starts_day_after_planting": 46, "ends_day_after_planting": 70, "description": "Full vine cover suppresses weeds naturally; storage root initiation begins." },
-    { "stage_id": "root_bulking", "name": "Storage root bulking", "starts_day_after_planting": 71, "ends_day_after_planting": 100, "description": "Storage roots bulk with starch and beta-carotene accumulates. This is also the period of greatest sweet potato weevil risk, since weevils are attracted to exposed roots and soil cracking around bulking roots." },
-    { "stage_id": "maturity", "name": "Maturity / harvest-ready window", "starts_day_after_planting": 90, "ends_day_after_planting": 150, "description": "Roots are harvestable from here onward. OFSP does not have cassava's multi-year in-ground storage tolerance -- delaying harvest past maturity sharply increases weevil damage rather than being cost-free, which is why this crop's harvest rule (below) has a real upper bound unlike cassava's." }
+    {
+      "stage_id": "establishment",
+      "name": "Establishment (vine rooting)",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 20,
+      "description": "Planted vine cuttings root and put out initial shoots. Unlike cassava's stem cuttings, OFSP is propagated from leafy vine cuttings, so early wilting/establishment failure is visible within days, not weeks."
+    },
+    {
+      "stage_id": "vine_development",
+      "name": "Vine development / canopy spread",
+      "starts_day_after_planting": 21,
+      "ends_day_after_planting": 45,
+      "description": "Vines spread and begin covering the ridge; this is the critical weed-competition window before the canopy closes."
+    },
+    {
+      "stage_id": "canopy_closure",
+      "name": "Canopy closure & root initiation",
+      "starts_day_after_planting": 46,
+      "ends_day_after_planting": 70,
+      "description": "Full vine cover suppresses weeds naturally; storage root initiation begins."
+    },
+    {
+      "stage_id": "root_bulking",
+      "name": "Storage root bulking",
+      "starts_day_after_planting": 71,
+      "ends_day_after_planting": 100,
+      "description": "Storage roots bulk with starch and beta-carotene accumulates. This is also the period of greatest sweet potato weevil risk, since weevils are attracted to exposed roots and soil cracking around bulking roots."
+    },
+    {
+      "stage_id": "maturity",
+      "name": "Maturity / harvest-ready window",
+      "starts_day_after_planting": 90,
+      "ends_day_after_planting": 150,
+      "description": "Roots are harvestable from here onward. OFSP does not have cassava's multi-year in-ground storage tolerance -- delaying harvest past maturity sharply increases weevil damage rather than being cost-free, which is why this crop's harvest rule (below) has a real upper bound unlike cassava's."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "land_preparation", "name": "Land Preparation (Ridging/Bed Formation)", "category": "land_prep", "description": "Ridging or raised-bed formation -- OFSP is grown on ridges/beds (typically 60-100cm apart, 10-30cm high) for root development and drainage, same reasoning as cassava.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "vine_sourcing", "name": "Vine Cutting Sourcing / Selection", "category": "land_prep", "description": "NEW operation, specific to this crop file: selecting healthy, disease-symptom-free vine cuttings (preferring the apical/tip portion of the vine, which establishes faster and carries lower weevil/fungal risk than middle or basal cuttings) before planting. Distinct from cassava's stem-cutting sourcing because vine tips wilt and lose viability quickly, so sourcing and planting are tightly coupled in time.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "planting", "name": "Planting (Vine Cuttings)", "category": "planting", "description": "Vine cuttings (20-30cm) inserted at an angle into ridges, typically 50cm between rows and 30cm within row.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "gap_filling", "name": "Gap Filling / Replanting", "category": "planting", "description": "Replacing cuttings that failed to root.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual weed control during the critical early competition period, before vines spread enough to self-suppress weeds.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "reridging", "name": "Re-ridging / Hilling", "category": "crop_management", "description": "Re-forming ridges around the base of plants to keep developing storage roots covered with soil -- exposed roots are both more prone to greening/off-flavor and are a direct entry point for sweet potato weevil.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Sweet potato weevil and virus disease (SPVD) monitoring/management.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "harvest", "name": "Harvest", "category": "harvest", "description": "Root lifting, typically after cutting back vines. Timing is more urgent than cassava's -- see validation_rules.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "curing", "name": "Curing", "category": "post_harvest", "description": "NEW operation, specific to this crop file (cassava.json has no equivalent, since cassava roots are processed immediately rather than cured). Holding freshly harvested roots at warm temperature and high humidity for several days so the skin toughens and harvest wounds heal, before storage or market. Curing is what makes OFSP storable at all -- uncured roots go straight to rapid weight loss, weevil entry, and decay. Note for future yield_validation extensions: unlike Vitamin A Maize, where postharvest handling only ever loses provitamin A, OFSP curing has been shown in some studies to modestly INCREASE measured beta-carotene and dry matter content (attributed to continued root metabolism/enzyme activity during curing, not degradation). A farmer who properly cures the crop should not be flagged for an 'unusually high' beta-carotene reading if that dimension is ever added -- source: ScienceDirect, Compositional and shelf-life indices of sweet potato are significantly improved by pre-harvest dehaulming.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "storage", "name": "Storage", "category": "post_harvest", "description": "Storage of cured roots (ambient, evaporative cooling barn, pit, or platform storage depending on what's available).", "requires_evidence": false, "can_repeat": false, "optional": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation (Ridging/Bed Formation)",
+      "category": "land_prep",
+      "description": "Ridging or raised-bed formation -- OFSP is grown on ridges/beds (typically 60-100cm apart, 10-30cm high) for root development and drainage, same reasoning as cassava.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "vine_sourcing",
+      "name": "Vine Cutting Sourcing / Selection",
+      "category": "land_prep",
+      "description": "NEW operation, specific to this crop file: selecting healthy, disease-symptom-free vine cuttings (preferring the apical/tip portion of the vine, which establishes faster and carries lower weevil/fungal risk than middle or basal cuttings) before planting. Distinct from cassava's stem-cutting sourcing because vine tips wilt and lose viability quickly, so sourcing and planting are tightly coupled in time.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "planting",
+      "name": "Planting (Vine Cuttings)",
+      "category": "planting",
+      "description": "Vine cuttings (20-30cm) inserted at an angle into ridges, typically 50cm between rows and 30cm within row.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "gap_filling",
+      "name": "Gap Filling / Replanting",
+      "category": "planting",
+      "description": "Replacing cuttings that failed to root.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "Manual weed control during the critical early competition period, before vines spread enough to self-suppress weeds.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "reridging",
+      "name": "Re-ridging / Hilling",
+      "category": "crop_management",
+      "description": "Re-forming ridges around the base of plants to keep developing storage roots covered with soil -- exposed roots are both more prone to greening/off-flavor and are a direct entry point for sweet potato weevil.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Scouting/Control",
+      "category": "pest_disease_control",
+      "description": "Sweet potato weevil and virus disease (SPVD) monitoring/management.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest",
+      "category": "harvest",
+      "description": "Root lifting, typically after cutting back vines. Timing is more urgent than cassava's -- see validation_rules.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "curing",
+      "name": "Curing",
+      "category": "post_harvest",
+      "description": "NEW operation, specific to this crop file (cassava.json has no equivalent, since cassava roots are processed immediately rather than cured). Holding freshly harvested roots at warm temperature and high humidity for several days so the skin toughens and harvest wounds heal, before storage or market. Curing is what makes OFSP storable at all -- uncured roots go straight to rapid weight loss, weevil entry, and decay. Note for future yield_validation extensions: unlike Vitamin A Maize, where postharvest handling only ever loses provitamin A, OFSP curing has been shown in some studies to modestly INCREASE measured beta-carotene and dry matter content (attributed to continued root metabolism/enzyme activity during curing, not degradation). A farmer who properly cures the crop should not be flagged for an 'unusually high' beta-carotene reading if that dimension is ever added -- source: ScienceDirect, Compositional and shelf-life indices of sweet potato are significantly improved by pre-harvest dehaulming.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "storage",
+      "name": "Storage",
+      "category": "post_harvest",
+      "description": "Storage of cured roots (ambient, evaporative cooling barn, pit, or platform storage depending on what's available).",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "land_preparation", "required": true },
-    { "step_number": 3, "operation_id": "vine_sourcing", "required": false },
-    { "step_number": 4, "operation_id": "planting", "required": true },
-    { "step_number": 5, "operation_id": "gap_filling", "required": false },
-    { "step_number": 6, "operation_id": "weeding_1", "required": true, "repeat_until": null },
-    { "step_number": 7, "operation_id": "reridging", "required": false, "repeat_until": "harvest" },
-    { "step_number": 8, "operation_id": "pest_disease_control", "required": false, "repeat_until": "harvest" },
-    { "step_number": 9, "operation_id": "harvest", "required": true },
-    { "step_number": 10, "operation_id": "curing", "required": false },
-    { "step_number": 11, "operation_id": "storage", "required": false }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "vine_sourcing",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "planting",
+      "required": true
+    },
+    {
+      "step_number": 5,
+      "operation_id": "gap_filling",
+      "required": false
+    },
+    {
+      "step_number": 6,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "reridging",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 9,
+      "operation_id": "harvest",
+      "required": true
+    },
+    {
+      "step_number": 10,
+      "operation_id": "curing",
+      "required": false
+    },
+    {
+      "step_number": 11,
+      "operation_id": "storage",
+      "required": false
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "ofsp_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation (ridging/bed formation) cannot be logged before land clearing.",
+      "rule_id": "ofsp_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation (ridging/bed formation) cannot be logged before land clearing.",
       "source": "General OFSP/sweet potato extension guidance (Agricincome Hub, FarmOrganics Nigeria) -- interval not independently sourced to a stated day figure; carried over as a reasonable default from the cassava.json pattern. Flagged for agronomist review."
     },
     {
-      "rule_id": "ofsp_r2", "operation_id": "planting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Planting cannot occur before ridges/beds are formed.",
+      "rule_id": "ofsp_r2",
+      "operation_id": "planting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Planting cannot occur before ridges/beds are formed.",
       "source": "General OFSP extension guidance -- interval not independently sourced; flagged for agronomist review, same caveat as ofsp_r1."
     },
     {
-      "rule_id": "ofsp_r_vine_freshness", "operation_id": "planting", "depends_on_operation_id": "vine_sourcing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, specific to this crop file. Unlike cassava's woody stem cuttings (which tolerate longer gaps between sourcing and planting), OFSP vine cuttings are leafy and wilt quickly once cut. Planting logged more than 2 days after vine sourcing is flagged, since cutting viability and establishment rate both decline with delay.",
+      "rule_id": "ofsp_r_vine_freshness",
+      "operation_id": "planting",
+      "depends_on_operation_id": "vine_sourcing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, specific to this crop file. Unlike cassava's woody stem cuttings (which tolerate longer gaps between sourcing and planting), OFSP vine cuttings are leafy and wilt quickly once cut. Planting logged more than 2 days after vine sourcing is flagged, since cutting viability and establishment rate both decline with delay.",
       "source": "PlantVillage, Sweet Potato Diseases and Pests (apical vine cuttings establish faster and are less likely to carry weevils/fungal pathogens, implying freshness matters); general propagation guidance from the OFSP field guide sources reviewed."
     },
     {
-      "rule_id": "ofsp_r3", "operation_id": "weeding_1", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 14, "max_days_after_dependency": 30, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "First weeding recommended 2-4 weeks after planting, before vine spread is sufficient to self-suppress weeds. IITA's Weeds Management Project has documented unmanaged weed infestation reducing sweet potato harvest by 50% or more.",
+      "rule_id": "ofsp_r3",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 30,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "First weeding recommended 2-4 weeks after planting, before vine spread is sufficient to self-suppress weeds. IITA's Weeds Management Project has documented unmanaged weed infestation reducing sweet potato harvest by 50% or more.",
       "source": "IITA Weeds Management Project (via FarmOrganics Nigeria, How to grow orange-fleshed sweet potatoes in Nigeria)."
     },
     {
-      "rule_id": "ofsp_r4", "operation_id": "reridging", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 30, "max_days_after_dependency": 60, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Re-ridging/hilling is recommended around 30 and again around 60 days after planting, to keep bulking storage roots covered as soil settles and roots push upward -- exposed roots are both a weevil entry point and prone to greening.",
+      "rule_id": "ofsp_r4",
+      "operation_id": "reridging",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 30,
+      "max_days_after_dependency": 60,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Re-ridging/hilling is recommended around 30 and again around 60 days after planting, to keep bulking storage roots covered as soil settles and roots push upward -- exposed roots are both a weevil entry point and prone to greening.",
       "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (re-ridging schedule at 30 and 60 DAP, cited alongside weevil-control practices)."
     },
     {
-      "rule_id": "ofsp_r5", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 75, "max_days_after_dependency": 180, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Harvest cannot be logged before 75 days after planting -- storage roots have not meaningfully bulked before this even for the earliest-maturing improved varieties (some hybrid OFSP varieties reach maturity within 90 days; a small number of very early lines are bred closer to 75). Upper bound of 180 days is a hard outer limit -- past this, a harvest record almost certainly reflects a data error or an atypical variety, not normal practice.",
+      "rule_id": "ofsp_r5",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 75,
+      "max_days_after_dependency": 180,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest cannot be logged before 75 days after planting -- storage roots have not meaningfully bulked before this even for the earliest-maturing improved varieties (some hybrid OFSP varieties reach maturity within 90 days; a small number of very early lines are bred closer to 75). Upper bound of 180 days is a hard outer limit -- past this, a harvest record almost certainly reflects a data error or an atypical variety, not normal practice.",
       "source": "TAAT Clearinghouse OFSP Technology Toolkit (hybrid varieties reaching maturity within 90 days); Guardian Nigeria (Mothers Delight variety matures in ~75 days / 2.5 months); African Farming (4-5 months / 120-150 days for standard varieties in warm areas)."
     },
     {
-      "rule_id": "ofsp_r5b", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": 90, "max_days_after_dependency": 150, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "90-150 days (roughly 3-5 months) is the typical harvest window across the varieties commonly grown in Nigeria. Harvest logged inside the hard block range but outside this typical window is flagged rather than blocked, since variety maturity class varies genuinely (Mothers Delight at ~75 days vs. local/standard varieties at up to 150 days) and this schema does not yet capture variety identity as a field.",
+      "rule_id": "ofsp_r5b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": 90,
+      "max_days_after_dependency": 150,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "90-150 days (roughly 3-5 months) is the typical harvest window across the varieties commonly grown in Nigeria. Harvest logged inside the hard block range but outside this typical window is flagged rather than blocked, since variety maturity class varies genuinely (Mothers Delight at ~75 days vs. local/standard varieties at up to 150 days) and this schema does not yet capture variety identity as a field.",
       "source": "Guardian Nigeria; African Farming; PDF field guide (105-110 day harvest figure for one widely documented variety)."
     },
     {
-      "rule_id": "ofsp_r5c_weevil", "operation_id": "harvest", "depends_on_operation_id": "planting",
-      "min_days_after_dependency": null, "max_days_after_dependency": 150, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, specific to this crop file: distinct from cassava, where delayed harvest is a low-cost farmer choice, delayed OFSP harvest carries a real and quantified cost -- sweet potato weevil (Cylas spp.) damage escalates sharply the longer roots sit in the ground past maturity, with published sources citing harvest delay as a primary driver of weevil losses that can reach up to 100% in severe cases (typically 20-55% on average) and general guidance to harvest within about 4 months to limit weevil damage. This rule flags (does not block) harvest beyond 150 days specifically as a weevil-risk advisory, distinct from ofsp_r5b's broader maturity-window flag.",
+      "rule_id": "ofsp_r5c_weevil",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "planting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 150,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, specific to this crop file: distinct from cassava, where delayed harvest is a low-cost farmer choice, delayed OFSP harvest carries a real and quantified cost -- sweet potato weevil (Cylas spp.) damage escalates sharply the longer roots sit in the ground past maturity, with published sources citing harvest delay as a primary driver of weevil losses that can reach up to 100% in severe cases (typically 20-55% on average) and general guidance to harvest within about 4 months to limit weevil damage. This rule flags (does not block) harvest beyond 150 days specifically as a weevil-risk advisory, distinct from ofsp_r5b's broader maturity-window flag.",
       "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (20-55% average tuber loss to weevil, up to 100% in severe/delayed cases); PlantVillage, Sweet Potato (recommendation to harvest within 4 months to avoid weevil damage)."
     },
     {
-      "rule_id": "ofsp_r6", "operation_id": "harvest", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Harvest can only be logged once per planting cycle for this template (a single terminal root-lifting event). Note, same caveat as cassava.json: real-world 'progressive'/piecemeal harvesting over several weeks is common practice in tropical smallholder systems -- this is a simplification flagged for review once the workflow engine supports partial harvests.",
+      "rule_id": "ofsp_r6",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvest can only be logged once per planting cycle for this template (a single terminal root-lifting event). Note, same caveat as cassava.json: real-world 'progressive'/piecemeal harvesting over several weeks is common practice in tropical smallholder systems -- this is a simplification flagged for review once the workflow engine supports partial harvests.",
       "source": "PlantVillage, Sweet Potato ('progressive harvesting' noted as common practice in tropical countries) -- same modeling limitation as cassava.json's harvest rule."
     },
     {
-      "rule_id": "ofsp_r_curing", "operation_id": "curing", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, specific to this crop file (cassava.json's equivalent rule is about immediate processing, not curing). Curing should begin promptly after harvest -- warm (29-35C), high-humidity (80-90%) conditions held for roughly 5-10 days let the skin toughen and heal harvest wounds, which is what actually enables storage; uncured roots are far more prone to weight loss, weevil entry, and decay. This is a warning, not a block: skipping curing is a real (if costly) farmer choice when roots are sold or eaten immediately rather than stored.",
+      "rule_id": "ofsp_r_curing",
+      "operation_id": "curing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, specific to this crop file (cassava.json's equivalent rule is about immediate processing, not curing). Curing should begin promptly after harvest -- warm (29-35C), high-humidity (80-90%) conditions held for roughly 5-10 days let the skin toughen and heal harvest wounds, which is what actually enables storage; uncured roots are far more prone to weight loss, weevil entry, and decay. This is a warning, not a block: skipping curing is a real (if costly) farmer choice when roots are sold or eaten immediately rather than stored.",
       "source": "LSU AgCenter, Curing and Storing Sweet Potatoes (5-10 days, warm/humid room); CTCRI sweet potato guide (polythene-sheet curing method, >10% reduction in fungal infection, 60% shelf-life increase); ScienceDirect, Compositional and shelf-life indices of sweet potato... pre-harvest dehaulming (29-35C, 80-90% RH curing conditions)."
     },
     {
-      "rule_id": "ofsp_r7", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "rule_id": "ofsp_r7",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
       "source": "Inherited convention from maize.json / cassava.json."
     }
   ],
-
   "soil_requirements": {
     "ph_min": 5.6,
     "ph_max": 6.5,
-    "texture": ["sandy loam", "loam", "clay loam"],
+    "texture": [
+      "sandy loam",
+      "loam",
+      "clay loam"
+    ],
     "drainage": "well-drained (ridges/raised beds specifically used to improve drainage and root formation; stony or heavy clay soils are unsuitable for good storage-root development)",
     "nitrogen_needs": "low"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 750,
     "rainfall_mm_max_cycle": 1000,
@@ -130,37 +358,84 @@
     "temp_c_max": 30,
     "notes": "Warm-season crop, sensitive to low temperatures and frost (not a practical concern in most Nigerian growing regions). Short days promote tuber/root development. Waterlogging and salinity are both harmful; stony or clay soils reduce storage-root quality even if the plant survives."
   },
-
   "diseases": [
-    { "name": "Sweet Potato Virus Disease (SPVD)", "risk_stage_ids": ["establishment", "vine_development", "canopy_closure"], "symptoms": "Vein clearing, leaf chlorosis, distortion, puckering, and severe stunting -- caused by co-infection of Sweet Potato Feathery Mottle Virus (SPFMV, aphid-transmitted) and Sweet Potato Chlorotic Stunt Virus (SPCSV, whitefly-transmitted).", "management": "Source virus-tested/certified planting material, establish isolated multiplication sites/nurseries for clean vine production, rogue and remove symptomatic plants promptly, use SPVD-tolerant varieties where available.", "confidence": 0.9, "source": "Multiple corroborating sources: field surveys in Nigeria found 58% of sampled plants virus-infected with SPVD-associated symptoms and yield reduction; controlled trials found tuber yield reduced 78% in SPVD-symptomatic plants (Uganda/Cameroon), with the broader literature citing losses up to 90-98% in severe cases (East Africa)." }
+    {
+      "name": "Sweet Potato Virus Disease (SPVD)",
+      "risk_stage_ids": [
+        "establishment",
+        "vine_development",
+        "canopy_closure"
+      ],
+      "symptoms": "Vein clearing, leaf chlorosis, distortion, puckering, and severe stunting -- caused by co-infection of Sweet Potato Feathery Mottle Virus (SPFMV, aphid-transmitted) and Sweet Potato Chlorotic Stunt Virus (SPCSV, whitefly-transmitted).",
+      "management": "Source virus-tested/certified planting material, establish isolated multiplication sites/nurseries for clean vine production, rogue and remove symptomatic plants promptly, use SPVD-tolerant varieties where available.",
+      "confidence": 0.9,
+      "source": "Multiple corroborating sources: field surveys in Nigeria found 58% of sampled plants virus-infected with SPVD-associated symptoms and yield reduction; controlled trials found tuber yield reduced 78% in SPVD-symptomatic plants (Uganda/Cameroon), with the broader literature citing losses up to 90-98% in severe cases (East Africa)."
+    }
   ],
-
   "pests": [
-    { "name": "Sweet Potato Weevil (Cylas spp.)", "risk_stage_ids": ["root_bulking", "maturity"], "symptoms": "Adult weevils puncture vines and roots; larvae tunnel inside roots causing a bitter, unmarketable off-flavor even when damage is not visible externally. Damage is worse during dry seasons and escalates sharply with delayed harvest.", "management": "Use weevil-free planting material, dip vine cuttings in an approved insecticide (e.g. imidacloprid solution) before planting, re-ridge periodically to keep developing roots covered with soil (exposed roots and soil cracking are the main entry points), install pheromone traps for mass trapping, and harvest promptly at maturity rather than delaying -- see the ofsp_r5c_weevil validation rule for the harvest-timing side of this.", "confidence": 0.85, "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (20-55% average loss, up to 100% in severe cases; imidacloprid dip and pheromone trap protocol); described as the dominant sweet potato postharvest/field pest across the sources reviewed." }
+    {
+      "name": "Sweet Potato Weevil (Cylas spp.)",
+      "risk_stage_ids": [
+        "root_bulking",
+        "maturity"
+      ],
+      "symptoms": "Adult weevils puncture vines and roots; larvae tunnel inside roots causing a bitter, unmarketable off-flavor even when damage is not visible externally. Damage is worse during dry seasons and escalates sharply with delayed harvest.",
+      "management": "Use weevil-free planting material, dip vine cuttings in an approved insecticide (e.g. imidacloprid solution) before planting, re-ridge periodically to keep developing roots covered with soil (exposed roots and soil cracking are the main entry points), install pheromone traps for mass trapping, and harvest promptly at maturity rather than delaying -- see the ofsp_r5c_weevil validation rule for the harvest-timing side of this.",
+      "confidence": 0.85,
+      "source": "Growing Orange-Fleshed Sweet Potato: A Field Guide (20-55% average loss, up to 100% in severe cases; imidacloprid dip and pheromone trap protocol); described as the dominant sweet potato postharvest/field pest across the sources reviewed."
+    }
   ],
-
   "yield_model": {
     "expected_yield_per_hectare": "8 - 15 (typical Nigerian smallholder), up to 20-25 (improved management, virus-free planting material)",
     "unit": "tonnes fresh roots",
-    "factors": ["variety maturity class", "virus-free planting material (single largest quality factor)", "weed control timing", "weevil pressure / harvest timing", "curing and storage practice (affects marketable yield, not field yield)"],
+    "factors": [
+      "variety maturity class",
+      "virus-free planting material (single largest quality factor)",
+      "weed control timing",
+      "weevil pressure / harvest timing",
+      "curing and storage practice (affects marketable yield, not field yield)"
+    ],
     "confidence": 0.55,
     "notes": "Wide range reflects genuine variety and practice variation across the sources reviewed rather than a single well-established Nigeria-specific figure; the 20-25 t/ha figure mirrors the sweet potato reference range cited in general (non-Nigeria-specific) production guides and should be treated as an achievable-with-good-management ceiling, not a typical smallholder yield."
   },
-
   "yield_validation": {
     "unit": "t/ha",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record." },
-      { "condition_type": "less_than", "max": 2.0, "severity": "warning", "message": "Well below typical range; verify plot area, weevil damage, and virus (SPVD) status." },
-      { "condition_type": "range", "min": 2.0, "max": 20.0, "severity": "pass", "message": "Standard Nigerian smallholder-to-commercial range." },
-      { "condition_type": "greater_than", "min": 20.0, "severity": "warning", "message": "Exceptional; requires manual review of variety and management." },
-      { "condition_type": "greater_than", "min": 30.0, "severity": "block", "message": "Approaches the upper end of published sweet potato yield ceilings even under intensive management -- almost certainly a kg/tonne unit typo or inflated area." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 4.0,
+        "severity": "warning",
+        "message": "Severe failure; weevil damage, drought or poor vine cuttings."
+      },
+      {
+        "condition_type": "range",
+        "min": 4.0,
+        "max": 25.0,
+        "severity": "pass",
+        "message": "Standard acceptable range (fresh tubers)."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 25.0,
+        "severity": "warning",
+        "message": "Exceptional yield with elite vines."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 40.0,
+        "severity": "block",
+        "message": "Highly improbable for West African conditions."
+      }
     ],
-    "source": "AgTrail Master Agronomist & Validator Ruleset structure (same 5-tier pattern as maize.json/vitamin_a_maize.json), thresholds set from the general sweet potato yield ranges found in the sources reviewed here rather than a Nigeria-OFSP-specific study; assumes reported area is trustworthy, same GPS-polygon caveat as other crop files in this knowledge base."
+    "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato). The ruleset gives a Soft Warning below 4.0, Pass 5.0-18.0 and a Soft Warning above 25.0, leaving 4.0-5.0 and 18.0-25.0 undefined; the Pass band is extended to 4.0-25.0. A true zero is a loss event, as for every crop. Replaces thresholds the file had set from other sources."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -175,6 +450,13 @@
       "changed_by": "AgTrail Knowledge Base - bugfix via scenario testing",
       "summary": "Removed the ofsp_r_beta_carotene validation_rules entry, found broken by running scenario files through the actual engine (engine.validator), not just schema validation. The rule used depends_on_operation_id: null with can_repeat: false, which in this engine means 'flag this operation if it is ever logged a second time' -- a genuine once-only-operation check (the same mechanic correctly used elsewhere for e.g. a single harvest per cycle). It does NOT mean 'always show this note when the operation happens,' which is what the rule's beta-carotene content actually needed. In practice this meant the note only ever surfaced on a DUPLICATE curing log, attached to a message that has nothing to do with duplicates -- confirmed via scenarios/ofsp_check_beta_carotene_rule.json. This engine has no mechanism for an unconditional informational flag; validation_rules exist to catch violations, not to annotate normal behavior. Moved the same content (curing modestly increasing measured beta-carotene, relevant if yield_validation ever gains a nutrient-quality dimension) into the curing operation's description field instead, which is the correct home for it and is consistent with how the rest of this knowledge base handles non-enforceable context. No new once-only rule was added for curing in its place, since neither maize.json's drying/storage nor cassava.json's post-harvest operations have one either -- that pattern is reserved for harvest-category operations across this knowledge base, and introducing it only for OFSP's curing step would be an inconsistent, unrequested change.",
       "source": "N/A -- internal engine-behavior fix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-24",
+      "changed_by": "AgTrail Knowledge Base - yield limits reconciled with the master ruleset",
+      "summary": "Replaced the yield thresholds with the master ruleset's, which the earlier ones (taken from general or global sources) did not match. The ruleset gives a Soft Warning below 4.0, Pass 5.0-18.0 and a Soft Warning above 25.0, leaving 4.0-5.0 and 18.0-25.0 undefined; the Pass band is extended to 4.0-25.0. A true zero is a loss event, as for every crop.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 7 (Orange-Fleshed Sweet Potato)"
     }
   ]
 }
