@@ -87,6 +87,22 @@ def signal_category_for(crop_id: Optional[str], operation_id: str) -> Optional[s
     return entry["signal_category"] if entry else None
 
 
+def phase_for(crop_id: Optional[str], operation_id: str) -> Optional[str]:
+    """
+    The phase of a job (pre_planting, planting, post_planting, harvest or post_harvest), or None
+    when the job has no mapping or its phase has not been decided yet. A job can name its own
+    phase; otherwise it takes the phase of its category.
+    """
+    data = taxonomy()
+    entry = data["operations"].get(operation_id)
+    if entry is None:
+        return None
+    if entry.get("phase"):
+        return entry["phase"]
+    category = signal_category_for(crop_id, operation_id)
+    return next((c.get("phase") for c in data["categories"] if c["id"] == category), None)
+
+
 def data_hash(root: Path = KNOWLEDGE_BASE_DIR) -> str:
     """
     A short fingerprint of every crop file, the schema and the mapping files.
