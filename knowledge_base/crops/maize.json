@@ -10,7 +10,7 @@
       "Nigeria - Guinea Savanna",
       "Nigeria - Sudan Savanna"
     ],
-    "current_version": "1.4.0"
+    "current_version": "1.4.1"
   },
   "growth_stages": [
     {
@@ -681,6 +681,13 @@
       "changed_by": "AgTrail Knowledge Base - harvest estimates backed by current research",
       "summary": "Added harvest_estimate: typical yield 2.03 t/ha (FAO national average, 2024), the normal range, the expected harvest window and sources. The earlier expected yield (1.2 - 3.5) was replaced because current national figures are lower.",
       "source": "FAOSTAT via Our World in Data; AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "version": "1.4.1",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - harvest estimate range capped",
+      "summary": "The high end of the harvest estimate range was 5.0 t/ha (the ruleset's best case). Per CEO decision it is now capped at twice the typical yield, 4.06 t/ha, so the range is closer to what farms really get. The yield checks are unchanged; the old figure is kept as ruleset_high.",
+      "source": "CEO decision, 25 Oct 2026; FAOSTAT via Our World in Data (typical yield)"
     }
   ],
   "harvest_estimate": {
@@ -690,9 +697,10 @@
     "yield_t_per_ha": {
       "typical": 2.03,
       "normal_low": 0.8,
-      "normal_high": 5.0,
+      "normal_high": 4.06,
       "national_recent_low": 1.94,
-      "national_recent_high": 2.23
+      "national_recent_high": 2.23,
+      "ruleset_high": 5.0
     },
     "harvest_window": {
       "after": "planting",
@@ -700,11 +708,12 @@
       "max_days": 130
     },
     "confidence": 0.6,
-    "method": "Typical is the FAO national average for Nigeria in 2024. The normal range is the standard range the crop's yield checks already use (the CEO's ruleset; for soybean, the IITA-based range). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
+    "method": "Typical is the FAO national average for Nigeria in 2024. The low end is the crop's normal low from the yield checks (the CEO's ruleset; for soybean, the IITA-based range). The high end is that ruleset's best case, capped at twice the typical yield, so it stays close to what farms really get (CEO decision, 25 Oct 2026). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
     "caveats": [
       "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
       "FAO's national figures for Nigeria are compiled from national reports and FAO estimates and move little from year to year.",
-      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care."
+      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care.",
+      "The high end is capped at twice the typical yield (4.06 t/ha). The ruleset's own best case is 5.0 t/ha, which a well-run farm can reach but few farms do."
     ],
     "sources": [
       {

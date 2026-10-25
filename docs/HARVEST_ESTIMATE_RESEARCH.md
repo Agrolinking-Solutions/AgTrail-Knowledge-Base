@@ -6,6 +6,7 @@ Every other crop answers "no current research recorded yet" and gets no figure.
 ## What each number is
 - **Typical** is Nigeria's national average yield for 2024 from FAOSTAT (FAO, Production: Crops and livestock products), read through Our World in Data. The 1961 to 2024 series was downloaded and the 2020 to 2024 low and high are stored beside it.
 - **Normal range** is the standard range the crop's yield checks already use: the CEO's ruleset (maize 0.8 to 5.0, rice 1.0 to 6.0, cassava 5 to 30, cocoa 0.1 to 1.5, groundnut 0.5 to 2.5, sorghum 0.5 to 2.5). The CEO's ruleset has no soybean section, so soybean uses 0.7 to 3.0, taken from IITA figures. The estimate and the yield validation therefore never disagree about what is normal.
+  **High end cap (CEO decision, 25 Oct 2026):** the high end is the ruleset's best case capped at twice the typical yield, so the range stays close to what farms really get. The ruleset figure is kept as `ruleset_high`. Cassava, for example, went from 30 to 11.68 t/ha.
 - **Harvest window** is the expected window in the crop's own timing rules. Rice is counted from transplanting, the others from planting. Cocoa is perennial and has no window.
 
 ## What was opened and checked

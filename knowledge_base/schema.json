@@ -588,6 +588,10 @@
             "normal_high": {
               "type": "number"
             },
+            "ruleset_high": {
+              "type": "number",
+              "description": "The ruleset's own best-case yield. normal_high is this figure capped at twice the typical yield."
+            },
             "national_recent_low": {
               "type": "number"
             },
