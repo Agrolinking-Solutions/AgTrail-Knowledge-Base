@@ -319,7 +319,8 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "condition": "Fertilizer application must be logged at least 1 day before weeding, and no more than 21 days before it (checked only when the earlier job is recorded).",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair.",
       "required_dependency": false
     },
@@ -332,7 +333,8 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "condition": "Weeding must be logged at least 1 day before pruning, and no more than 30 days before it (checked only when the earlier job is recorded).",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair.",
       "required_dependency": false
     },
