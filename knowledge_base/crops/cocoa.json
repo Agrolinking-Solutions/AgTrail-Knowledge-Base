@@ -10,7 +10,7 @@
       "Nigeria - Southwest rainforest belt",
       "Nigeria - Cross River"
     ],
-    "current_version": "1.3.0"
+    "current_version": "1.4.0"
   },
   "growth_stages": [
     {
@@ -145,17 +145,17 @@
     {
       "step_number": 1,
       "operation_id": "land_clearing",
-      "required": true
+      "required": false
     },
     {
       "step_number": 2,
       "operation_id": "nursery_establishment",
-      "required": true
+      "required": false
     },
     {
       "step_number": 3,
       "operation_id": "transplanting",
-      "required": true
+      "required": false
     },
     {
       "step_number": 4,
@@ -245,8 +245,9 @@
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "An initial application of organic manure is applied directly into the planting hole at the time of transplanting itself, not weeks later. This is a real change from the previous draft, which assumed a 30 day wait. Later applications then follow roughly every six months as the tree grows.",
-      "source": "How to Plant Cocoa in Nigeria (Floratalk): organic manure applied during transplanting, with additional fertilizer roughly every six months afterward"
+      "condition": "An initial application of organic manure is applied directly into the planting hole at the time of transplanting itself, not weeks later. This is a real change from the previous draft, which assumed a 30 day wait. Later applications then follow roughly every six months as the tree grows. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "How to Plant Cocoa in Nigeria (Floratalk): organic manure applied during transplanting, with additional fertilizer roughly every six months afterward",
+      "required_dependency": false
     },
     {
       "rule_id": "cocoa_r4",
@@ -257,8 +258,9 @@
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "Hard block if the first harvest is logged before 540 days (1.5 years) after transplanting.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
+      "condition": "Hard block if the first harvest is logged before 540 days (1.5 years) after transplanting. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)",
+      "required_dependency": false
     },
     {
       "rule_id": "cocoa_r4b",
@@ -269,8 +271,9 @@
       "can_repeat": true,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "Hybrids bear from about 2 years. Flagged if the first harvest is logged before 730 days after transplanting.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
+      "condition": "Hybrids bear from about 2 years. Flagged if the first harvest is logged before 730 days after transplanting. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)",
+      "required_dependency": false
     },
     {
       "rule_id": "cocoa_r5",
@@ -316,8 +319,9 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
-      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding could previously be logged with no fertilizer_application in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair.",
+      "required_dependency": false
     },
     {
       "rule_id": "cocoa_r_seq_weeding_pruning",
@@ -328,8 +332,9 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
-      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- pruning could previously be logged with no weeding in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (30 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair.",
+      "required_dependency": false
     },
     {
       "rule_id": "cocoa_r2b",
@@ -492,6 +497,13 @@
       "changed_by": "AgTrail Knowledge Base - timing rules reconciled with the master ruleset",
       "summary": "Nursery hard block now over 180 days (was 210) with a flag under 100 or over 150. First harvest is blocked before 540 days (was 730) and flagged before 730 days (the old 1095-1825 day flag was removed). Fermentation is flagged under 4 or over 8 days (was outside 5-7) and blocked under 3 or over 10.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 15 (Cocoa)"
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - established orchards supported (CEO answer)",
+      "summary": "Cocoa is a perennial crop and many orchards were planted long before they were entered here, so only maintenance and harvest are logged for them. The rules that tie maintenance and harvest to the nursery or transplanting (cocoa_r3, cocoa_r4, cocoa_r4b, cocoa_r_seq_fertilizer_application_weeding, cocoa_r_seq_weeding_pruning) now apply only when that step was recorded, and the establishment steps are no longer required in the workflow. The age limits themselves are unchanged.",
+      "source": "CEO answer: cocoa is a perennial crop, some are already established, and these only need to be maintained and harvested; AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
   ],
   "yield_validation": {

@@ -6,94 +6,271 @@
     "category": "cash_crop",
     "crop_cycle_type": "perennial",
     "typical_duration_days": 1095,
-    "regions": ["Nigeria - South / Middle Belt (Robusta, lowland/mid-altitude)", "Nigeria - Mambilla Plateau, Taraba (Arabica, high altitude only)"],
-    "current_version": "1.0.0"
+    "regions": [
+      "Nigeria - South / Middle Belt (Robusta, lowland/mid-altitude)",
+      "Nigeria - Mambilla Plateau, Taraba (Arabica, high altitude only)"
+    ],
+    "current_version": "1.1.0"
   },
-
   "growth_stages": [
-    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -270, "ends_day_after_planting": 0, "description": "Seedlings raised under shade for 6-9 months before transplanting. Day 0 is transplanting, not seed sowing -- same convention as cocoa.json/oil_palm.json." },
-    { "stage_id": "immature_establishment", "name": "Immature (Establishment)", "starts_day_after_planting": 0, "ends_day_after_planting": 1095, "description": "Years 0-3." },
-    { "stage_id": "early_bearing", "name": "Early Bearing", "starts_day_after_planting": 1096, "ends_day_after_planting": 1825, "description": "Years 3-5." },
-    { "stage_id": "full_bearing", "name": "Full Bearing", "starts_day_after_planting": 1826, "ends_day_after_planting": 7300, "description": "Years 6-20+." }
+    {
+      "stage_id": "nursery",
+      "name": "Nursery",
+      "starts_day_after_planting": -270,
+      "ends_day_after_planting": 0,
+      "description": "Seedlings raised under shade for 6-9 months before transplanting. Day 0 is transplanting, not seed sowing -- same convention as cocoa.json/oil_palm.json."
+    },
+    {
+      "stage_id": "immature_establishment",
+      "name": "Immature (Establishment)",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 1095,
+      "description": "Years 0-3."
+    },
+    {
+      "stage_id": "early_bearing",
+      "name": "Early Bearing",
+      "starts_day_after_planting": 1096,
+      "ends_day_after_planting": 1825,
+      "description": "Years 3-5."
+    },
+    {
+      "stage_id": "full_bearing",
+      "name": "Full Bearing",
+      "starts_day_after_planting": 1826,
+      "ends_day_after_planting": 7300,
+      "description": "Years 6-20+."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing, Lining & Holing", "category": "land_prep", "description": "Clearing, lining and holing on soils suited to the species' required altitude. SPECIES/ALTITUDE MATCHING NOTE: the source ruleset states 'match species strictly to elevation' (Robusta for lowland/mid-altitude, Arabica restricted to the high Mambilla Plateau) -- this is a genuinely different kind of validation gap from anything flagged in this knowledge base's other crop files so far: it requires checking the FARM'S GEOGRAPHIC LOCATION/ALTITUDE against the SPECIES SELECTED, and neither this schema's operations/validation_rules structure nor its flat regions list (a list of names, not altitude bands with enforcement logic) can represent or check that kind of constraint at all. Flagged for the end-of-round review as a new limitation category, not an extension of any previously-flagged one.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Raising seedlings under shade.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "shade_tree_establishment", "name": "Shade Tree Establishment", "category": "land_prep", "description": "Establishing shade trees -- both species are shade-grown in the source ruleset's description, Arabica particularly ('under managed shade').", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Transplanting seedlings at species-specific spacing: Robusta ~3m x 3m, Arabica ~2m x 2m under managed shade. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "weeding_mulching", "name": "Weeding & Mulching", "category": "crop_management", "description": "Weeding and mulching.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "pruning", "name": "Pruning", "category": "crop_management", "description": "Pruning to shape.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Control", "category": "pest_disease_control", "description": "Leaf rust (Arabica-specific), Coffee Berry Disease, and Coffee Berry Borer management.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "harvest", "name": "Harvest (Cherry Picking)", "category": "harvest", "description": "Selective picking of red-ripe cherries. Recurs across the harvest season -- no once-only rule, same pattern as cocoa.json/oil_palm.json/rubber.json's recurring harvest operations.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "processing", "name": "Processing (Wet-Pulp or Dry)", "category": "post_harvest", "description": "Wet-pulping or dry processing of picked cherries. Promptness matters: bagged cherries left too long ferment anaerobically and develop off-flavours.", "requires_evidence": false, "can_repeat": true, "optional": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing, Lining & Holing",
+      "category": "land_prep",
+      "description": "Clearing, lining and holing on soils suited to the species' required altitude. SPECIES/ALTITUDE MATCHING NOTE: the source ruleset states 'match species strictly to elevation' (Robusta for lowland/mid-altitude, Arabica restricted to the high Mambilla Plateau) -- this is a genuinely different kind of validation gap from anything flagged in this knowledge base's other crop files so far: it requires checking the FARM'S GEOGRAPHIC LOCATION/ALTITUDE against the SPECIES SELECTED, and neither this schema's operations/validation_rules structure nor its flat regions list (a list of names, not altitude bands with enforcement logic) can represent or check that kind of constraint at all. Flagged for the end-of-round review as a new limitation category, not an extension of any previously-flagged one.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "nursery_establishment",
+      "name": "Nursery Establishment",
+      "category": "land_prep",
+      "description": "Raising seedlings under shade.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "shade_tree_establishment",
+      "name": "Shade Tree Establishment",
+      "category": "land_prep",
+      "description": "Establishing shade trees -- both species are shade-grown in the source ruleset's description, Arabica particularly ('under managed shade').",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "transplanting",
+      "name": "Transplanting",
+      "category": "planting",
+      "description": "Transplanting seedlings at species-specific spacing: Robusta ~3m x 3m, Arabica ~2m x 2m under managed shade. This is day 0 of the field lifecycle.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_mulching",
+      "name": "Weeding & Mulching",
+      "category": "crop_management",
+      "description": "Weeding and mulching.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pruning",
+      "name": "Pruning",
+      "category": "crop_management",
+      "description": "Pruning to shape.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Control",
+      "category": "pest_disease_control",
+      "description": "Leaf rust (Arabica-specific), Coffee Berry Disease, and Coffee Berry Borer management.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Cherry Picking)",
+      "category": "harvest",
+      "description": "Selective picking of red-ripe cherries. Recurs across the harvest season -- no once-only rule, same pattern as cocoa.json/oil_palm.json/rubber.json's recurring harvest operations.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "processing",
+      "name": "Processing (Wet-Pulp or Dry)",
+      "category": "post_harvest",
+      "description": "Wet-pulping or dry processing of picked cherries. Promptness matters: bagged cherries left too long ferment anaerobically and develop off-flavours.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "nursery_establishment", "required": true },
-    { "step_number": 3, "operation_id": "shade_tree_establishment", "required": false },
-    { "step_number": 4, "operation_id": "transplanting", "required": true },
-    { "step_number": 5, "operation_id": "weeding_mulching", "required": false, "repeat_until": null },
-    { "step_number": 6, "operation_id": "pruning", "required": false, "repeat_until": null },
-    { "step_number": 7, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
-    { "step_number": 8, "operation_id": "harvest", "required": true, "repeat_until": null },
-    { "step_number": 9, "operation_id": "processing", "required": false, "repeat_until": null }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": false
+    },
+    {
+      "step_number": 2,
+      "operation_id": "nursery_establishment",
+      "required": false
+    },
+    {
+      "step_number": 3,
+      "operation_id": "shade_tree_establishment",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "transplanting",
+      "required": false
+    },
+    {
+      "step_number": 5,
+      "operation_id": "weeding_mulching",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 6,
+      "operation_id": "pruning",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 9,
+      "operation_id": "processing",
+      "required": false,
+      "repeat_until": null
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "coffee_r_nursery_block", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 150, "max_days_after_dependency": 360, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "UNITS CONVERSION, same pattern as oil_palm_r_nursery_block in oil_palm.json: source states 'hard block under 5 or over 12 months', converted using a 30-day-per-month approximation (5mo = 150 days, 12mo = 360 days), since no year-equivalent is given directly here (unlike rubber.json's tapping rule, which had an exact year figure to use instead).",
+      "rule_id": "coffee_r_nursery_block",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 150,
+      "max_days_after_dependency": 360,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "UNITS CONVERSION, same pattern as oil_palm_r_nursery_block in oil_palm.json: source states 'hard block under 5 or over 12 months', converted using a 30-day-per-month approximation (5mo = 150 days, 12mo = 360 days), since no year-equivalent is given directly here (unlike rubber.json's tapping rule, which had an exact year figure to use instead).",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 1."
     },
     {
-      "rule_id": "coffee_r_nursery_warn", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 180, "max_days_after_dependency": 270, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "UNITS CONVERSION (see coffee_r_nursery_block): source states 'flag under 6 or over 9 months', converted as 6mo = 180 days, 9mo = 270 days.",
+      "rule_id": "coffee_r_nursery_warn",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 180,
+      "max_days_after_dependency": 270,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "UNITS CONVERSION (see coffee_r_nursery_block): source states 'flag under 6 or over 9 months', converted as 6mo = 180 days, 9mo = 270 days.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 1."
     },
     {
-      "rule_id": "coffee_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 900, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Hard block before 2.5 years (900 days) -- the source states this figure directly in days, no conversion needed, same as oil_palm.json's harvest floor.",
+      "rule_id": "coffee_r_harvest_floor",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 900,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block before 2.5 years (900 days) -- the source states this figure directly in days, no conversion needed, same as oil_palm.json's harvest floor. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4.",
+      "required_dependency": false
+    },
+    {
+      "rule_id": "coffee_r_harvest_early_warn",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 1095,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Flag before 3 years (1095 days). Sits above the 900-day hard-block floor. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4.",
+      "required_dependency": false
+    },
+    {
+      "rule_id": "coffee_r_processing_block",
+      "operation_id": "processing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 2,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "GRANULARITY LIMITATION, same as oil_palm_r_milling_block in oil_palm.json: source states 'hard block beyond 48h', but operations here carry only a date, not a date-and-time, so hours cannot be checked precisely. Approximated as 2 days (48h), with the same calendar-date-vs-clock-time imprecision caveat already documented for oil palm's milling rule.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4."
     },
     {
-      "rule_id": "coffee_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 1095, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Flag before 3 years (1095 days). Sits above the 900-day hard-block floor.",
+      "rule_id": "coffee_r_processing_warn",
+      "operation_id": "processing",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 1,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "GRANULARITY LIMITATION (see coffee_r_processing_block): source states 'flag beyond 24h', approximated as 1 day with the same caveat.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4."
     },
     {
-      "rule_id": "coffee_r_processing_block", "operation_id": "processing", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": null, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "GRANULARITY LIMITATION, same as oil_palm_r_milling_block in oil_palm.json: source states 'hard block beyond 48h', but operations here carry only a date, not a date-and-time, so hours cannot be checked precisely. Approximated as 2 days (48h), with the same calendar-date-vs-clock-time imprecision caveat already documented for oil palm's milling rule.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4."
-    },
-    {
-      "rule_id": "coffee_r_processing_warn", "operation_id": "processing", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": null, "max_days_after_dependency": 1, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "GRANULARITY LIMITATION (see coffee_r_processing_block): source states 'flag beyond 24h', approximated as 1 day with the same caveat.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 4."
-    },
-    {
-      "rule_id": "coffee_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "rule_id": "coffee_r_global_order",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
       "source": "Inherited convention across this knowledge base."
     }
   ],
-
   "soil_requirements": {
     "ph_min": 5.0,
     "ph_max": 6.5,
-    "texture": ["loam", "clay loam"],
+    "texture": [
+      "loam",
+      "clay loam"
+    ],
     "drainage": "well-drained",
     "nitrogen_needs": "medium"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 1200,
     "rainfall_mm_max_cycle": 2000,
@@ -101,38 +278,94 @@
     "temp_c_max": 28,
     "notes": "MODELING COMPROMISE, flagged explicitly: this single weather_preferences block is a rough average across two climatically OPPOSITE growing zones bundled into one crop file (matching the source ruleset's own choice to cover both species in one numbered section, not two). Robusta grows lowland/mid-altitude and tolerates warmer conditions; Arabica is restricted to the cool high-altitude Mambilla Plateau specifically because it CANNOT tolerate lowland heat. A single temp_c_max/min range spanning both is not agronomically meaningful for either species individually -- it is provided only because the schema requires numeric values, not because it usefully constrains anything. If this platform ever wants real altitude-based validation (e.g. blocking Arabica registration on a lowland farm), this crop very likely needs to be split into coffee_robusta and coffee_arabica as two separate crop_ids with their own weather_preferences, rather than continuing to share one file. Flagged for agronomist/product review."
   },
-
   "diseases": [
-    { "name": "Leaf Rust (Hemileia vastatrix)", "risk_stage_ids": ["early_bearing", "full_bearing"], "symptoms": "Orange-yellow powdery pustules on the underside of leaves, leading to premature leaf drop. Named in the source ruleset as Arabica-specific.", "management": "Named directly in the source ruleset as an Arabica-specific concern -- rust-resistant Arabica lines and shade management where available.", "confidence": 0.75, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3 ('leaf rust (Arabica)')." },
-    { "name": "Coffee Berry Disease (CBD)", "risk_stage_ids": ["early_bearing", "full_bearing"], "symptoms": "Dark, sunken lesions on green and ripening berries, causing berries to shrivel and drop.", "management": "Field sanitation and monitoring, per the source ruleset's Stage 3 guidance.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3." }
+    {
+      "name": "Leaf Rust (Hemileia vastatrix)",
+      "risk_stage_ids": [
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Orange-yellow powdery pustules on the underside of leaves, leading to premature leaf drop. Named in the source ruleset as Arabica-specific.",
+      "management": "Named directly in the source ruleset as an Arabica-specific concern -- rust-resistant Arabica lines and shade management where available.",
+      "confidence": 0.75,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3 ('leaf rust (Arabica)')."
+    },
+    {
+      "name": "Coffee Berry Disease (CBD)",
+      "risk_stage_ids": [
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Dark, sunken lesions on green and ripening berries, causing berries to shrivel and drop.",
+      "management": "Field sanitation and monitoring, per the source ruleset's Stage 3 guidance.",
+      "confidence": 0.7,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3."
+    }
   ],
-
   "pests": [
-    { "name": "Coffee Berry Borer (CBB)", "risk_stage_ids": ["early_bearing", "full_bearing"], "symptoms": "Small beetles bore into berries and feed on the beans inside, causing direct yield and quality loss.", "management": "Field sanitation, prompt/complete harvesting (reduces the beetle's food source between seasons), monitoring per the source ruleset's Stage 3 guidance.", "confidence": 0.75, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3." }
+    {
+      "name": "Coffee Berry Borer (CBB)",
+      "risk_stage_ids": [
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Small beetles bore into berries and feed on the beans inside, causing direct yield and quality loss.",
+      "management": "Field sanitation, prompt/complete harvesting (reduces the beetle's food source between seasons), monitoring per the source ruleset's Stage 3 guidance.",
+      "confidence": 0.75,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Stage 3."
+    }
   ],
-
   "yield_model": {
     "expected_yield_per_hectare": "0.4 - 2.5",
     "unit": "tonnes green (milled) coffee beans, cumulative per hectare PER YEAR",
-    "factors": ["species/altitude match (see land_clearing operation note)", "shade management", "leaf rust (Arabica) / CBD / CBB pressure", "pruning regularity", "nursery duration adherence"],
+    "factors": [
+      "species/altitude match (see land_clearing operation note)",
+      "shade management",
+      "leaf rust (Arabica) / CBD / CBB pressure",
+      "pruning regularity",
+      "nursery duration adherence"
+    ],
     "confidence": 0.7,
     "notes": "Range taken directly from the source ruleset's Pass and first Warning tiers. Same annual-cumulative-vs-per-picking-event framing already flagged in oil_palm.json and rubber.json: yield is 'per hectare per year', but harvest is a selective, repeated picking process across a season, so a single picking round's weight should not be entered against these annual tiers -- same data-entry risk as those two crops. The block-tier message here is unusually explicit about this exact confusion ('fresh cherry weight likely logged instead of green bean'), suggesting the ruleset authors were already aware unit/stage confusion is common for this crop specifically."
   },
-
   "yield_validation": {
     "unit": "t/ha/yr",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event, not a harvest record." },
-      { "condition_type": "less_than", "max": 0.4, "severity": "warning", "message": "Aging or unpruned traditional farms." },
-      { "condition_type": "range", "min": 0.4, "max": 1.5, "severity": "pass", "message": "Standard Nigerian production range." },
-      { "condition_type": "greater_than", "min": 1.5, "severity": "warning", "message": "Optimized GAP; flag for review." },
-      { "condition_type": "greater_than", "min": 4.0, "severity": "block", "message": "Fresh cherry weight likely logged instead of green bean." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "Must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.4,
+        "severity": "warning",
+        "message": "Aging or unpruned traditional farms."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.4,
+        "max": 1.5,
+        "severity": "pass",
+        "message": "Standard Nigerian production range."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 1.5,
+        "severity": "warning",
+        "message": "Optimized GAP; flag for review."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 4.0,
+        "severity": "block",
+        "message": "Fresh cherry weight likely logged instead of green bean."
+      }
     ],
     "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee), Yield Validation table. TWO gaps in the source table this time, more than any single previous crop file: (1) the table states '<0.3 Soft Warning' and '0.4-1.5 Pass', leaving 0.3-0.4 covered by neither -- resolved by setting the warning tier's ceiling to 0.4 (0 < v < 0.4) so it meets Pass's floor exactly, rather than the wider merge technique used elsewhere, since this gap is narrow enough that adjusting the lower tier's boundary (rather than the upper tier's) is the more natural fit. (2) The table states '1.5' as Pass's ceiling and '>2.5' as the next Soft Warning threshold, leaving 1.5-2.5 covered by neither -- resolved the same way as this knowledge base's other Master-Ruleset crops, by extending to a single greater_than 1.5 warning tier covering everything up to the Hard Block ceiling. Both flagged for agronomist/ruleset-author confirmation."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -140,6 +373,13 @@
       "changed_by": "AgTrail Knowledge Base - new crop, Medium-priority tier, built from Master Ruleset",
       "summary": "Initial file for Coffee (Robusta & Arabica), seventh of the 8 Medium-priority crops from the AgTrail Master Agronomist & Validator Ruleset not yet in this knowledge base, built from Section 19. Third PERENNIAL crop in this batch. Two genuinely new findings beyond what yam/groundnut/pepper/onion/oil_palm/rubber already surfaced: (1) NEW LIMITATION CATEGORY -- the source's 'match species strictly to elevation' instruction (Robusta lowland/mid-altitude, Arabica restricted to the high Mambilla Plateau) requires checking a farm's geographic location/altitude against the coffee species selected. This is unlike every previously-flagged gap (rolling-window frequency counts, self-referential first-instance blocking, cross-crop plot history, hour-vs-day granularity, month-to-day unit conversion, schema type constraints) -- it needs geographic/altitude-aware validation this schema's flat regions-name list cannot represent at all. Flagged on the land_clearing operation and here rather than invented around. (2) Because the source document itself treats Robusta and Arabica as ONE numbered crop section rather than two, this file follows suit with a single crop_id -- but that means weather_preferences has to average across two climatically OPPOSITE growing zones (Robusta tolerates lowland heat; Arabica specifically cannot), which is flagged explicitly in weather_preferences.notes as not agronomically meaningful for either species individually, with a recommendation to split into coffee_robusta/coffee_arabica crop_ids if real altitude-based validation is ever wanted. The yield_validation table also had TWO separate gaps (0.3-0.4 and 1.5-2.5) rather than the single gap seen in every other crop file so far, resolved with slightly different techniques for each (narrowing the lower tier's ceiling for the first, the usual upper-tier merge for the second). Nursery timing needed a months-to-days conversion (no year-equivalent given, unlike rubber.json), while harvest timing did not (days/years given directly, same as oil_palm.json). No rolling-window frequency rule is stated for this crop in the source (unlike pepper.json/rubber.json), so no additional instance of that limitation applies here. Not yet agronomist-reviewed.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 19 (Coffee)."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - established orchards supported (CEO answer)",
+      "summary": "Coffee is a perennial crop and many orchards were planted long before they were entered here, so only maintenance and harvest are logged for them. The rules that tie maintenance and harvest to the nursery or transplanting (coffee_r_harvest_floor, coffee_r_harvest_early_warn) now apply only when that step was recorded, and the establishment steps are no longer required in the workflow. The age limits themselves are unchanged.",
+      "source": "CEO answer: cocoa is a perennial crop, some are already established, and these only need to be maintained and harvested; AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
   ]
 }

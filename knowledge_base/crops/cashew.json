@@ -6,138 +6,383 @@
     "category": "tree_crop",
     "crop_cycle_type": "perennial",
     "typical_duration_days": 1095,
-    "regions": ["Nigeria - Middle Belt (Kogi, Kwara)", "Nigeria - South-East"],
-    "current_version": "1.0.2"
+    "regions": [
+      "Nigeria - Middle Belt (Kogi, Kwara)",
+      "Nigeria - South-East"
+    ],
+    "current_version": "1.1.0"
   },
-
   "growth_stages": [
-    { "stage_id": "nursery", "name": "Nursery (poly-bags)", "starts_day_after_planting": -120, "ends_day_after_planting": 0, "description": "Raised in poly-bags for 2-3 months before transplanting. Day 0 is transplanting, not seed sowing." },
-    { "stage_id": "immature_establishment", "name": "Immature (Establishment)", "starts_day_after_planting": 0, "ends_day_after_planting": 1095, "description": "Years 0-3 after transplanting, tree establishment, not yet bearing." },
-    { "stage_id": "early_bearing", "name": "Early Bearing", "starts_day_after_planting": 1096, "ends_day_after_planting": 1825, "description": "Years 3-5 after transplanting, first harvests begin." },
-    { "stage_id": "full_bearing", "name": "Full Bearing", "starts_day_after_planting": 1826, "ends_day_after_planting": 7300, "description": "Years 6-20+ after transplanting, mature production, recurring annually." }
+    {
+      "stage_id": "nursery",
+      "name": "Nursery (poly-bags)",
+      "starts_day_after_planting": -120,
+      "ends_day_after_planting": 0,
+      "description": "Raised in poly-bags for 2-3 months before transplanting. Day 0 is transplanting, not seed sowing."
+    },
+    {
+      "stage_id": "immature_establishment",
+      "name": "Immature (Establishment)",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 1095,
+      "description": "Years 0-3 after transplanting, tree establishment, not yet bearing."
+    },
+    {
+      "stage_id": "early_bearing",
+      "name": "Early Bearing",
+      "starts_day_after_planting": 1096,
+      "ends_day_after_planting": 1825,
+      "description": "Years 3-5 after transplanting, first harvests begin."
+    },
+    {
+      "stage_id": "full_bearing",
+      "name": "Full Bearing",
+      "starts_day_after_planting": 1826,
+      "ends_day_after_planting": 7300,
+      "description": "Years 6-20+ after transplanting, mature production, recurring annually."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Raising seedlings in poly-bags.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "land_preparation", "name": "Site Preparation (Line & Hole)", "category": "land_prep", "description": "Clearing, lining, and holing at 8m x 8m to 10m x 10m spacing. Cashew tolerates poorer soils than most tree crops but still needs good drainage and fire protection.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Transplant while young to avoid taproot damage. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "ring_weeding", "name": "Ring Weeding", "category": "crop_management", "description": "Weeding a ring around the base of each tree.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "fire_trace_maintenance", "name": "Fire-Trace Maintenance", "category": "crop_management", "description": "Maintaining cleared fire-traces (firebreaks) against bush fire, a real and named risk for cashew specifically, not a generic operation carried over from another crop file.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "fertilizer_application", "name": "Fertilizer Application (Light)", "category": "input_application", "description": "Light fertilizer application. No specific timing given in the source beyond bundling it with general maintenance.", "requires_evidence": true, "can_repeat": true, "optional": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Control", "category": "pest_disease_control", "description": "Stem borer and leaf miner are the named pests.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "harvest", "name": "Harvest (Raw Cashew Nut)", "category": "harvest", "description": "Nuts are let to drop naturally, then collected and separated from the cashew apple. Recurs every season once bearing begins, like cocoa, this is not a single terminal harvest.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "drying", "name": "Drying (RCN)", "category": "post_harvest", "description": "Sun-dry Raw Cashew Nuts on hard floors 2-3 days to 8-9% moisture. This schema can enforce that drying happens after harvest, but cannot yet enforce the 2-3 day DURATION of drying itself, since operations are logged as a single date, not a start/end span, same limitation as Ginger.", "requires_evidence": false, "can_repeat": true, "optional": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "nursery_establishment",
+      "name": "Nursery Establishment",
+      "category": "land_prep",
+      "description": "Raising seedlings in poly-bags.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Site Preparation (Line & Hole)",
+      "category": "land_prep",
+      "description": "Clearing, lining, and holing at 8m x 8m to 10m x 10m spacing. Cashew tolerates poorer soils than most tree crops but still needs good drainage and fire protection.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "transplanting",
+      "name": "Transplanting",
+      "category": "planting",
+      "description": "Transplant while young to avoid taproot damage. This is day 0 of the field lifecycle.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "ring_weeding",
+      "name": "Ring Weeding",
+      "category": "crop_management",
+      "description": "Weeding a ring around the base of each tree.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "fire_trace_maintenance",
+      "name": "Fire-Trace Maintenance",
+      "category": "crop_management",
+      "description": "Maintaining cleared fire-traces (firebreaks) against bush fire, a real and named risk for cashew specifically, not a generic operation carried over from another crop file.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "fertilizer_application",
+      "name": "Fertilizer Application (Light)",
+      "category": "input_application",
+      "description": "Light fertilizer application. No specific timing given in the source beyond bundling it with general maintenance.",
+      "requires_evidence": true,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Control",
+      "category": "pest_disease_control",
+      "description": "Stem borer and leaf miner are the named pests.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Raw Cashew Nut)",
+      "category": "harvest",
+      "description": "Nuts are let to drop naturally, then collected and separated from the cashew apple. Recurs every season once bearing begins, like cocoa, this is not a single terminal harvest.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "drying",
+      "name": "Drying (RCN)",
+      "category": "post_harvest",
+      "description": "Sun-dry Raw Cashew Nuts on hard floors 2-3 days to 8-9% moisture. This schema can enforce that drying happens after harvest, but cannot yet enforce the 2-3 day DURATION of drying itself, since operations are logged as a single date, not a start/end span, same limitation as Ginger.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "nursery_establishment", "required": true },
-    { "step_number": 3, "operation_id": "land_preparation", "required": true },
-    { "step_number": 4, "operation_id": "transplanting", "required": true },
-    { "step_number": 5, "operation_id": "ring_weeding", "required": false, "repeat_until": null },
-    { "step_number": 6, "operation_id": "fire_trace_maintenance", "required": false, "repeat_until": null },
-    { "step_number": 7, "operation_id": "fertilizer_application", "required": false, "repeat_until": null },
-    { "step_number": 8, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
-    { "step_number": 9, "operation_id": "harvest", "required": true, "repeat_until": null },
-    { "step_number": 10, "operation_id": "drying", "required": false, "repeat_until": null }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": false
+    },
+    {
+      "step_number": 2,
+      "operation_id": "nursery_establishment",
+      "required": false
+    },
+    {
+      "step_number": 3,
+      "operation_id": "land_preparation",
+      "required": false
+    },
+    {
+      "step_number": 4,
+      "operation_id": "transplanting",
+      "required": false
+    },
+    {
+      "step_number": 5,
+      "operation_id": "ring_weeding",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 6,
+      "operation_id": "fire_trace_maintenance",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "fertilizer_application",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 9,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 10,
+      "operation_id": "drying",
+      "required": false,
+      "repeat_until": null
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "cashew_r_land_prep_gate", "operation_id": "transplanting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "rule_id": "cashew_r_land_prep_gate",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
     },
     {
-      "rule_id": "cashew_r_land_clearing_gate", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning nursery_establishment could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
+      "rule_id": "cashew_r_land_clearing_gate",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning nursery_establishment could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Pattern and max-day window (60 days) matches cocoa.json's existing analogous rule (cocoa_r1)."
     },
     {
-      "rule_id": "cashew_r1", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 45, "max_days_after_dependency": 120, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Hard block if the nursery period is under 45 or over 120 days. Over-held seedlings form a coiled 'J-root' that snaps in wind years later, a real, specifically named agronomic risk, not a generic timing rule. See cashew_r1b for the narrower typical window.",
+      "rule_id": "cashew_r1",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 45,
+      "max_days_after_dependency": 120,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block if the nursery period is under 45 or over 120 days. Over-held seedlings form a coiled 'J-root' that snaps in wind years later, a real, specifically named agronomic risk, not a generic timing rule. See cashew_r1b for the narrower typical window.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
-      "rule_id": "cashew_r1b", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 60, "max_days_after_dependency": 90, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "60-90 days (roughly matching the '2-3 months' recommendation) is the typical nursery window. Outside it but still inside the 45-120 day hard block is flagged.",
+      "rule_id": "cashew_r1b",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 60,
+      "max_days_after_dependency": 90,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "60-90 days (roughly matching the '2-3 months' recommendation) is the typical nursery window. Outside it but still inside the 45-120 day hard block is flagged.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
-      "rule_id": "cashew_r3", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 900, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "First harvest cannot be logged before 2.5 years (900 days) after transplanting. No upper bound: once bearing begins, harvest recurs every season indefinitely, like cocoa. See cashew_r3b for the 3-year typical threshold.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+      "rule_id": "cashew_r3",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 900,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "First harvest cannot be logged before 2.5 years (900 days) after transplanting. No upper bound: once bearing begins, harvest recurs every season indefinitely, like cocoa. See cashew_r3b for the 3-year typical threshold. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026",
+      "required_dependency": false
     },
     {
-      "rule_id": "cashew_r3b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 1095, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "First harvest is flagged if logged before 3 years (1095 days) after transplanting, still allowed since it's past the hard block floor of 2.5 years, but early enough to confirm deliberately. No upper flag: the source states no lateness concern for cashew's harvest, unlike some other crops.",
-      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+      "rule_id": "cashew_r3b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 1095,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "First harvest is flagged if logged before 3 years (1095 days) after transplanting, still allowed since it's past the hard block floor of 2.5 years, but early enough to confirm deliberately. No upper flag: the source states no lateness concern for cashew's harvest, unlike some other crops. Applies only when the planting is recorded: an orchard established before it was entered here is not blocked for lacking it.",
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026",
+      "required_dependency": false
     },
     {
-      "rule_id": "cashew_r4", "operation_id": "drying", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 7, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Drying should begin promptly after harvest, damp nuts mould rapidly. The 7-day window is a reasonable default, not an explicit source figure; the source's actual stated detail (drying itself should take 2-3 days, flagged if under 2) describes a DURATION this schema cannot yet enforce, see the drying operation's own description for that limitation.",
+      "rule_id": "cashew_r4",
+      "operation_id": "drying",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 7,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Drying should begin promptly after harvest, damp nuts mould rapidly. The 7-day window is a reasonable default, not an explicit source figure; the source's actual stated detail (drying itself should take 2-3 days, flagged if under 2) describes a DURATION this schema cannot yet enforce, see the drying operation's own description for that limitation.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 (prompt-start principle sourced; the 7-day window itself is a reasonable default, not sourced)"
     },
     {
-      "rule_id": "cashew_r5", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+      "rule_id": "cashew_r5",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
     },
     {
-      "rule_id": "cashew_r_seq_nursery_establishment_land_preparation", "operation_id": "land_preparation", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 90, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- land_preparation could previously be logged with no nursery_establishment in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "cashew_r_seq_nursery_establishment_land_preparation",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 90,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- land_preparation could previously be logged with no nursery_establishment in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (90 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
-
   "soil_requirements": {
     "texture": [],
     "drainage": "well-drained -- cashew tolerates poorer soils than most tree crops in this knowledge base, but still needs good drainage.",
     "nitrogen_needs": "low"
   },
-
   "weather_preferences": {
     "notes": "Not sourced from the master ruleset's GAP process flow beyond noting the Middle Belt (Kogi, Kwara) and South-East as primary production zones, and that fire risk is a real concern (hence fire-trace maintenance as a named operation). Rainfall and temperature fields deliberately omitted rather than guessed at. Flagged as a real gap needing a dedicated sourcing pass."
   },
-
   "diseases": [],
-
   "pests": [
-    { "name": "Stem Borer", "risk_stage_ids": ["immature_establishment", "early_bearing", "full_bearing"], "symptoms": "Not detailed beyond being named as a management target.", "management": "Named alongside leaf miner as requiring management; specific control methods not detailed in the source. Flagged for a dedicated follow-up sourcing pass.", "confidence": 0.5, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026" },
-    { "name": "Leaf Miner", "risk_stage_ids": ["immature_establishment", "early_bearing", "full_bearing"], "symptoms": "Not detailed beyond being named as a management target.", "management": "Same caveat as Stem Borer above, named but not detailed in the source.", "confidence": 0.5, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026" }
+    {
+      "name": "Stem Borer",
+      "risk_stage_ids": [
+        "immature_establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Not detailed beyond being named as a management target.",
+      "management": "Named alongside leaf miner as requiring management; specific control methods not detailed in the source. Flagged for a dedicated follow-up sourcing pass.",
+      "confidence": 0.5,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    },
+    {
+      "name": "Leaf Miner",
+      "risk_stage_ids": [
+        "immature_establishment",
+        "early_bearing",
+        "full_bearing"
+      ],
+      "symptoms": "Not detailed beyond being named as a management target.",
+      "management": "Same caveat as Stem Borer above, named but not detailed in the source.",
+      "confidence": 0.5,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
+    }
   ],
-
   "yield_model": {
     "expected_yield_per_hectare": "0.3 - 1.0 per year (standard smallholder), 1.0 - 2.5 per year (optimized GAP with improved Jumbo clones)",
     "unit": "tonnes Raw Cashew Nut (RCN)",
-    "factors": ["nursery seedling quality (J-root risk)", "years since transplanting", "fire damage/neglect", "variety (Jumbo clones vs traditional)"],
+    "factors": [
+      "nursery seedling quality (J-root risk)",
+      "years since transplanting",
+      "fire damage/neglect",
+      "variety (Jumbo clones vs traditional)"
+    ],
     "confidence": 0.6,
     "notes": "This is RCN (Raw Cashew Nut) yield specifically, reported per hectare PER YEAR once bearing begins, not a one-time total the way an annual crop's yield_model would read. Derived from the yield_validation tiers below."
   },
-
   "yield_validation": {
     "unit": "t/ha/yr",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "A reported yield of 0 t/ha/yr must be logged as a Disaster/Loss Event, not a harvest record." },
-      { "condition_type": "less_than", "max": 0.3, "severity": "warning", "message": "Severe neglect, fire damage, or aged/wild trees." },
-      { "condition_type": "range", "min": 0.3, "max": 1.0, "severity": "pass", "message": "Standard smallholder production." },
-      { "condition_type": "greater_than", "min": 1.0, "severity": "warning", "message": "Optimized GAP with improved Jumbo clones." },
-      { "condition_type": "greater_than", "min": 4.0, "severity": "block", "message": "Improbable -- cashew apples likely logged alongside the RCN." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "A reported yield of 0 t/ha/yr must be logged as a Disaster/Loss Event, not a harvest record."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 0.3,
+        "severity": "warning",
+        "message": "Severe neglect, fire damage, or aged/wild trees."
+      },
+      {
+        "condition_type": "range",
+        "min": 0.3,
+        "max": 1.0,
+        "severity": "pass",
+        "message": "Standard smallholder production."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 1.0,
+        "severity": "warning",
+        "message": "Optimized GAP with improved Jumbo clones."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 4.0,
+        "severity": "block",
+        "message": "Improbable -- cashew apples likely logged alongside the RCN."
+      }
     ],
     "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. Note the /yr unit, this is an annual figure for a recurring perennial harvest, not a lifetime total. Same gap-closing approach used for Tomato and Ginger: the source's warning tier was stated as '< 0.2' with the pass range starting at 0.3, leaving 0.2-0.3 uncovered, extended to '< 0.3' to close it. The source's upper warning tier was stated as '1.0-2.5' with the block starting at '> 4.0', leaving 2.5-4.0 uncovered, modeled as an open-ended '> 1.0' warning, correctly ceding to the '> 4.0' block for very high values via the engine's existing overlap-resolution logic. The equals_zero tier was inferred, not stated in the source table for cashew."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -159,6 +404,13 @@
       "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
       "summary": "Added cashew_r_seq_nursery_establishment_land_preparation. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - established orchards supported (CEO answer)",
+      "summary": "Cashew is a perennial crop and many orchards were planted long before they were entered here, so only maintenance and harvest are logged for them. The rules that tie maintenance and harvest to the nursery or transplanting (cashew_r3, cashew_r3b) now apply only when that step was recorded, and the establishment steps are no longer required in the workflow. The age limits themselves are unchanged.",
+      "source": "CEO answer: cocoa is a perennial crop, some are already established, and these only need to be maintained and harvested; AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
   ]
 }

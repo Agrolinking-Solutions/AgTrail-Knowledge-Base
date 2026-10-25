@@ -33,8 +33,7 @@ Rule differences that were not in the ruleset but were kept as the file's own ch
 - "Soft warning if X is not logged" for cotton bollworm scouting between 45 and 90 days after planting, and for mulching ginger by 14 days (the engine only checks a step that was logged).
 - Harvest bunch interval limits are in the file and match.
 
-### Decision still needed: cassava harvest
-The file blocks harvest before 240 days with no maximum, chosen on purpose by the earlier author. The ruleset (section 5) blocks harvest before 180 days and after 730 days, and flags before 270 or after 450. Changing the block to follow the ruleset is one edit to cassava_r6, and the vitamin A cassava file already uses the ruleset numbers. The CEO should say which applies to ordinary cassava.
-
-### For the CEO's attention: cocoa first harvest
-The earlier file blocked a first cocoa harvest before 730 days after transplanting and said the choice was deliberate. The ruleset blocks before 540 days and only flags before 730, so a harvest at 18 months (547 days) is now allowed with a flag. The ruleset was followed.
+### Decided by the CEO (25 Oct 2026)
+- **Cassava harvest: keep the file's rule** (block before 240 days, never block a late harvest). The ruleset's 180 and 730 day blocks are not used for ordinary cassava. The vitamin A cassava file keeps the ruleset numbers.
+- **Cocoa and the other tree crops are perennial, and many orchards are already established**, so only maintenance and harvest are logged for them. The rules that tie maintenance and harvest to the nursery or transplanting (cocoa, oil palm, cashew, rubber, coffee) now apply only when that step was recorded, and the establishment steps are no longer required in the workflow. The age limits (for example cocoa first harvest blocked before 540 days and flagged before 730) still apply whenever the transplanting is known.
+- **Activities are grouped into pre-planting, planting, harvesting and post-harvest.** Recorded as guidance in the shared job mapping. The mapping of the existing job groups to these four phases is waiting on one answer: which phase the growing-period jobs (weeding, fertilizing, pest control, watering, pruning) belong to.

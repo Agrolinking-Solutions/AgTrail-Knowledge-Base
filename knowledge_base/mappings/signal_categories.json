@@ -449,7 +449,8 @@
     "decisions": [
       "Changed from the suggestion: nursery_establishment and shade_tree_establishment count as planting.",
       "Tree crops (rubber, cocoa, oil palm): the satellite is used as evidence. Harvesting must not cause a drop in greenness. A sharp drop on one farm is flagged as possible fire, clearing or disease. Not yet asked: comparing with nearby farms, and asking for a delivery weight or photo as proof of harvest.",
-      "Not yet asked: the two proposed new groups (seed and planting material; looking after the crop)."
+      "Not yet asked: the two proposed new groups (seed and planting material; looking after the crop).",
+      "CEO, 25 Oct 2026: activities in agriculture are grouped into pre-planting, planting, harvesting and post-harvest. Not yet applied to the job groups: the phase for weeding, fertilizing, pest control, watering and pruning is still to be confirmed."
     ]
   }
 }
