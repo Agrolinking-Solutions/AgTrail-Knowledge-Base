@@ -33,9 +33,11 @@ def test_the_catch_all_group_has_no_phase_of_its_own():
     assert categories()["other"]["phase"] is None
 
 
-def test_irrigation_and_pruning_are_post_harvest_as_the_ceo_said():
-    assert taxonomy.phase_for("maize", "irrigation") == "post_harvest"
-    assert taxonomy.phase_for("cocoa", "pruning") == "post_harvest"
+def test_irrigation_and_pruning_are_post_planting_as_the_ceo_corrected():
+    # Irrigation follows planting or seeding and continues through growth. Pruning is done in
+    # early growth and during growth (and again after harvest for trees), so it sits here too.
+    assert taxonomy.phase_for("maize", "irrigation") == "post_planting"
+    assert taxonomy.phase_for("cocoa", "pruning") == "post_planting"
 
 
 @pytest.mark.parametrize("operation, phase", [
