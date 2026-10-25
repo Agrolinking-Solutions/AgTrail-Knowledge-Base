@@ -171,7 +171,8 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "condition": "Land preparation must be logged at least 1 day before planting, and no more than 21 days before it.",
+      "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
     },
     {
@@ -280,7 +281,8 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "block",
-      "condition": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- drying could previously be logged with no harvest in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "condition": "Harvest must be logged at least 1 day before drying, and no more than 10 days before it.",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- drying could previously be logged with no harvest in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (10 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],

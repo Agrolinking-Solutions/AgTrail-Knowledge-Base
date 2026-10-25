@@ -278,6 +278,10 @@
             "type": "string",
             "description": "Human-readable statement of the rule, for audit/debug logs and for surfacing to the farmer as an error/warning message."
           },
+          "internal_note": {
+            "type": "string",
+            "description": "Developer history for this rule (why it was added, how it was found). Never shown to farmers: only 'condition' is."
+          },
           "source": {
             "type": "string",
             "description": "Where this specific interval/threshold came from (e.g. 'IITA Guide to Maize Production in Northern Nigeria, 2020'). Optional but strongly recommended -- an unsourced timing rule is a guess, not a validated constraint."

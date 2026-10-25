@@ -170,7 +170,8 @@
       "can_repeat": false,
       "allow_backdate": false,
       "severity": "warning",
-      "condition": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting_material_sourcing could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
+      "condition": "Land clearing must be logged at least 1 day before planting material sourcing, and no more than 60 days before it.",
+      "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning planting_material_sourcing could previously be logged with NO land_clearing in history whatsoever. Added in response to a real bug the user found (land preparation stages should not be skippable or same-day relative to what precedes them) -- warning rather than block severity here to match the severity level cocoa.json's equivalent land_clearing -> nursery_establishment rule already used, since establishing nursery stock somewhat in parallel with site prep is more defensible for tree crops than skipping land prep entirely before planting a field crop.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Pattern and max-day window (60 days) matches cocoa.json's existing analogous rule (cocoa_r1)."
     },
     {
