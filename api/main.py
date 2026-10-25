@@ -104,6 +104,19 @@ def get_taxonomy(request: Request) -> Response:
     return _cached_json(request, taxonomy_data.taxonomy())
 
 
+@app.get("/v1/crops/{crop_id}/harvest-estimate", responses={**_NOT_MODIFIED, 404: {"description": "Unrecognized crop_id"}}, tags=["reference data"])
+def get_harvest_estimate(crop_id: str, request: Request) -> Response:
+    """
+    What a farm of this crop typically harvests per hectare (typical value and normal range), the
+    expected harvest window and the sources, as of the date inside. `available` is false for a crop
+    with no current research behind it yet. This describes a typical farm, not a forecast for one.
+    """
+    try:
+        return _cached_json(request, taxonomy_data.harvest_estimate(crop_id))
+    except CropNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @app.get("/v1/mappings/commodities", responses=_NOT_MODIFIED, tags=["reference data"])
 def get_commodity_mapping(request: Request) -> Response:
     """Which PIS commodity prices each crop, and the yield conversion factor."""
