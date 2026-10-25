@@ -51,18 +51,19 @@ def test_no_mapped_operation_is_unused():
     assert stale == set(), "mapping lists operations no crop file uses"
 
 
-def test_approval_is_recorded_and_only_the_two_unanswered_operations_are_open():
+def test_every_operation_is_approved_and_nothing_is_left_open():
     data = taxonomy.taxonomy()
-    open_ops = {i for i, e in data["operations"].items() if e["review_status"] != "approved"}
 
-    assert data["review_status"] == "PARTLY_APPROVED"
-    assert open_ops == {"cover_crop_establishment", "gap_filling"} == set(data["approval"]["still_open"])
-    assert data["approval"]["approved_by"]
+    assert data["review_status"] == "APPROVED"
+    assert all(e["review_status"] == "approved" for e in data["operations"].values())
+    assert data["approval"]["still_open"] == [] and data["approval"]["approved_by"]
 
 
-def test_the_ceo_changed_two_operations_to_planting():
+def test_the_ceo_placed_nursery_shade_trees_and_cover_crop_in_planting():
     assert taxonomy.signal_category_for(None, "nursery_establishment") == "planting"
     assert taxonomy.signal_category_for(None, "shade_tree_establishment") == "planting"
+    assert taxonomy.signal_category_for(None, "cover_crop_establishment") == "planting"
+    assert taxonomy.signal_category_for(None, "gap_filling") == "planting"
     assert taxonomy.signal_category_for(None, "stimulation") == "other"
     assert taxonomy.signal_category_for(None, "tapping") == "harvesting"
 

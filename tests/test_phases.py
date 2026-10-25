@@ -33,15 +33,17 @@ def test_the_catch_all_group_has_no_phase_of_its_own():
     assert categories()["other"]["phase"] is None
 
 
-def test_irrigation_and_pruning_are_post_harvest_as_the_ceo_said():
-    assert taxonomy.phase_for("maize", "irrigation") == "post_harvest"
-    assert taxonomy.phase_for("cocoa", "pruning") == "post_harvest"
+def test_irrigation_and_pruning_are_post_planting_as_the_ceo_corrected():
+    # Irrigation follows planting or seeding and continues through growth. Pruning is done in
+    # early growth and during growth (and again after harvest for trees), so it sits here too.
+    assert taxonomy.phase_for("maize", "irrigation") == "post_planting"
+    assert taxonomy.phase_for("cocoa", "pruning") == "post_planting"
 
 
 @pytest.mark.parametrize("operation, phase", [
     ("land_clearing", "pre_planting"), ("land_preparation", "pre_planting"), ("planting", "planting"), ("transplanting", "planting"),
     ("nursery_establishment", "planting"), ("weeding_1", "post_planting"), ("first_fertilizer", "post_planting"),
-    ("pest_disease_control", "post_planting"), ("reridging", None), ("harvest", "harvest"), ("tapping", "harvest"),
+    ("pest_disease_control", "post_planting"), ("reridging", "post_planting"), ("harvest", "harvest"), ("tapping", "harvest"),
     ("drying", "post_harvest"), ("milling", "post_harvest"), ("storage", "post_harvest"),
 ])
 def test_jobs_take_the_phase_of_their_group(operation, phase):
@@ -58,11 +60,22 @@ def test_every_phase_used_is_a_listed_phase():
     assert used <= set(PHASES)
 
 
-def test_only_jobs_in_the_catch_all_group_lack_a_phase_and_each_is_listed_as_open():
+def test_every_job_has_a_phase():
     data = taxonomy.taxonomy()
-    without = sorted(op for op in data["operations"] if taxonomy.phase_for(None, op) is None)
-    assert without == sorted(data["approval"]["phases_still_open"])
-    assert all(data["operations"][op]["signal_category"] == "other" for op in without)
+
+    assert [op for op in data["operations"] if taxonomy.phase_for(None, op) is None] == []
+    assert data["approval"]["phases_still_open"] == []
+
+
+@pytest.mark.parametrize("job, phase", [
+    ("seed_selection", "pre_planting"), ("planting_material_sourcing", "pre_planting"), ("isolation_verification", "pre_planting"),
+    ("cover_crop_establishment", "planting"), ("gap_filling", "planting"),
+    ("mulching", "post_planting"), ("staking", "post_planting"), ("pest_scouting", "post_planting"), ("reridging", "post_planting"),
+    ("thinning", "post_planting"), ("water_management", "post_planting"), ("irrigation", "post_planting"), ("pruning", "post_planting"),
+    ("stimulation", "harvest"),
+])
+def test_the_jobs_the_ceo_accepted_are_in_the_phases_suggested(job, phase):
+    assert taxonomy.phase_for(None, job) == phase
 
 
 def test_the_phase_is_part_of_what_the_api_serves():

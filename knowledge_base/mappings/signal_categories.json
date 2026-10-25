@@ -1,6 +1,6 @@
 {
   "_about": "The shared list of farm operation types used by the Knowledge Base, AgTrail and the monitoring hub, and the mapping of every Knowledge Base operation_id onto it. The mapping is by operation_id and is the same for every crop unless crop_overrides says otherwise. review_status 'proposed' means a clear mapping waiting for approval and 'needs-decision' means an agronomist must choose. Nothing here is approved yet, so the whole file is UNVERIFIED. satellite_evidence is informational and comes from the integration plan; it is also UNVERIFIED.",
-  "review_status": "PARTLY_APPROVED",
+  "review_status": "APPROVED",
   "categories": [
     {
       "id": "land_preparation",
@@ -80,10 +80,9 @@
     "cover_crop_establishment": {
       "name": "Legume Cover Crop Establishment",
       "kb_category": "land_prep",
-      "signal_category": "other",
-      "review_status": "needs-decision",
-      "reason": "Sowing a cover crop is not planting the main crop.",
-      "phase": null
+      "signal_category": "planting",
+      "review_status": "approved",
+      "reason": "Sowing a cover crop is part of planting. CEO, 25 Oct 2026 (suggested 'something else', changed to planting)."
     },
     "curing": {
       "name": "Curing (Field Curing)",
@@ -133,7 +132,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Draining a flooded field. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "fire_trace_maintenance": {
       "name": "Fire-Trace Maintenance",
@@ -141,7 +140,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Firebreaks round a tree crop. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "first_fertilizer": {
       "name": "First Fertilizer Application (Basal)",
@@ -154,8 +153,8 @@
       "name": "Gap Filling / Replanting",
       "kb_category": "planting",
       "signal_category": "planting",
-      "review_status": "needs-decision",
-      "reason": "Replanting missing stands. Partly a planting, but it only changes part of the field."
+      "review_status": "approved",
+      "reason": "Replanting missing stands is planting. CEO, 25 Oct 2026, agreed."
     },
     "girth_monitoring": {
       "name": "Girth Monitoring",
@@ -163,7 +162,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Measuring trees, a check not an operation.",
-      "phase": null
+      "phase": "post_planting"
     },
     "harvest": {
       "name": "Harvest",
@@ -185,7 +184,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "The shared list puts irrigation under other.",
-      "phase": "post_harvest"
+      "phase": "post_planting"
     },
     "isolation_verification": {
       "name": "Isolation Distance Verification",
@@ -193,7 +192,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "A check, not a field operation.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "land_clearing": {
       "name": "Land Clearing",
@@ -222,7 +221,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Covering the soil. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "nitrogen_application": {
       "name": "Nitrogen Application",
@@ -251,7 +250,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Looking for pests, not controlling them. Satellite would show no change.",
-      "phase": null
+      "phase": "post_planting"
     },
     "phosphorus_application": {
       "name": "Phosphorus Fertilizer Application (SSP/DAP)",
@@ -273,7 +272,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Buying or collecting material, not a field operation.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "post_harvest_handling": {
       "name": "Post-Harvest Handling",
@@ -295,7 +294,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "The shared list puts pruning under other.",
-      "phase": "post_harvest"
+      "phase": "post_planting"
     },
     "reridging": {
       "name": "Re-ridging / Hilling",
@@ -303,7 +302,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Earthing up ridges, often done with weeding. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "ring_weeding": {
       "name": "Ring Weeding",
@@ -325,7 +324,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Preparation with no visible change on the farm.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "seed_selection_treatment": {
       "name": "Seed Selection & Treatment",
@@ -333,7 +332,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Preparation with no visible change on the farm.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "seed_yam_selection": {
       "name": "Seed Yam Selection & Treatment",
@@ -341,7 +340,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Preparation with no visible change on the farm.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "shade_management": {
       "name": "Shade Management",
@@ -349,7 +348,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Managing shade trees. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "shade_tree_establishment": {
       "name": "Shade Tree Establishment",
@@ -378,7 +377,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Supporting plants. No matching category.",
-      "phase": null
+      "phase": "post_planting"
     },
     "stimulation": {
       "name": "Ethephon Stimulation",
@@ -386,7 +385,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Rubber latex stimulation is a chemical on the tree, not a fertilizer.",
-      "phase": null
+      "phase": "harvest"
     },
     "storage": {
       "name": "Storage",
@@ -408,7 +407,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "The shared list puts thinning under other.",
-      "phase": null
+      "phase": "post_planting"
     },
     "third_fertilizer": {
       "name": "Third Fertilizer (Potassium, fruiting)",
@@ -430,7 +429,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Buying or collecting material, not a field operation.",
-      "phase": null
+      "phase": "pre_planting"
     },
     "water_management": {
       "name": "Water Management (Flooding)",
@@ -438,7 +437,7 @@
       "signal_category": "other",
       "review_status": "approved",
       "reason": "Water control. Probably irrigation-like, but the name is broad.",
-      "phase": null
+      "phase": "post_planting"
     },
     "weeding": {
       "name": "Circle Weeding",
@@ -472,37 +471,16 @@
   "crop_overrides": {},
   "approval": {
     "approved_by": "CEO, acting as agronomist, via the Farm Jobs Check page (answers received 2026-10-23)",
-    "approved": "52 of 54 operations: the 30 proposed as clear, and 22 of the 24 that needed a decision (20 as suggested, 2 changed).",
-    "still_open": [
-      "cover_crop_establishment",
-      "gap_filling"
-    ],
+    "approved": "All 54 operations: the 30 proposed as clear, and the 24 that needed a decision (2 changed: nursery_establishment and shade_tree_establishment count as planting; cover_crop_establishment also counts as planting).",
+    "still_open": [],
     "decisions": [
       "Changed from the suggestion: nursery_establishment and shade_tree_establishment count as planting.",
       "Tree crops (rubber, cocoa, oil palm): the satellite is used as evidence. Harvesting must not cause a drop in greenness. A sharp drop on one farm is flagged as possible fire, clearing or disease. Not yet asked: comparing with nearby farms, and asking for a delivery weight or photo as proof of harvest.",
       "Not yet asked: the two proposed new groups (seed and planting material; looking after the crop).",
-      "CEO, 25 Oct 2026: jobs fall into five phases. Pre-planting: land preparation. Planting: planting. Post-planting: weeding, fertilizer application, pest control. Harvest: harvesting. Post-harvest: irrigation, pruning, sorting and grading, cleaning and drying, processing, storing. Irrigation and pruning are individual jobs inside 'other', so their phase is set on the job."
+      "CEO, 25 Oct 2026: jobs fall into five phases. Pre-planting: land preparation. Planting: planting. Post-planting: weeding, fertilizer application, pest control, and (corrected the same day) irrigation and pruning. Harvest: harvesting. Post-harvest: sorting and grading, cleaning and drying, processing, storing. Irrigation and pruning are individual jobs inside 'other', so their phase is set on the job. Irrigation is done right after planting or seeding and through growth; pruning is done in early growth and during growth and, for trees, again after harvest, so it is placed in post-planting.",
+      "CEO, 25 Oct 2026: planting a cover crop is planting; filling gaps is planting. The remaining jobs inside 'other' were placed in phases as suggested and accepted: pre-planting for seed selection, seed treatment, yam seed selection, planting material sourcing, vine sourcing and the isolation check; post-planting for field draining, fire paths, trunk measuring, mulching, pest scouting, earthing-up, shade management, staking, thinning and water management; harvest for stimulation."
     ],
-    "phases_still_open": [
-      "cover_crop_establishment",
-      "field_draining",
-      "fire_trace_maintenance",
-      "girth_monitoring",
-      "isolation_verification",
-      "mulching",
-      "pest_scouting",
-      "planting_material_sourcing",
-      "reridging",
-      "seed_selection",
-      "seed_selection_treatment",
-      "seed_yam_selection",
-      "shade_management",
-      "staking",
-      "stimulation",
-      "thinning",
-      "vine_sourcing",
-      "water_management"
-    ]
+    "phases_still_open": []
   },
   "phases": [
     {
