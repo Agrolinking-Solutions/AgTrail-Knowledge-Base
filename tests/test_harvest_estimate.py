@@ -30,6 +30,14 @@ def test_the_typical_yield_sits_inside_the_normal_range(crop):
 
 
 @pytest.mark.parametrize("crop", WITH_ESTIMATE)
+def test_the_high_end_is_capped_at_twice_the_typical_yield(crop):
+    y = load_crop(crop)["harvest_estimate"]["yield_t_per_ha"]
+
+    assert y["normal_high"] <= round(2 * y["typical"], 2)
+    assert y["normal_high"] == min(y["ruleset_high"], round(2 * y["typical"], 2))
+
+
+@pytest.mark.parametrize("crop", WITH_ESTIMATE)
 def test_the_normal_range_never_contradicts_the_yield_checks(crop):
     # The estimate and the validation must agree on what is normal: nothing inside the estimate's
     # normal range may be blocked by the crop's own yield checks.
