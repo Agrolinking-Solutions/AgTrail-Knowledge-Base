@@ -11,7 +11,7 @@
       "Nigeria - Sudan Savanna",
       "Nigeria - Guinea Savanna"
     ],
-    "current_version": "1.0.0"
+    "current_version": "1.1.0"
   },
   "growth_stages": [
     {
@@ -415,7 +415,7 @@
     }
   ],
   "yield_model": {
-    "expected_yield_per_hectare": "0.5 - 2.5",
+    "expected_yield_per_hectare": "1.07 (Nigeria national average, FAO 2024); normal range 0.5 - 2.5",
     "unit": "tonnes",
     "factors": [
       "variety (improved SAMSORG lines vs traditional landraces)",
@@ -426,7 +426,7 @@
       "rainfall distribution through the season"
     ],
     "confidence": 0.6,
-    "notes": "Range is the Pass tier of the AgTrail Master Agronomist & Validator Ruleset (smallholder to GAP-improved). Grain yield per hectare, anchored to the GPS-mapped area."
+    "notes": "Range is the Pass tier of the AgTrail Master Agronomist & Validator Ruleset (smallholder to GAP-improved). Grain yield per hectare, anchored to the GPS-mapped area. Updated 2026-10-25: the earlier expected figure was 0.5 - 2.5 (tonnes), from older sources. FAO's national average for 2024 is 1.07 t/ha, so that figure was replaced; see harvest_estimate for the sources."
   },
   "yield_validation": {
     "unit": "t/ha",
@@ -473,6 +473,55 @@
       "changed_by": "AgTrail Knowledge Base - new crop from the master ruleset",
       "summary": "Initial file for Sorghum, one of three ruleset crops that had no file (with Pearl Millet and Vitamin A Cassava). Operations, timing limits and yield bands come from the AgTrail Master Agronomist & Validator Ruleset. Soil, pests and diseases come from the web sources cited on each entry, with lower confidence. Workflow 'required' flags are provisional.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, section 3 (Sorghum)"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - harvest estimates backed by current research",
+      "summary": "Added harvest_estimate: typical yield 1.07 t/ha (FAO national average, 2024), the normal range, the expected harvest window and sources. The earlier expected yield (0.5 - 2.5) was replaced because current national figures are lower.",
+      "source": "FAOSTAT via Our World in Data; AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
-  ]
+  ],
+  "harvest_estimate": {
+    "as_of": "2026-10-25",
+    "per": "season",
+    "yield_basis": "grain",
+    "yield_t_per_ha": {
+      "typical": 1.07,
+      "normal_low": 0.5,
+      "normal_high": 2.5,
+      "national_recent_low": 1.07,
+      "national_recent_high": 1.19
+    },
+    "harvest_window": {
+      "after": "planting",
+      "min_days": 100,
+      "max_days": 150
+    },
+    "confidence": 0.6,
+    "method": "Typical is the FAO national average for Nigeria in 2024. The normal range is the standard range the crop's yield checks already use (the CEO's ruleset; for soybean, the IITA-based range). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
+    "caveats": [
+      "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
+      "FAO's national figures for Nigeria are compiled from national reports and FAO estimates and move little from year to year.",
+      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care."
+    ],
+    "sources": [
+      {
+        "title": "FAOSTAT, Production: Crops and livestock products, Nigeria national yield 1961 to 2024 (via Our World in Data)",
+        "publisher": "FAO, processed by Our World in Data",
+        "url": "https://ourworldindata.org/grapher/sorghum-yield",
+        "figure": "1.07 t/ha in 2024; 1.07 to 1.19 t/ha across 2020 to 2024",
+        "year": 2024,
+        "opened": "2026-10-25"
+      },
+      {
+        "title": "AgTrail Master Agronomist & Validator Ruleset, section 3 (Sorghum), yield validation",
+        "publisher": "Agrolinking Solutions Ltd. (CEO, acting as agronomist)",
+        "url": null,
+        "figure": "standard range 0.5 to 2.5 t/ha",
+        "year": 2026,
+        "opened": "2026-10-25"
+      }
+    ]
+  }
 }

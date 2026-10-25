@@ -10,7 +10,7 @@
       "Nigeria - Guinea Savanna",
       "Nigeria - Sudan Savanna"
     ],
-    "current_version": "1.1.0"
+    "current_version": "1.2.0"
   },
   "growth_stages": [
     {
@@ -395,7 +395,7 @@
     }
   ],
   "yield_model": {
-    "expected_yield_per_hectare": "0.8 - 2.5",
+    "expected_yield_per_hectare": "1.02 (Nigeria national average, FAO 2024); normal range 0.7 - 3.0",
     "unit": "tonnes",
     "factors": [
       "variety and seed quality",
@@ -407,7 +407,7 @@
       "rust and Phytophthora pressure"
     ],
     "confidence": 0.5,
-    "notes": "Not stated in the IITA guide, so taken from web sources. IITA project report: farmer yields from developed varieties 0.8-1.2 t/ha. IITA-partnered trials of TGx 1448-2E: 2.0-2.5 t/ha on average, ranging from 0.7 t/ha (Badeggi) to 2.8 t/ha (Ibadan, irrigated). A study citing Ronner et al. 2016 gives Nigeria's average as below 1 t/ha against a potential above 3 t/ha. Sources: iita.org news item 15511; bulletin.iita.org soybean business incubation article. Flagged for agronomist review."
+    "notes": "Not stated in the IITA guide, so taken from web sources. IITA project report: farmer yields from developed varieties 0.8-1.2 t/ha. IITA-partnered trials of TGx 1448-2E: 2.0-2.5 t/ha on average, ranging from 0.7 t/ha (Badeggi) to 2.8 t/ha (Ibadan, irrigated). A study citing Ronner et al. 2016 gives Nigeria's average as below 1 t/ha against a potential above 3 t/ha. Sources: iita.org news item 15511; bulletin.iita.org soybean business incubation article. Flagged for agronomist review. Updated 2026-10-25: the earlier expected figure was 0.8 - 2.5 (tonnes), from older sources. FAO's national average for 2024 is 1.02 t/ha, so that figure was replaced; see harvest_estimate for the sources."
   },
   "yield_validation": {
     "unit": "t/ha",
@@ -461,6 +461,55 @@
       "changed_by": "CEO, acting as agronomist, via the Farm Jobs Check page (answers received 2026-10-23)",
       "summary": "Added the hard-block yield ceiling: more than 6 t/ha is blocked as a probable unit error. Everything else is unchanged and still provisional.",
       "source": "CEO answer to the soybean ceiling question."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-25",
+      "changed_by": "AgTrail Knowledge Base - harvest estimates backed by current research",
+      "summary": "Added harvest_estimate: typical yield 1.02 t/ha (FAO national average, 2024), the normal range, the expected harvest window and sources. The earlier expected yield (0.8 - 2.5) was replaced because current national figures are lower.",
+      "source": "FAOSTAT via Our World in Data; IITA"
     }
-  ]
+  ],
+  "harvest_estimate": {
+    "as_of": "2026-10-25",
+    "per": "season",
+    "yield_basis": "grain",
+    "yield_t_per_ha": {
+      "typical": 1.02,
+      "normal_low": 0.7,
+      "normal_high": 3.0,
+      "national_recent_low": 1.02,
+      "national_recent_high": 1.2
+    },
+    "harvest_window": {
+      "after": "planting",
+      "min_days": 90,
+      "max_days": 120
+    },
+    "confidence": 0.5,
+    "method": "Typical is the FAO national average for Nigeria in 2024. The normal range is the standard range the crop's yield checks already use (the CEO's ruleset; for soybean, the IITA-based range). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
+    "caveats": [
+      "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
+      "FAO's national figures for Nigeria are compiled from national reports and FAO estimates and move little from year to year.",
+      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care."
+    ],
+    "sources": [
+      {
+        "title": "FAOSTAT, Production: Crops and livestock products, Nigeria national yield 1961 to 2024 (via Our World in Data)",
+        "publisher": "FAO, processed by Our World in Data",
+        "url": "https://ourworldindata.org/grapher/soybean-yields",
+        "figure": "1.02 t/ha in 2024; 1.02 to 1.2 t/ha across 2020 to 2024",
+        "year": 2024,
+        "opened": "2026-10-25"
+      },
+      {
+        "title": "IITA, Farmers' Guide to Soybean Production in Northern Nigeria and IITA news item on soybean yields (the CEO's ruleset has no soybean section)",
+        "publisher": "IITA",
+        "url": "https://iita.org/?p=15511",
+        "figure": "current average yields of the developed varieties 0.8 to 1.2 t/ha; trial sites 0.7 to 2.8 t/ha (article dated 4 April 2020)",
+        "year": 2020,
+        "opened": "2026-10-25"
+      }
+    ]
+  }
 }

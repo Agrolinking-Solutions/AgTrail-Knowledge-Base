@@ -68,6 +68,19 @@ def crop_steps(crop_id: str) -> dict:
     return {"crop_id": crop_id, "steps": steps}
 
 
+def harvest_estimate(crop_id: str) -> dict:
+    """
+    What a farm of this crop typically harvests, with its sources, or {"available": False} when the
+    crop has no current research behind it yet. Raises CropNotFoundError for a crop with no file.
+    """
+    from .loader import load_crop
+
+    block = load_crop(crop_id).get("harvest_estimate")
+    if not block:
+        return {"crop_id": crop_id, "available": False, "reason": "No current research is recorded for this crop yet, so no estimate is given."}
+    return {"crop_id": crop_id, "available": True, **block}
+
+
 def signal_categories() -> list[str]:
     return [c["id"] for c in taxonomy()["categories"]]
 
