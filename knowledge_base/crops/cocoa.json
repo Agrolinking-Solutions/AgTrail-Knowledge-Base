@@ -10,7 +10,7 @@
       "Nigeria - Southwest rainforest belt",
       "Nigeria - Cross River"
     ],
-    "current_version": "1.5.1"
+    "current_version": "1.5.2"
   },
   "growth_stages": [
     {
@@ -368,10 +368,13 @@
     "ph_max": 7.5,
     "texture": [
       "loam",
-      "sandy loam"
+      "sandy loam",
+      "clay loam",
+      "sandy clay loam"
     ],
     "drainage": "well-drained, deep soil",
-    "nitrogen_needs": "medium"
+    "nitrogen_needs": "medium",
+    "texture_source": "Yara, cocoa nutrition guide, 'Soils, liming and salinity in cocoa production' (opened 26 Oct 2026): 'Sandy clay loam to clay loam soils are the most productive.' Adds clay loam and sandy clay loam as preferred. No avoid list: the sources opened name no soil cocoa cannot grow on."
   },
   "weather_preferences": {
     "rainfall_mm_min_cycle": 1500,
@@ -520,6 +523,13 @@
       "changed_by": "AgTrail Knowledge Base - harvest estimate range capped",
       "summary": "The high end of the harvest estimate range was 1.5 t/ha (the ruleset's best case). Per CEO decision it is now capped at twice the typical yield, 0.54 t/ha, so the range is closer to what farms really get. The yield checks are unchanged; the old figure is kept as ruleset_high.",
       "source": "CEO decision, 25 Oct 2026; FAOSTAT via Our World in Data (typical yield)"
+    },
+    {
+      "version": "1.5.2",
+      "date": "2026-10-26",
+      "changed_by": "AgTrail Knowledge Base - soil research",
+      "summary": "Added clay loam and sandy clay loam to the preferred textures: the most productive soils for cocoa per Yara's guide. No avoid list.",
+      "source": "Yara, cocoa nutrition guide (Soils, liming and salinity in cocoa production)"
     }
   ],
   "yield_validation": {

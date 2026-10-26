@@ -38,11 +38,31 @@ def test_soybean_does_badly_on_sand_and_accepts_the_rest():
 
 
 def test_only_sourced_avoid_lists_exist():
-    # Nothing but soybean's sand is sourced yet; do not add others without a source.
+    # Soybean's sand and groundnut's clay-heavy soils are sourced; do not add others without a source.
     from engine.loader import load_crop
 
     avoid = {c: load_crop(c)["soil_requirements"].get("texture_avoid") for c in ("maize", "rice", "cassava", "cocoa", "groundnut", "sorghum", "soybean")}
-    assert {c: a for c, a in avoid.items() if a} == {"soybean": ["sand"]}
+    assert {c: a for c, a in avoid.items() if a} == {"soybean": ["sand"], "groundnut": ["clay loam", "sandy clay", "clay"]}
+
+
+def test_every_avoid_list_names_its_source():
+    from engine.loader import load_crop
+
+    for crop in ("groundnut",):
+        req = load_crop(crop)["soil_requirements"]
+        assert req["texture_avoid"] and "opened 26 Oct 2026" in req["texture_avoid_source"]
+
+
+def test_groundnut_avoids_heavy_clay_and_is_fine_on_sandy_loam():
+    assert taxonomy.soil_match("groundnut", "clay")["status"] == "avoid"
+    assert taxonomy.soil_match("groundnut", "sandy_clay")["status"] == "avoid"
+    assert taxonomy.soil_match("groundnut", "clay_loam")["status"] == "avoid"
+    assert taxonomy.soil_match("groundnut", "sandy_loam")["status"] == "preferred"
+    assert taxonomy.soil_match("groundnut", "loam")["status"] == "not_listed"
+
+
+def test_cocoa_prefers_clay_loam():
+    assert taxonomy.soil_match("cocoa", "clay_loam")["status"] == "preferred"
 
 
 def test_endpoint_returns_the_match_and_404s_an_unknown_crop():
