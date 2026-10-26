@@ -15,6 +15,7 @@ the server is running.
 from __future__ import annotations
 
 import hashlib
+from typing import Optional
 import json
 from datetime import date
 
@@ -102,6 +103,18 @@ _NOT_MODIFIED = {304: {"description": "Unchanged since the ETag in If-None-Match
 def get_taxonomy(request: Request) -> Response:
     """The shared operation categories and the operation_id mapping. Every row is UNVERIFIED until approved."""
     return _cached_json(request, taxonomy_data.taxonomy())
+
+
+@app.get("/v1/crops/{crop_id}/soil-match", responses={404: {"description": "Unrecognized crop_id"}}, tags=["reference data"])
+def get_soil_match(crop_id: str, soil: Optional[str] = None) -> dict:
+    """
+    How a farm's recorded soil (AgTrail's soil_type, e.g. sandy_loam) compares with what this crop
+    prefers: preferred, avoid, not_listed or unknown. Only `avoid` should change an estimate.
+    """
+    try:
+        return taxonomy_data.soil_match(crop_id, soil)
+    except CropNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @app.get("/v1/crops/{crop_id}/harvest-estimate", responses={**_NOT_MODIFIED, 404: {"description": "Unrecognized crop_id"}}, tags=["reference data"])

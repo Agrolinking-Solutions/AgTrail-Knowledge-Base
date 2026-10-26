@@ -81,6 +81,32 @@ def harvest_estimate(crop_id: str) -> dict:
     return {"crop_id": crop_id, "available": True, **block}
 
 
+def soil_match(crop_id: str, soil: Optional[str]) -> dict:
+    """
+    How the soil AgTrail recorded for a farm compares with what the crop prefers. Status is one of:
+    preferred (the crop's own list names it), avoid (the crop file says the crop does badly on it),
+    not_listed (a known soil the crop file neither names nor warns against: no effect), or unknown
+    (no soil recorded, or a word we cannot place). Only `avoid` should change a number.
+    Raises CropNotFoundError for a crop with no file.
+    """
+    from .loader import load_crop
+
+    req = load_crop(crop_id).get("soil_requirements", {})
+    preferred = list(req.get("texture", []))
+    avoid = list(req.get("texture_avoid", []))
+    out = {"crop_id": crop_id, "soil": soil, "texture": None, "preferred": preferred, "avoid": avoid}
+    key = (soil or "").strip().lower().replace(" ", "_").replace("-", "_")
+    texture = _load_mapping("soil_types.json")["soils"].get(key)
+    if texture is None:
+        return {**out, "status": "unknown", "note": "No usable soil type is recorded for this farm, so the soil is not taken into account."}
+    out["texture"] = texture
+    if texture in avoid:
+        return {**out, "status": "avoid", "note": f"The crop file says {crop_id} does badly on {texture} soil."}
+    if texture in preferred or (preferred and preferred[0].startswith("any except")):
+        return {**out, "status": "preferred", "note": f"{texture.capitalize()} is a soil this crop does well on."}
+    return {**out, "status": "not_listed", "note": f"{texture.capitalize()} is neither listed as preferred nor warned against for this crop, so it does not change the estimate."}
+
+
 def signal_categories() -> list[str]:
     return [c["id"] for c in taxonomy()["categories"]]
 

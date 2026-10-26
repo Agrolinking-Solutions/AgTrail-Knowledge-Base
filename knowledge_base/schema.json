@@ -304,6 +304,13 @@
             "type": "string"
           }
         },
+        "texture_avoid": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Soil textures (as named in mappings/soil_types.json) this crop does badly on. Only fill from a source: an entry here lowers the harvest estimate's high end for farms on that soil."
+        },
         "drainage": {
           "type": "string"
         },

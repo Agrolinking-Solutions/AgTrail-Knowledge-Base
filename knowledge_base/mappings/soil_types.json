@@ -1,0 +1,15 @@
+{
+  "_about": "Maps the soil words AgTrail sends on a farm (soil_type) to the texture names used in each crop's soil_requirements. A word not listed here, or 'Not recorded', is treated as unknown: it is never guessed.",
+  "source": "Values seen in live AgTrail farm messages, 26 Oct 2026",
+  "soils": {
+    "loam": "loam",
+    "sandy_loam": "sandy loam",
+    "silty_loam": "silt loam",
+    "sandy": "sand",
+    "clay_loam": "clay loam",
+    "sandy_clay": "sandy clay",
+    "clay": "clay",
+    "silt": "silt",
+    "chalky": "chalky"
+  }
+}
