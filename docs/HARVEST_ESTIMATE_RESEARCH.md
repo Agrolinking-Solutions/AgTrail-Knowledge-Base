@@ -32,3 +32,20 @@ The earlier "expected yield" figures were higher than current national figures f
 
 ## To refresh (once a year, after FAOSTAT publishes a new year)
 Download `https://ourworldindata.org/grapher/<crop>-yields.csv?v=1&csvType=full&useColumnShortNames=true`, keep the Nigeria rows, update `typical`, `national_recent_low`, `national_recent_high` and `as_of` in each crop's `harvest_estimate`, and bump the file's version.
+
+## Soil research (26 Oct 2026)
+
+The estimate compares a farm's recorded soil with what the crop prefers. Only a soil the crop file says the crop does badly on (`texture_avoid`) changes a number: the high end is held at the typical yield. An avoid entry needs a source that was opened.
+
+**Added**
+- Groundnut avoids clay loam, sandy clay and clay. Source: ARC Grain Crops Institute (South Africa), "Groundnut production: a concise guide" by AJ Cilliers, as published in Farmer's Weekly, 16 Dec 2017. The topsoil should have under 20% clay so the pegs can penetrate, and a high clay content may break the pegs at harvest. One source from outside Nigeria.
+- Cocoa prefers clay loam and sandy clay loam in addition to loam and sandy loam. Source: Yara, "Soils, liming and salinity in cocoa production": sandy clay loam to clay loam soils are the most productive.
+- Soybean avoids sand (from the existing soybean note).
+
+**Looked at and not used**
+- Maize: the IITA land preparation procedure treats sandy soil as workable; Nigerian suitability studies name fertility and climate, not texture, as the main limits. No avoid.
+- Cassava: a search summary said an IITA farming guide calls sandy and clayey soils "not the most suitable", but the IITA document link (Starting_a_cassava_farm.pdf) returned 404 and a second CGIAR page did not resolve, so it was not confirmed. No avoid.
+- Rice: a Nigerian flood-plain suitability paper (FUDMA Journal of Agriculture and Agricultural Technology, June 2022) was opened. It rates the studied soils suitable and says nothing against sandy soil. No avoid.
+- Sorghum: sources disagree (one pot study found sandy loam best and sandy clay least suitable; guides say sorghum tolerates heavy clay). Not opened in full. No avoid.
+
+**To get further:** the better route is AgTrail's own harvest results grouped by soil, which would measure the effect instead of reading it from foreign guides.

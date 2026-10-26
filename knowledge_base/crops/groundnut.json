@@ -10,7 +10,7 @@
       "Nigeria - Sudan Savanna",
       "Nigeria - Guinea Savanna"
     ],
-    "current_version": "1.2.1"
+    "current_version": "1.2.2"
   },
   "growth_stages": [
     {
@@ -293,7 +293,13 @@
       "sandy loam"
     ],
     "drainage": "well-drained, loose tilth (needed for peg penetration)",
-    "nitrogen_needs": "low"
+    "nitrogen_needs": "low",
+    "texture_avoid": [
+      "clay loam",
+      "sandy clay",
+      "clay"
+    ],
+    "texture_avoid_source": "ARC Grain Crops Institute (South Africa), 'Groundnut production: a concise guide' by AJ Cilliers, as published in Farmer's Weekly, 16 Dec 2017 (opened 26 Oct 2026): 'The topsoil should have a low clay content (below 20%) with a loose structure that the peg can penetrate freely' and 'A high clay content in the topsoil may cause the groundnut pegs to break at harvest.' Clay loam, sandy clay and clay all have more than 20% clay. One source from outside Nigeria; the effect is only to hold the estimate's high end at the typical yield."
   },
   "weather_preferences": {
     "rainfall_mm_min_cycle": 500,
@@ -431,6 +437,13 @@
       "changed_by": "AgTrail Knowledge Base - harvest estimate range capped",
       "summary": "The high end of the harvest estimate range was 2.5 t/ha (the ruleset's best case). Per CEO decision it is now capped at twice the typical yield, 2.5 t/ha, so the range is closer to what farms really get. The yield checks are unchanged; the old figure is kept as ruleset_high.",
       "source": "CEO decision, 25 Oct 2026; FAOSTAT via Our World in Data (typical yield)"
+    },
+    {
+      "version": "1.2.2",
+      "date": "2026-10-26",
+      "changed_by": "AgTrail Knowledge Base - soil research",
+      "summary": "Added texture_avoid (clay loam, sandy clay, clay): the crop needs topsoil with under 20% clay so the pegs can penetrate and the pods can be lifted at harvest.",
+      "source": "ARC Grain Crops Institute (South Africa) groundnut guide, via Farmer's Weekly, 16 Dec 2017"
     }
   ],
   "harvest_estimate": {
