@@ -10,7 +10,7 @@
       "Nigeria - Guinea Savanna",
       "Nigeria - Sudan Savanna"
     ],
-    "current_version": "1.2.1"
+    "current_version": "1.2.2"
   },
   "growth_stages": [
     {
@@ -297,7 +297,10 @@
       "any except sandy, gravelly or shallow soils"
     ],
     "drainage": "well-drained (avoid waterlogged soils and soils whose surface crusts)",
-    "nitrogen_needs": "low"
+    "nitrogen_needs": "low",
+    "texture_avoid": [
+      "sand"
+    ]
   },
   "weather_preferences": {
     "rainfall_mm_min_cycle": 700,
@@ -475,6 +478,13 @@
       "changed_by": "AgTrail Knowledge Base - harvest estimate range capped",
       "summary": "The high end of the harvest estimate range was 3.0 t/ha (the ruleset's best case). Per CEO decision it is now capped at twice the typical yield, 2.04 t/ha, so the range is closer to what farms really get. The yield checks are unchanged; the old figure is kept as ruleset_high.",
       "source": "CEO decision, 25 Oct 2026; FAOSTAT via Our World in Data (typical yield)"
+    },
+    {
+      "version": "1.2.2",
+      "date": "2026-10-26",
+      "changed_by": "AgTrail Knowledge Base - soil match",
+      "summary": "Added texture_avoid: sand, from this file's existing note that soybean does badly on sandy soils. Other crops have no avoid list yet because none is sourced.",
+      "source": "IITA (existing soybean soil note in this file)"
     }
   ],
   "harvest_estimate": {
