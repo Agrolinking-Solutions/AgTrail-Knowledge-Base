@@ -1,6 +1,6 @@
 {
   "_about": "Maps each Knowledge Base crop to the PIS commodity whose price should be used for its harvest estimate. conversion_factor turns Knowledge Base yield tonnes into tonnes of the product PIS prices. null means not sourced yet: do not show a naira value. Every row marked UNVERIFIED needs agronomist or PIS-team confirmation. 'reviewed-by-data' means the row only records that PIS has no series for that crop.",
-  "pis_source": "https://pis-api.agrolinking.com/commodities (checked 22 Oct 2026: 19 commodities)",
+  "pis_source": "https://pis-api.agrolinking.com/forecasts/{name} for the farm crops, and /commodities (document 'PIS prices for AgLens', 28 Oct 2026)",
   "crops": [
     {
       "crop_id": "cashew",
@@ -14,7 +14,7 @@
       "crop_id": "cassava",
       "pis_commodity": null,
       "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
+      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'. PIS confirmed on 28 Oct 2026 that it has no current source for cassava.",
       "price_status": "unpriced",
       "review_status": "reviewed-by-data"
     },
@@ -45,10 +45,10 @@
     {
       "crop_id": "cowpea",
       "pis_commodity": "Beans (white)",
-      "conversion_factor": null,
-      "conversion_note": "Cowpea may be priced as white or red beans depending on the variety, and PIS prices them separately. Not decided: needs an agronomist. Until then show tonnes only.",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. Beans (white) is dry white cowpea grain in NGN/kg (WFP shop price converted to wholesale); brown-seeded cowpea would use Beans (red). The yield is dry grain, so the factor is 1.0. This crop has no harvest estimate yet.",
       "price_status": "priced",
-      "review_status": "UNVERIFIED"
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "ginger",
@@ -60,11 +60,11 @@
     },
     {
       "crop_id": "groundnut",
-      "pis_commodity": null,
+      "pis_commodity": "Groundnut",
       "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices SHELLED nuts per kg. Our yield is in-shell groundnut, so it must be multiplied by the shelling percentage (kernel weight divided by in-shell weight) before this price applies. No Nigerian shelling percentage has been sourced, so the factor stays null and no naira value is shown.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "hibiscus",
@@ -84,11 +84,11 @@
     },
     {
       "crop_id": "ofsp",
-      "pis_commodity": null,
-      "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "pis_commodity": "Sweet potato",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices fresh ordinary sweet potato roots; no separate orange-fleshed price exists, so this is an approximation for OFSP. This crop has no harvest estimate yet.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "oil_palm",
@@ -100,11 +100,11 @@
     },
     {
       "crop_id": "onion",
-      "pis_commodity": null,
-      "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "pis_commodity": "Onion",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices dry bulbs per kg (rainy-season onions from August to January, dry-season from February to July). The yield is bulb weight, so the factor is 1.0. This crop has no harvest estimate yet.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "pearl_millet",
@@ -116,17 +116,17 @@
     },
     {
       "crop_id": "pepper",
-      "pis_commodity": null,
-      "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "pis_commodity": "Pepper",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices fresh pepper (tatashe) per kg; rodo and shombo are listed separately. Valid only because the yield is fresh weight.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "rice",
       "pis_commodity": "Rice (local)",
       "conversion_factor": null,
-      "conversion_note": "Knowledge Base yield is paddy; PIS 'Rice (local)' is milled rice. A milling factor is needed and has not been sourced. Until then no naira value should be shown for rice.",
+      "conversion_note": "Knowledge Base yield is paddy; PIS 'Rice (local)' is milled rice. A milling factor is needed and has not been sourced. Until then no naira value should be shown for rice. PIS confirmed on 28 Oct 2026 that Rice (local) is MILLED rice and that it has no paddy price (the daily rice exchange price is probably paddy but is not used: its source label changed and it moves 10 to 20 percent a day). Keep rice unvalued until a paddy price or a milling factor is sourced.",
       "price_status": "priced",
       "review_status": "UNVERIFIED"
     },
@@ -164,11 +164,11 @@
     },
     {
       "crop_id": "tomato",
-      "pis_commodity": null,
-      "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "pis_commodity": "Tomato",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices fresh ordinary (open-field) tomatoes per kg; hybrid tomatoes are listed separately. The yield is fresh fruit weight, so the factor is 1.0.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     },
     {
       "crop_id": "vitamin_a_cassava",
@@ -188,11 +188,11 @@
     },
     {
       "crop_id": "yam",
-      "pis_commodity": null,
-      "conversion_factor": null,
-      "conversion_note": "No PIS price series yet. Show tonnes only and the message 'no price series yet'.",
-      "price_status": "unpriced",
-      "review_status": "reviewed-by-data"
+      "pis_commodity": "Yam",
+      "conversion_factor": 1.0,
+      "conversion_note": "Market price, not a farm-gate price (PIS has no regular farm-gate source for this crop): a harvest valued with it is what it would fetch in a market. PIS prices fresh yam tubers per kg; the yield is fresh tuber weight, so the factor is 1.0.",
+      "price_status": "priced",
+      "review_status": "reviewed-by-PIS (28 Oct 2026)"
     }
   ],
   "pis_commodities_without_a_crop_file": {
