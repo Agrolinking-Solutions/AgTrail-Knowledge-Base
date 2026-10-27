@@ -49,3 +49,20 @@ The estimate compares a farm's recorded soil with what the crop prefers. Only a 
 - Sorghum: sources disagree (one pot study found sandy loam best and sandy clay least suitable; guides say sorghum tolerates heavy clay). Not opened in full. No avoid.
 
 **To get further:** the better route is AgTrail's own harvest results grouped by soil, which would measure the effect instead of reading it from foreign guides.
+
+## Yam, tomato and pepper (27 Oct 2026)
+
+Three more crops have an estimate: **yam 8.15 t/ha** (fresh tubers), **tomato 4.53** (fresh fruit) and **pepper 7.37** (green fruit, added up over the whole harvest period).
+
+**Source:** FAOSTAT, Production: Crops and livestock products, bulk download for Africa (`Production_Crops_Livestock_E_Africa.zip`), Nigeria, element Yield, opened and read on 27 Oct 2026. Our World in Data has no page for these crops, and FAOSTAT's data service needs a login, so the public bulk file was used. The file reports yield in kg per hectare.
+
+**How weak the evidence is:** FAO flags the 2024 yield for all three as its own estimate (flag E), not a figure reported by Nigeria. Yam's 2019 figure was official (7.81 t/ha). Tomato moved between 3.4 and 7.6 t/ha in ten years. Pepper is almost flat (7.37 to 7.62 over ten years), which looks modelled. Confidence is 0.5 for yam and 0.4 for tomato and pepper, and each caveat says so.
+
+**Normal range:** the low end and best case come from the CEO's yield checks (yam 5 to 25, tomato 2 to 15, pepper 1 to 10), with the best case capped at twice the typical yield as for the other crops (yam 16.3, tomato 9.06, pepper 10.0).
+
+**Harvest dates:** yam has a window (180 to 270 days after planting, from its timing rules). Tomato, onion and pepper rules give only the earliest sensible harvest (50, 75 and 60 days after transplanting) and no latest date, so no window is invented: the estimate says so (`timing_note`).
+
+**Not added, because the sources disagree:**
+- **Dry onion:** FAO's national average is 2.7 t/ha (an estimate), below the CEO's lowest normal yield of 5 t/ha.
+- **Sweet potato (and OFSP):** FAO's national average is 2.7 t/ha, below the CEO's lowest normal yield of 4 t/ha for OFSP. A national sweet potato average is also not specific to orange-fleshed varieties.
+These stay "no current research recorded yet" until someone reconciles the two, for example with the World Bank farm survey.

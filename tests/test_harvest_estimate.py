@@ -17,8 +17,8 @@ client = TestClient(app)
 WITH_ESTIMATE = sorted(p.stem for p in CROPS_DIR.glob("*.json") if "harvest_estimate" in json.loads(p.read_text()))
 
 
-def test_the_seven_researched_crops_have_an_estimate():
-    assert WITH_ESTIMATE == ["cassava", "cocoa", "groundnut", "maize", "rice", "sorghum", "soybean"]
+def test_the_ten_researched_crops_have_an_estimate():
+    assert WITH_ESTIMATE == ["cassava", "cocoa", "groundnut", "maize", "pepper", "rice", "sorghum", "soybean", "tomato", "yam"]
 
 
 @pytest.mark.parametrize("crop", WITH_ESTIMATE)
@@ -59,7 +59,10 @@ def test_every_estimate_is_dated_cited_and_says_what_it_cannot_do(crop):
     assert 0 < b["confidence"] <= 1
 
 
-@pytest.mark.parametrize("crop", [c for c in WITH_ESTIMATE if c != "cocoa"])
+WITH_WINDOW = [c for c in WITH_ESTIMATE if json.loads((CROPS_DIR / f"{c}.json").read_text())["harvest_estimate"]["harvest_window"]]
+
+
+@pytest.mark.parametrize("crop", WITH_WINDOW)
 def test_the_harvest_window_matches_the_crops_own_timing_rules(crop):
     w = load_crop(crop)["harvest_estimate"]["harvest_window"]
     rules = [r for r in load_crop(crop)["validation_rules"] if r["operation_id"] == "harvest" and r.get("depends_on_operation_id") == w["after"]]
@@ -98,3 +101,25 @@ def test_the_endpoint_serves_the_block_with_caching_and_404s_an_unknown_crop():
     assert client.get("/v1/crops/maize/harvest-estimate", headers={"If-None-Match": first.headers["etag"]}).status_code == 304
     assert client.get("/v1/crops/not_a_crop/harvest-estimate").status_code == 404
     assert taxonomy.harvest_estimate("maize")["as_of"] == body["as_of"]
+
+
+def test_a_crop_without_a_harvest_window_says_why_unless_it_is_a_tree_crop():
+    for crop in WITH_ESTIMATE:
+        b = load_crop(crop)["harvest_estimate"]
+        if b["harvest_window"] is None and crop != "cocoa":
+            assert b.get("timing_note"), crop
+            assert "no harvest window" in b["timing_note"].lower()
+
+
+def test_the_weak_fao_figures_are_flagged_and_lower_confidence():
+    for crop in ("yam", "tomato", "pepper"):
+        b = load_crop(crop)["harvest_estimate"]
+        assert b["confidence"] <= 0.5
+        assert any("estimate" in c.lower() and "flag E" in c for c in b["caveats"]), crop
+        assert "flag E" in b["sources"][0]["figure"]
+
+
+def test_onion_and_sweet_potato_stay_without_an_estimate_because_the_sources_disagree():
+    # FAO's national averages (2.7 t/ha) sit below the CEO's own lowest normal yield (onion 5, OFSP 4).
+    for crop in ("onion", "ofsp"):
+        assert "harvest_estimate" not in load_crop(crop)

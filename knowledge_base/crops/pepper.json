@@ -6,120 +6,330 @@
     "category": "vegetable",
     "crop_cycle_type": "annual",
     "typical_duration_days": 150,
-    "regions": ["Nigeria - nationwide (smallholder cultivation)"],
-    "current_version": "1.1.3"
+    "regions": [
+      "Nigeria - nationwide (smallholder cultivation)"
+    ],
+    "current_version": "1.2.0"
   },
-
   "growth_stages": [
-    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -45, "ends_day_after_planting": 0, "description": "Seedlings raised on clean beds from disease-free seed for 30-45 days before transplanting. Day 0 is transplanting, not seed sowing -- same convention as tomato.json." },
-    { "stage_id": "vegetative_growth", "name": "Vegetative Growth", "starts_day_after_planting": 1, "ends_day_after_planting": 40, "description": "Vegetative growth after transplanting." },
-    { "stage_id": "flowering_initial_fruiting", "name": "Flowering & Initial Fruiting", "starts_day_after_planting": 41, "ends_day_after_planting": 60, "description": "Flowering and first fruit set." },
-    { "stage_id": "harvesting", "name": "Harvesting", "starts_day_after_planting": 61, "ends_day_after_planting": 150, "description": "Repeated weekly/bi-weekly picking over months. The source ruleset gives this stage as '61-150+ DAT', i.e. open-ended -- 150 is used here as this crop file's typical_duration_days, not a stated ceiling." }
+    {
+      "stage_id": "nursery",
+      "name": "Nursery",
+      "starts_day_after_planting": -45,
+      "ends_day_after_planting": 0,
+      "description": "Seedlings raised on clean beds from disease-free seed for 30-45 days before transplanting. Day 0 is transplanting, not seed sowing -- same convention as tomato.json."
+    },
+    {
+      "stage_id": "vegetative_growth",
+      "name": "Vegetative Growth",
+      "starts_day_after_planting": 1,
+      "ends_day_after_planting": 40,
+      "description": "Vegetative growth after transplanting."
+    },
+    {
+      "stage_id": "flowering_initial_fruiting",
+      "name": "Flowering & Initial Fruiting",
+      "starts_day_after_planting": 41,
+      "ends_day_after_planting": 60,
+      "description": "Flowering and first fruit set."
+    },
+    {
+      "stage_id": "harvesting",
+      "name": "Harvesting",
+      "starts_day_after_planting": 61,
+      "ends_day_after_planting": 150,
+      "description": "Repeated weekly/bi-weekly picking over months. The source ruleset gives this stage as '61-150+ DAT', i.e. open-ended -- 150 is used here as this crop file's typical_duration_days, not a stated ceiling."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing/bed formation. NOTE: the source ruleset's Stage 1 also names a rotation check here ('avoid planting immediately after tomato -- they share bacterial wilt and viruses; system flags this from plot history') that this knowledge base's engine cannot currently implement -- see version_history for why, flagged for the end-of-round engine review.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sowing seed in nursery beds on clean, disease-free ground.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Moving seedlings from nursery to the field at ~60cm x 50cm spacing, with basal manure + NPK. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "staking", "name": "Staking", "category": "crop_management", "description": "Staking of tall pepper types.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "weeding", "name": "Weeding", "category": "crop_management", "description": "Regular weed control.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "split_fertilizer", "name": "Split Fertilizer Application", "category": "input_application", "description": "Fertilizer applied in split doses across the season to sustain the crop through its long fruiting window -- unlike a single-harvest cereal, one basal dose is not enough to carry a plant that keeps fruiting for months.", "requires_evidence": true, "can_repeat": true, "optional": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Pepper Veinal Mottle Virus (PVMV), mites, and fruit fly monitoring/vector control.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "harvest", "name": "Harvest (Picking)", "category": "harvest", "description": "Picking ripe fruit. Like tomato, this REPEATS many times across months as successive fruit ripen -- there is no single terminal harvest event. The source ruleset also specifies a rotation-check ('avoid planting immediately after tomato') referenced on the land_preparation operation -- that rule is STILL not implemented, since it requires checking a different crop's plot history, a Group C item beyond this engine-fixes pass's scope. The harvest-frequency data-integrity check ('more than 3 times in 7 days is blocked, flag if >2/week'), which was ALSO previously unimplemented, is now implemented -- see pepper_r_harvest_frequency_block/warn in validation_rules.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "post_harvest_handling", "name": "Post-Harvest Handling", "category": "post_harvest", "description": "Moving picked ripe fruit quickly to market, or promptly drying chili-type pods.", "requires_evidence": false, "can_repeat": true, "optional": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Ploughing/bed formation. NOTE: the source ruleset's Stage 1 also names a rotation check here ('avoid planting immediately after tomato -- they share bacterial wilt and viruses; system flags this from plot history') that this knowledge base's engine cannot currently implement -- see version_history for why, flagged for the end-of-round engine review.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "nursery_establishment",
+      "name": "Nursery Establishment",
+      "category": "land_prep",
+      "description": "Sowing seed in nursery beds on clean, disease-free ground.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "transplanting",
+      "name": "Transplanting",
+      "category": "planting",
+      "description": "Moving seedlings from nursery to the field at ~60cm x 50cm spacing, with basal manure + NPK. This is day 0 of the field lifecycle.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "staking",
+      "name": "Staking",
+      "category": "crop_management",
+      "description": "Staking of tall pepper types.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "weeding",
+      "name": "Weeding",
+      "category": "crop_management",
+      "description": "Regular weed control.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "split_fertilizer",
+      "name": "Split Fertilizer Application",
+      "category": "input_application",
+      "description": "Fertilizer applied in split doses across the season to sustain the crop through its long fruiting window -- unlike a single-harvest cereal, one basal dose is not enough to carry a plant that keeps fruiting for months.",
+      "requires_evidence": true,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Scouting/Control",
+      "category": "pest_disease_control",
+      "description": "Pepper Veinal Mottle Virus (PVMV), mites, and fruit fly monitoring/vector control.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Picking)",
+      "category": "harvest",
+      "description": "Picking ripe fruit. Like tomato, this REPEATS many times across months as successive fruit ripen -- there is no single terminal harvest event. The source ruleset also specifies a rotation-check ('avoid planting immediately after tomato') referenced on the land_preparation operation -- that rule is STILL not implemented, since it requires checking a different crop's plot history, a Group C item beyond this engine-fixes pass's scope. The harvest-frequency data-integrity check ('more than 3 times in 7 days is blocked, flag if >2/week'), which was ALSO previously unimplemented, is now implemented -- see pepper_r_harvest_frequency_block/warn in validation_rules.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "post_harvest_handling",
+      "name": "Post-Harvest Handling",
+      "category": "post_harvest",
+      "description": "Moving picked ripe fruit quickly to market, or promptly drying chili-type pods.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "land_preparation", "required": true },
-    { "step_number": 3, "operation_id": "nursery_establishment", "required": true },
-    { "step_number": 4, "operation_id": "transplanting", "required": true },
-    { "step_number": 5, "operation_id": "staking", "required": false },
-    { "step_number": 6, "operation_id": "weeding", "required": true, "repeat_until": null },
-    { "step_number": 7, "operation_id": "split_fertilizer", "required": false, "repeat_until": null },
-    { "step_number": 8, "operation_id": "pest_disease_control", "required": false, "repeat_until": null },
-    { "step_number": 9, "operation_id": "harvest", "required": true, "repeat_until": null },
-    { "step_number": 10, "operation_id": "post_harvest_handling", "required": false, "repeat_until": null }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "nursery_establishment",
+      "required": true
+    },
+    {
+      "step_number": 4,
+      "operation_id": "transplanting",
+      "required": true
+    },
+    {
+      "step_number": 5,
+      "operation_id": "staking",
+      "required": false
+    },
+    {
+      "step_number": 6,
+      "operation_id": "weeding",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 7,
+      "operation_id": "split_fertilizer",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 8,
+      "operation_id": "pest_disease_control",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 9,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 10,
+      "operation_id": "post_harvest_handling",
+      "required": false,
+      "repeat_until": null
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "pepper_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation cannot be logged before land clearing. Interval not independently stated for pepper in the source ruleset -- carried over as the default used across this knowledge base's other crop files, same pattern as tomato_r1. Flagged for review.",
+      "rule_id": "pepper_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing. Interval not independently stated for pepper in the source ruleset -- carried over as the default used across this knowledge base's other crop files, same pattern as tomato_r1. Flagged for review.",
       "source": "General cross-crop default (same pattern as tomato.json, maize.json)."
     },
     {
-      "rule_id": "pepper_r2", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Nursery is normally started around the time land clearing/preparation begins, since it runs for several weeks while the main field is prepared in parallel. Same unsourced-default pattern as tomato_r2. Flagged for review.",
+      "rule_id": "pepper_r2",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Nursery is normally started around the time land clearing/preparation begins, since it runs for several weeks while the main field is prepared in parallel. Same unsourced-default pattern as tomato_r2. Flagged for review.",
       "source": "General cross-reference with tomato.json's analogous rule -- not independently sourced for pepper timing specifically."
     },
     {
-      "rule_id": "pepper_r_land_prep_gate", "operation_id": "transplanting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation must be logged at least 1 day before transplanting, and no more than 21 days before it.", "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "rule_id": "pepper_r_land_prep_gate",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation must be logged at least 1 day before transplanting, and no more than 21 days before it.",
+      "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
     },
     {
-      "rule_id": "pepper_r_nursery_duration", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 30, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "The source ruleset states the nursery duration as '30-45 days on clean beds' descriptively, without the explicit separate hard-block/soft-warning wording it gives tomato's nursery rule (tomato_r3/tomato_r3b in tomato.json, which has an explicit 15-45 day hard block plus a narrower 21-35 day warning band). No hard block is invented here that the source doesn't itself state for this crop -- implemented as a single warning band matching the source's stated 30-45 day range.",
+      "rule_id": "pepper_r_nursery_duration",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 30,
+      "max_days_after_dependency": 45,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "The source ruleset states the nursery duration as '30-45 days on clean beds' descriptively, without the explicit separate hard-block/soft-warning wording it gives tomato's nursery rule (tomato_r3/tomato_r3b in tomato.json, which has an explicit 15-45 day hard block plus a narrower 21-35 day warning band). No hard block is invented here that the source doesn't itself state for this crop -- implemented as a single warning band matching the source's stated 30-45 day range.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Recommended Varieties / Growth Stages."
     },
     {
-      "rule_id": "pepper_r_harvest_floor", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 50, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Hard block before 50 DAT. No upper block: the source doesn't specify one, and for an indeterminate multi-harvest crop that keeps fruiting for months, a late pick isn't the same kind of problem as a late single-harvest grain crop -- same reasoning as tomato_r7.",
+      "rule_id": "pepper_r_harvest_floor",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 50,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Hard block before 50 DAT. No upper block: the source doesn't specify one, and for an indeterminate multi-harvest crop that keeps fruiting for months, a late pick isn't the same kind of problem as a late single-harvest grain crop -- same reasoning as tomato_r7.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 4."
     },
     {
-      "rule_id": "pepper_r_harvest_early_warn", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 60, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Flag before 60 DAT. Sits above the 50-day hard-block floor: harvest logged between 50 and 60 days is physically accepted but flagged, since the stated typical window starts at ~60 DAT.",
+      "rule_id": "pepper_r_harvest_early_warn",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 60,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Flag before 60 DAT. Sits above the 50-day hard-block floor: harvest logged between 50 and 60 days is physically accepted but flagged, since the stated typical window starts at ~60 DAT.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 4."
     },
     {
-      "rule_id": "pepper_r_harvest_frequency_block", "operation_id": "harvest", "depends_on_operation_id": null,
-      "max_occurrences": 3, "occurrence_window_days": 7, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "Harvesting logged more than 3 times in 7 days is blocked as anomalous data-padding. NEWLY IMPLEMENTED in the engine-fixes pass following the Medium-priority crop batch: this rule was previously flagged as entirely unimplementable, since the engine had no way to count occurrences of an operation within a rolling window -- it could only check a single date-offset from a dependency. Now uses max_occurrences/occurrence_window_days, added specifically to fix this rule (and rubber.json's analogous tapping/stimulation-frequency rules).",
+      "rule_id": "pepper_r_harvest_frequency_block",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "max_occurrences": 3,
+      "occurrence_window_days": 7,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Harvesting logged more than 3 times in 7 days is blocked as anomalous data-padding. NEWLY IMPLEMENTED in the engine-fixes pass following the Medium-priority crop batch: this rule was previously flagged as entirely unimplementable, since the engine had no way to count occurrences of an operation within a rolling window -- it could only check a single date-offset from a dependency. Now uses max_occurrences/occurrence_window_days, added specifically to fix this rule (and rubber.json's analogous tapping/stimulation-frequency rules).",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 4."
     },
     {
-      "rule_id": "pepper_r_harvest_frequency_warn", "operation_id": "harvest", "depends_on_operation_id": null,
-      "max_occurrences": 2, "occurrence_window_days": 7, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Flag if harvest is logged more than 2 times in 7 days (i.e. '>2/week'), a softer threshold than the 3-times hard block above -- the source states both thresholds together as one escalating rule.",
+      "rule_id": "pepper_r_harvest_frequency_warn",
+      "operation_id": "harvest",
+      "depends_on_operation_id": null,
+      "max_occurrences": 2,
+      "occurrence_window_days": 7,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Flag if harvest is logged more than 2 times in 7 days (i.e. '>2/week'), a softer threshold than the 3-times hard block above -- the source states both thresholds together as one escalating rule.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 4."
     },
     {
-      "rule_id": "pepper_r_postharvest", "operation_id": "post_harvest_handling", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "ESTIMATE, flagged explicitly: the source ruleset's Stage 4 guidance for pepper is qualitative only ('pick ripe fruit; move quickly to market or dry chili types promptly'), with no stated hour/day figure -- unlike tomato's analogous rule, which the ruleset gives explicit 24-48 hour and 72 hour figures for. This rule borrows tomato's 0-2 day warning window as a reasonable proxy for 'quickly,' since both are perishable Solanaceae fruit crops, but this is an estimate carried over by analogy, not an independently stated figure for pepper. Flagged for agronomist/ruleset-author confirmation rather than presented as sourced.",
+      "rule_id": "pepper_r_postharvest",
+      "operation_id": "post_harvest_handling",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "ESTIMATE, flagged explicitly: the source ruleset's Stage 4 guidance for pepper is qualitative only ('pick ripe fruit; move quickly to market or dry chili types promptly'), with no stated hour/day figure -- unlike tomato's analogous rule, which the ruleset gives explicit 24-48 hour and 72 hour figures for. This rule borrows tomato's 0-2 day warning window as a reasonable proxy for 'quickly,' since both are perishable Solanaceae fruit crops, but this is an estimate carried over by analogy, not an independently stated figure for pepper. Flagged for agronomist/ruleset-author confirmation rather than presented as sourced.",
       "source": "Estimated by analogy to tomato_r_postharvest in tomato.json (itself sourced to the AgTrail Master Agronomist & Validator Ruleset's tomato section) -- NOT independently stated for pepper in Section 13."
     },
     {
-      "rule_id": "pepper_r_global_order", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
+      "rule_id": "pepper_r_global_order",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence).",
       "source": "Inherited convention across this knowledge base."
     },
     {
-      "rule_id": "pepper_r_seq_land_preparation_nursery_establishment", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Land preparation must be logged at least 1 day before nursery establishment, and no more than 60 days before it.", "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- nursery_establishment could previously be logged with no land_preparation in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "pepper_r_seq_land_preparation_nursery_establishment",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Land preparation must be logged at least 1 day before nursery establishment, and no more than 60 days before it.",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- nursery_establishment could previously be logged with no land_preparation in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (60 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
-
   "soil_requirements": {
     "ph_min": 6.0,
     "ph_max": 6.8,
-    "texture": ["loam", "sandy loam"],
+    "texture": [
+      "loam",
+      "sandy loam"
+    ],
     "drainage": "well-drained",
     "nitrogen_needs": "medium"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 600,
     "rainfall_mm_max_cycle": 1250,
@@ -127,39 +337,106 @@
     "temp_c_max": 30,
     "notes": "Not covered numerically in the source ruleset section for this crop -- carried over as a placeholder from general West African pepper agronomy references, same caveat as yam.json's and groundnut.json's weather_preferences. Flagged for agronomist review."
   },
-
   "diseases": [
-    { "name": "Pepper Veinal Mottle Virus (PVMV)", "risk_stage_ids": ["vegetative_growth", "flowering_initial_fruiting", "harvesting"], "symptoms": "Vein clearing, mottling, leaf distortion; aphid-transmitted, named directly in the source ruleset alongside mites and fruit fly as the crop's core IPM targets.", "management": "Vector (aphid) control, resistant varieties where available, scouting through vegetative and fruiting stages.", "confidence": 0.75, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3 ('Manage Pepper Veinal Mottle Virus, mites and fruit fly through scouting and vector control')." },
-    { "name": "Bacterial Wilt", "risk_stage_ids": ["vegetative_growth", "flowering_initial_fruiting"], "symptoms": "Sudden whole-plant wilting; shared with tomato per the source ruleset's own rotation-check rationale.", "management": "Avoid planting pepper immediately after tomato on the same plot -- the source ruleset names this explicitly as the reason for its (currently unimplementable) rotation-check rule. Crop rotation more broadly, resistant varieties.", "confidence": 0.7, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 1 ('Avoid planting immediately after tomato -- they share bacterial wilt and viruses')." }
+    {
+      "name": "Pepper Veinal Mottle Virus (PVMV)",
+      "risk_stage_ids": [
+        "vegetative_growth",
+        "flowering_initial_fruiting",
+        "harvesting"
+      ],
+      "symptoms": "Vein clearing, mottling, leaf distortion; aphid-transmitted, named directly in the source ruleset alongside mites and fruit fly as the crop's core IPM targets.",
+      "management": "Vector (aphid) control, resistant varieties where available, scouting through vegetative and fruiting stages.",
+      "confidence": 0.75,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3 ('Manage Pepper Veinal Mottle Virus, mites and fruit fly through scouting and vector control')."
+    },
+    {
+      "name": "Bacterial Wilt",
+      "risk_stage_ids": [
+        "vegetative_growth",
+        "flowering_initial_fruiting"
+      ],
+      "symptoms": "Sudden whole-plant wilting; shared with tomato per the source ruleset's own rotation-check rationale.",
+      "management": "Avoid planting pepper immediately after tomato on the same plot -- the source ruleset names this explicitly as the reason for its (currently unimplementable) rotation-check rule. Crop rotation more broadly, resistant varieties.",
+      "confidence": 0.7,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 1 ('Avoid planting immediately after tomato -- they share bacterial wilt and viruses')."
+    }
   ],
-
   "pests": [
-    { "name": "Mites", "risk_stage_ids": ["vegetative_growth", "flowering_initial_fruiting", "harvesting"], "symptoms": "Leaf curling, bronzing, stippling from sap feeding.", "management": "Scouting and vector control per the source ruleset's IPM guidance.", "confidence": 0.6, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3." },
-    { "name": "Fruit Fly", "risk_stage_ids": ["flowering_initial_fruiting", "harvesting"], "symptoms": "Larvae develop inside ripening fruit, causing internal rot and premature drop.", "management": "Scouting and vector control per the source ruleset's IPM guidance; prompt harvest of ripe fruit reduces the window of exposure.", "confidence": 0.6, "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3." }
+    {
+      "name": "Mites",
+      "risk_stage_ids": [
+        "vegetative_growth",
+        "flowering_initial_fruiting",
+        "harvesting"
+      ],
+      "symptoms": "Leaf curling, bronzing, stippling from sap feeding.",
+      "management": "Scouting and vector control per the source ruleset's IPM guidance.",
+      "confidence": 0.6,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3."
+    },
+    {
+      "name": "Fruit Fly",
+      "risk_stage_ids": [
+        "flowering_initial_fruiting",
+        "harvesting"
+      ],
+      "symptoms": "Larvae develop inside ripening fruit, causing internal rot and premature drop.",
+      "management": "Scouting and vector control per the source ruleset's IPM guidance; prompt harvest of ripe fruit reduces the window of exposure.",
+      "confidence": 0.6,
+      "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Stage 3."
+    }
   ],
-
   "yield_model": {
-    "expected_yield_per_hectare": "1.0 - 20.0",
+    "expected_yield_per_hectare": "7.37 (Nigeria national average, FAO 2024 estimate); normal range 1.0 - 10.0",
     "unit": "tonnes, cumulative across the whole 3-4 month harvest window",
-    "factors": ["PVMV/mite/fruit fly pressure", "staking (for tall types)", "split fertilizer adherence across the long fruiting window", "harvest frequency/promptness"],
+    "factors": [
+      "PVMV/mite/fruit fly pressure",
+      "staking (for tall types)",
+      "split fertilizer adherence across the long fruiting window",
+      "harvest frequency/promptness"
+    ],
     "confidence": 0.75,
-    "notes": "Range taken directly from the source ruleset's Pass and first Warning tiers. Explicitly cumulative across the full multi-month picking season, not a single-event figure -- same framing the source ruleset uses for tomato."
+    "notes": "Range taken directly from the source ruleset's Pass and first Warning tiers. Explicitly cumulative across the full multi-month picking season, not a single-event figure -- same framing the source ruleset uses for tomato. Earlier expected yield, kept as the record of what was replaced: 1.0 - 20.0."
   },
-
   "yield_validation": {
     "unit": "t/ha",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Must be logged as a Disaster/Loss Event." },
-      { "condition_type": "less_than", "max": 1.0, "severity": "warning", "message": "Severe disease (e.g., PVMV) or early field abandonment." },
-      { "condition_type": "range", "min": 1.0, "max": 10.0, "severity": "pass", "message": "Standard cumulative smallholder yield." },
-      { "condition_type": "greater_than", "min": 10.0, "severity": "warning", "message": "Optimized GAP management; flag for review." },
-      { "condition_type": "greater_than", "min": 35.0, "severity": "block", "message": "Improbable open-field -- a single harvest likely logged as the total, or a unit typo." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "Must be logged as a Disaster/Loss Event."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 1.0,
+        "severity": "warning",
+        "message": "Severe disease (e.g., PVMV) or early field abandonment."
+      },
+      {
+        "condition_type": "range",
+        "min": 1.0,
+        "max": 10.0,
+        "severity": "pass",
+        "message": "Standard cumulative smallholder yield."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 10.0,
+        "severity": "warning",
+        "message": "Optimized GAP management; flag for review."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 35.0,
+        "severity": "block",
+        "message": "Improbable open-field -- a single harvest likely logged as the total, or a unit typo."
+      }
     ],
     "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026, Section 13 (Pepper), Yield Validation table. NOTE: the source table as written has an unaddressed gap between its stated '10.0-20.0 t/ha Soft Warning' tier and its '>35.0 t/ha Hard Block' tier, leaving 20.0-35.0 covered by neither -- same failure mode as yam.json and groundnut.json, which would make yield_validator.py raise an error on a plausible real value in that band. Resolved here by merging the source's two described warning bands ('10.0-20.0, Optimized GAP management' and the unaddressed 20.0-35.0 range) into a single greater_than 10.0 warning tier covering everything above Pass up to the Hard Block ceiling, rather than inventing a new numeric boundary the source doesn't state. Flagged for agronomist/ruleset-author confirmation."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -195,6 +472,56 @@
       "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
       "summary": "Added pepper_r_seq_land_preparation_nursery_establishment. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-27",
+      "changed_by": "AgTrail Knowledge Base - harvest estimate research",
+      "summary": "Added harvest_estimate: typical yield 7.37 t/ha (FAO national average, 2024, an FAO estimate), normal range 1.0 to 10.0 t/ha (ruleset low, best case capped at twice the typical) and its sources.",
+      "source": "FAOSTAT bulk download (Production: Crops and livestock products); AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
-  ]
+  ],
+  "harvest_estimate": {
+    "as_of": "2026-10-27",
+    "per": "season",
+    "yield_basis": "fresh green fruit, added up over the whole harvest period",
+    "yield_t_per_ha": {
+      "typical": 7.37,
+      "normal_low": 1.0,
+      "normal_high": 10.0,
+      "national_recent_low": 7.37,
+      "national_recent_high": 7.42,
+      "ruleset_high": 10.0
+    },
+    "harvest_window": null,
+    "confidence": 0.4,
+    "method": "Typical is the FAO national average for Nigeria in 2024. The low end is the crop's normal low from the yield checks (the CEO's ruleset). The high end is that ruleset's best case, capped at twice the typical yield, so it stays close to what farms really get (CEO decision, 25 Oct 2026). The harvest window is the expected window in the crop's timing rules, where they give one. The range is what is normal for a farm, not a forecast for this one.",
+    "caveats": [
+      "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
+      "FAO flags the 2024 figure for this crop as its own estimate (flag E), not a figure reported by Nigeria. It is weaker evidence than the figures for maize or soybean.",
+      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care.",
+      "The high end is capped at twice the typical yield (10.0 t/ha). The ruleset's own best case is 10.0 t/ha, which a well-run farm can reach but few farms do.",
+      "FAO's pepper figure barely changes (7.4 to 7.6 t/ha for ten years), which suggests it is a modelled value rather than a survey result.",
+      "The yield is the total picked over the whole harvest period, not one picking."
+    ],
+    "sources": [
+      {
+        "title": "FAOSTAT, Production: Crops and livestock products, Nigeria national yield (bulk download, Africa)",
+        "publisher": "FAO",
+        "url": "https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_Africa.zip",
+        "figure": "7.37 t/ha in 2024 (FAO estimate, flag E); 7.37 to 7.42 t/ha across 2020 to 2024",
+        "year": 2024,
+        "opened": "2026-10-27"
+      },
+      {
+        "title": "AgTrail Master Agronomist & Validator Ruleset, Pepper (Rodo / Tatashe / Sombo), yield validation",
+        "publisher": "Agrolinking Solutions Ltd. (CEO, acting as agronomist)",
+        "url": null,
+        "figure": "standard range 1.0 to 10.0 t/ha",
+        "year": 2026,
+        "opened": "2026-10-27"
+      }
+    ],
+    "timing_note": "The crop rules give the earliest sensible harvest (60 days after transplanting) but no latest date, because peppers are picked over several months, so no harvest window is shown."
+  }
 }
