@@ -6,173 +6,469 @@
     "category": "vegetable",
     "crop_cycle_type": "annual",
     "typical_duration_days": 120,
-    "regions": ["Nigeria - Northern (major production zone)", "Nigeria - nationwide (smallholder cultivation)"],
-    "current_version": "1.1.3"
+    "regions": [
+      "Nigeria - Northern (major production zone)",
+      "Nigeria - nationwide (smallholder cultivation)"
+    ],
+    "current_version": "1.2.0"
   },
-
   "growth_stages": [
-    { "stage_id": "nursery", "name": "Nursery", "starts_day_after_planting": -35, "ends_day_after_planting": 0, "description": "Seeds sown in a nursery bed, germinating in 5-7 days, grown for 3-5 weeks before transplanting. Day 0 is transplanting, not seed sowing." },
-    { "stage_id": "establishment", "name": "Establishment / vegetative growth", "starts_day_after_planting": 0, "ends_day_after_planting": 30, "description": "Root establishment and vegetative growth after transplanting." },
-    { "stage_id": "flowering", "name": "Flowering", "starts_day_after_planting": 31, "ends_day_after_planting": 50, "description": "Flower set begins; calcium demand rises sharply during this stage." },
-    { "stage_id": "fruiting_harvest", "name": "Fruiting and harvest", "starts_day_after_planting": 51, "ends_day_after_planting": 120, "description": "Fruit development and repeated harvest picking. Unlike a grain crop with one terminal harvest, tomato is picked repeatedly over several weeks as fruit ripens in successive flushes." }
+    {
+      "stage_id": "nursery",
+      "name": "Nursery",
+      "starts_day_after_planting": -35,
+      "ends_day_after_planting": 0,
+      "description": "Seeds sown in a nursery bed, germinating in 5-7 days, grown for 3-5 weeks before transplanting. Day 0 is transplanting, not seed sowing."
+    },
+    {
+      "stage_id": "establishment",
+      "name": "Establishment / vegetative growth",
+      "starts_day_after_planting": 0,
+      "ends_day_after_planting": 30,
+      "description": "Root establishment and vegetative growth after transplanting."
+    },
+    {
+      "stage_id": "flowering",
+      "name": "Flowering",
+      "starts_day_after_planting": 31,
+      "ends_day_after_planting": 50,
+      "description": "Flower set begins; calcium demand rises sharply during this stage."
+    },
+    {
+      "stage_id": "fruiting_harvest",
+      "name": "Fruiting and harvest",
+      "starts_day_after_planting": 51,
+      "ends_day_after_planting": 120,
+      "description": "Fruit development and repeated harvest picking. Unlike a grain crop with one terminal harvest, tomato is picked repeatedly over several weeks as fruit ripens in successive flushes."
+    }
   ],
-
   "operations": [
-    { "operation_id": "land_clearing", "name": "Land Clearing", "category": "land_prep", "description": "Removal of vegetation/debris from the plot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "land_preparation", "name": "Land Preparation", "category": "land_prep", "description": "Ploughing, bed formation, ridging.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "nursery_establishment", "name": "Nursery Establishment", "category": "land_prep", "description": "Sowing seed in nursery beds or trays.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "transplanting", "name": "Transplanting", "category": "planting", "description": "Moving seedlings from nursery to the field. This is day 0 of the field lifecycle.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "staking", "name": "Staking", "category": "crop_management", "description": "Installing stakes/trellis to support plants and keep fruit off the ground.", "requires_evidence": false, "can_repeat": false, "optional": true },
-    { "operation_id": "first_fertilizer", "name": "First Fertilizer (NPK, vegetative growth)", "category": "input_application", "description": "Basal NPK application to support vegetative growth.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "weeding_1", "name": "First Weeding", "category": "crop_management", "description": "Manual or chemical weed control.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "second_fertilizer", "name": "Second Fertilizer (Calcium, flowering)", "category": "input_application", "description": "Calcium nitrate application timed to flowering; low calcium at this stage is linked to blossom end rot.", "requires_evidence": true, "can_repeat": false },
-    { "operation_id": "third_fertilizer", "name": "Third Fertilizer (Potassium, fruiting)", "category": "input_application", "description": "Potassium-focused application to support fruit development.", "requires_evidence": true, "can_repeat": false, "optional": true },
-    { "operation_id": "pruning", "name": "Pruning", "category": "crop_management", "description": "Removing lower leaves and suckers to direct energy to fruit production.", "requires_evidence": false, "can_repeat": true, "optional": true },
-    { "operation_id": "pest_disease_control", "name": "Pest & Disease Scouting/Control", "category": "pest_disease_control", "description": "Tuta absoluta (tomato leafminer) monitoring and control is the priority; also covers bacterial and fungal wilt management.", "requires_evidence": false, "can_repeat": true },
-    { "operation_id": "harvest", "name": "Harvest (Picking)", "category": "harvest", "description": "Fruit picking. Unlike an annual grain crop, this REPEATS many times across several weeks as successive fruit flushes ripen -- there is no single terminal harvest event.", "requires_evidence": true, "can_repeat": true },
-    { "operation_id": "post_harvest_handling", "name": "Post-Harvest Handling", "category": "post_harvest", "description": "Sorting and rapid sale/processing -- fresh tomato is highly perishable and does not store.", "requires_evidence": false, "can_repeat": true, "optional": true }
+    {
+      "operation_id": "land_clearing",
+      "name": "Land Clearing",
+      "category": "land_prep",
+      "description": "Removal of vegetation/debris from the plot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "land_preparation",
+      "name": "Land Preparation",
+      "category": "land_prep",
+      "description": "Ploughing, bed formation, ridging.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "nursery_establishment",
+      "name": "Nursery Establishment",
+      "category": "land_prep",
+      "description": "Sowing seed in nursery beds or trays.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "transplanting",
+      "name": "Transplanting",
+      "category": "planting",
+      "description": "Moving seedlings from nursery to the field. This is day 0 of the field lifecycle.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "staking",
+      "name": "Staking",
+      "category": "crop_management",
+      "description": "Installing stakes/trellis to support plants and keep fruit off the ground.",
+      "requires_evidence": false,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "first_fertilizer",
+      "name": "First Fertilizer (NPK, vegetative growth)",
+      "category": "input_application",
+      "description": "Basal NPK application to support vegetative growth.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "weeding_1",
+      "name": "First Weeding",
+      "category": "crop_management",
+      "description": "Manual or chemical weed control.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "second_fertilizer",
+      "name": "Second Fertilizer (Calcium, flowering)",
+      "category": "input_application",
+      "description": "Calcium nitrate application timed to flowering; low calcium at this stage is linked to blossom end rot.",
+      "requires_evidence": true,
+      "can_repeat": false
+    },
+    {
+      "operation_id": "third_fertilizer",
+      "name": "Third Fertilizer (Potassium, fruiting)",
+      "category": "input_application",
+      "description": "Potassium-focused application to support fruit development.",
+      "requires_evidence": true,
+      "can_repeat": false,
+      "optional": true
+    },
+    {
+      "operation_id": "pruning",
+      "name": "Pruning",
+      "category": "crop_management",
+      "description": "Removing lower leaves and suckers to direct energy to fruit production.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    },
+    {
+      "operation_id": "pest_disease_control",
+      "name": "Pest & Disease Scouting/Control",
+      "category": "pest_disease_control",
+      "description": "Tuta absoluta (tomato leafminer) monitoring and control is the priority; also covers bacterial and fungal wilt management.",
+      "requires_evidence": false,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "harvest",
+      "name": "Harvest (Picking)",
+      "category": "harvest",
+      "description": "Fruit picking. Unlike an annual grain crop, this REPEATS many times across several weeks as successive fruit flushes ripen -- there is no single terminal harvest event.",
+      "requires_evidence": true,
+      "can_repeat": true
+    },
+    {
+      "operation_id": "post_harvest_handling",
+      "name": "Post-Harvest Handling",
+      "category": "post_harvest",
+      "description": "Sorting and rapid sale/processing -- fresh tomato is highly perishable and does not store.",
+      "requires_evidence": false,
+      "can_repeat": true,
+      "optional": true
+    }
   ],
-
   "workflow": [
-    { "step_number": 1, "operation_id": "land_clearing", "required": true },
-    { "step_number": 2, "operation_id": "land_preparation", "required": true },
-    { "step_number": 3, "operation_id": "nursery_establishment", "required": true },
-    { "step_number": 4, "operation_id": "transplanting", "required": true },
-    { "step_number": 5, "operation_id": "staking", "required": false },
-    { "step_number": 6, "operation_id": "first_fertilizer", "required": true },
-    { "step_number": 7, "operation_id": "weeding_1", "required": true, "repeat_until": "harvest" },
-    { "step_number": 8, "operation_id": "second_fertilizer", "required": true },
-    { "step_number": 9, "operation_id": "third_fertilizer", "required": false },
-    { "step_number": 10, "operation_id": "pruning", "required": false, "repeat_until": null },
-    { "step_number": 11, "operation_id": "pest_disease_control", "required": true, "repeat_until": null },
-    { "step_number": 12, "operation_id": "harvest", "required": true, "repeat_until": null },
-    { "step_number": 13, "operation_id": "post_harvest_handling", "required": false, "repeat_until": null }
+    {
+      "step_number": 1,
+      "operation_id": "land_clearing",
+      "required": true
+    },
+    {
+      "step_number": 2,
+      "operation_id": "land_preparation",
+      "required": true
+    },
+    {
+      "step_number": 3,
+      "operation_id": "nursery_establishment",
+      "required": true
+    },
+    {
+      "step_number": 4,
+      "operation_id": "transplanting",
+      "required": true
+    },
+    {
+      "step_number": 5,
+      "operation_id": "staking",
+      "required": false
+    },
+    {
+      "step_number": 6,
+      "operation_id": "first_fertilizer",
+      "required": true
+    },
+    {
+      "step_number": 7,
+      "operation_id": "weeding_1",
+      "required": true,
+      "repeat_until": "harvest"
+    },
+    {
+      "step_number": 8,
+      "operation_id": "second_fertilizer",
+      "required": true
+    },
+    {
+      "step_number": 9,
+      "operation_id": "third_fertilizer",
+      "required": false
+    },
+    {
+      "step_number": 10,
+      "operation_id": "pruning",
+      "required": false,
+      "repeat_until": null
+    },
+    {
+      "step_number": 11,
+      "operation_id": "pest_disease_control",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 12,
+      "operation_id": "harvest",
+      "required": true,
+      "repeat_until": null
+    },
+    {
+      "step_number": 13,
+      "operation_id": "post_harvest_handling",
+      "required": false,
+      "repeat_until": null
+    }
   ],
-
   "validation_rules": [
     {
-      "rule_id": "tomato_r1", "operation_id": "land_preparation", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation cannot be logged before land clearing.",
+      "rule_id": "tomato_r1",
+      "operation_id": "land_preparation",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation cannot be logged before land clearing.",
       "source": "General extension guidance, interval not independently sourced for tomato specifically. Flagged for review, same caveat as similar rules in other crop files."
     },
     {
-      "rule_id": "tomato_r2", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_clearing",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Nursery is normally started around the time land clearing/preparation begins, since it runs for several weeks while the main field is prepared in parallel. Large gaps are flagged but not blocked.",
+      "rule_id": "tomato_r2",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_clearing",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Nursery is normally started around the time land clearing/preparation begins, since it runs for several weeks while the main field is prepared in parallel. Large gaps are flagged but not blocked.",
       "source": "General cross-reference with cocoa's nursery pattern; not independently sourced for tomato timing specifically."
     },
     {
-      "rule_id": "tomato_r_land_prep_gate", "operation_id": "transplanting", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Land preparation must be logged at least 1 day before transplanting, and no more than 21 days before it.", "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
+      "rule_id": "tomato_r_land_prep_gate",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Land preparation must be logged at least 1 day before transplanting, and no more than 21 days before it.",
+      "internal_note": "PLATFORM BUGFIX: this dependency rule did not exist at all in the original file, meaning transplanting could previously be logged with NO land_preparation in history whatsoever (not even same-day -- any day, or never). Added in response to a real bug the user found: land preparation needs to happen and be given at least a day before the next stage begins, not be skippable or same-day. min=1 day (not 0) so same-day submissions are also blocked, consistent with the same fix applied to every other crop file in this pass.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) matches the convention used for equivalent rules in this knowledge base's other annual/nursery-transplant crops."
     },
     {
-      "rule_id": "tomato_r3", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 15, "max_days_after_dependency": 45, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block if the nursery is under 15 or over 45 days. Previous version of this file used 21-35 as the block boundary itself, which was too strict, master ruleset uses 21-35 as a narrower WARNING band inside a wider 15-45 day hard block. See tomato_r3b for that narrower typical window.",
+      "rule_id": "tomato_r3",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 15,
+      "max_days_after_dependency": 45,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block if the nursery is under 15 or over 45 days. Previous version of this file used 21-35 as the block boundary itself, which was too strict, master ruleset uses 21-35 as a narrower WARNING band inside a wider 15-45 day hard block. See tomato_r3b for that narrower typical window.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- supersedes the earlier self-sourced 21-35 day hard block"
     },
     {
-      "rule_id": "tomato_r3b", "operation_id": "transplanting", "depends_on_operation_id": "nursery_establishment",
-      "min_days_after_dependency": 21, "max_days_after_dependency": 35, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "21-35 days is the typical window; outside it (but still inside the 15-45 day hard block) risks leggy, root-bound seedlings that yield poorly. This roughly matches what the previous version of this file already had, now correctly demoted from a block to a warning.",
+      "rule_id": "tomato_r3b",
+      "operation_id": "transplanting",
+      "depends_on_operation_id": "nursery_establishment",
+      "min_days_after_dependency": 21,
+      "max_days_after_dependency": 35,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "21-35 days is the typical window; outside it (but still inside the 15-45 day hard block) risks leggy, root-bound seedlings that yield poorly. This roughly matches what the previous version of this file already had, now correctly demoted from a block to a warning.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026; broadly consistent with Farmsquare and Skyline E-Learning's earlier-cited figures"
     },
     {
-      "rule_id": "tomato_r4b", "operation_id": "staking", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": null, "max_days_after_dependency": 30, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: staking should be done by 30 days after transplanting. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent (validation_rules only fire when an operation IS submitted, not when one is missing by a deadline; that kind of reminder belongs to the suggestions layer instead). What this rule CAN enforce: if staking IS logged, flag it as late when it happens after 30 days. Wet-season fruit left unstaked touches soil and rots.",
+      "rule_id": "tomato_r4b",
+      "operation_id": "staking",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 30,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: staking should be done by 30 days after transplanting. The source frames this as 'soft warning if not logged' by that point, an absence-based check this schema cannot directly represent (validation_rules only fire when an operation IS submitted, not when one is missing by a deadline; that kind of reminder belongs to the suggestions layer instead). What this rule CAN enforce: if staking IS logged, flag it as late when it happens after 30 days. Wet-season fruit left unstaked touches soil and rots.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
-      "rule_id": "tomato_r4", "operation_id": "first_fertilizer", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 14, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Basal NPK (e.g. 15:15:15) supports early vegetative growth and is typically applied at or shortly after transplanting.",
+      "rule_id": "tomato_r4",
+      "operation_id": "first_fertilizer",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 14,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Basal NPK (e.g. 15:15:15) supports early vegetative growth and is typically applied at or shortly after transplanting.",
       "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria (NPK 15:15:15 for growth stage, general timing)"
     },
     {
-      "rule_id": "tomato_r5", "operation_id": "weeding_1", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 14, "max_days_after_dependency": 21, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "First weeding recommended 2-3 weeks after transplanting.",
+      "rule_id": "tomato_r5",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 14,
+      "max_days_after_dependency": 21,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "First weeding recommended 2-3 weeks after transplanting.",
       "source": "General extension guidance carried over from the maize/cassava weeding pattern -- not independently sourced for tomato specifically. Flagged for review."
     },
     {
-      "rule_id": "tomato_r6", "operation_id": "second_fertilizer", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 28, "max_days_after_dependency": 42, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Calcium nitrate is applied around flowering; low calcium at this stage is specifically linked to blossom end rot. Window estimated from the flowering growth stage (roughly 31-50 days after transplanting) rather than a directly stated interval -- flagged as an estimate pending a firmer source.",
+      "rule_id": "tomato_r6",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 28,
+      "max_days_after_dependency": 42,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Calcium nitrate is applied around flowering; low calcium at this stage is specifically linked to blossom end rot. Window estimated from the flowering growth stage (roughly 31-50 days after transplanting) rather than a directly stated interval -- flagged as an estimate pending a firmer source.",
       "source": "Skyline E-Learning, Complete Guide to Tomato Farming in Nigeria (calcium nitrate 'for flowering' -- stage named but exact day range not given in the source, estimated against the flowering growth stage window)"
     },
     {
-      "rule_id": "tomato_r7", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 45, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block floor moved from 55 to 45 days, field tomato genuinely cannot set and ripen fruit in under 45 days from transplant. No upper block: the master ruleset doesn't specify one, and for an indeterminate multi-harvest crop that keeps fruiting for months, a late pick within the same cycle isn't the same kind of problem as a late single-harvest grain crop. The previous version's invented 110-day upper block is removed. Unlike maize or cassava, there is deliberately no rule limiting harvest to a single occurrence, tomato is picked repeatedly across many weeks, and can_repeat is true on both the operation and this rule.",
+      "rule_id": "tomato_r7",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 45,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "CORRECTED per the AgTrail Master Agronomist & Validator Ruleset: hard block floor moved from 55 to 45 days, field tomato genuinely cannot set and ripen fruit in under 45 days from transplant. No upper block: the master ruleset doesn't specify one, and for an indeterminate multi-harvest crop that keeps fruiting for months, a late pick within the same cycle isn't the same kind of problem as a late single-harvest grain crop. The previous version's invented 110-day upper block is removed. Unlike maize or cassava, there is deliberately no rule limiting harvest to a single occurrence, tomato is picked repeatedly across many weeks, and can_repeat is true on both the operation and this rule.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026 -- supersedes the earlier self-sourced 55-110 day range"
     },
     {
-      "rule_id": "tomato_r7b", "operation_id": "harvest", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 50, "max_days_after_dependency": null, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "CORRECTED: typical window floor moved from 60 to 50 days per the master ruleset ('flag before 50'). No upper warning either, for the same reason as tomato_r7's removed upper block. The earlier patent-derived maturity class data (very early under 70, through late over 100 days) is retained here as useful background on WHY harvest timing varies by variety, without being treated as an active bound.",
+      "rule_id": "tomato_r7b",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 50,
+      "max_days_after_dependency": null,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "CORRECTED: typical window floor moved from 60 to 50 days per the master ruleset ('flag before 50'). No upper warning either, for the same reason as tomato_r7's removed upper block. The earlier patent-derived maturity class data (very early under 70, through late over 100 days) is retained here as useful background on WHY harvest timing varies by variety, without being treated as an active bound.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026; maturity class background from USPTO hybrid tomato variety patent filings (retained from the earlier version)"
     },
     {
-      "rule_id": "tomato_r_postharvest", "operation_id": "post_harvest_handling", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 2, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: move harvested fruit to aggregation within 24-48 hours unless entering a cold chain. Checked against the most recent harvest pick, which is the correct behavior for a repeatable harvest operation like tomato's.",
+      "rule_id": "tomato_r_postharvest",
+      "operation_id": "post_harvest_handling",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 2,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "NEW rule, added per the AgTrail Master Agronomist & Validator Ruleset: move harvested fruit to aggregation within 24-48 hours unless entering a cold chain. Checked against the most recent harvest pick, which is the correct behavior for a repeatable harvest operation like tomato's.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
-      "rule_id": "tomato_r_postharvest_block", "operation_id": "post_harvest_handling", "depends_on_operation_id": "harvest",
-      "min_days_after_dependency": null, "max_days_after_dependency": 3, "can_repeat": true, "allow_backdate": false,
-      "severity": "block", "condition": "NEW rule: aggregation logged more than 72 hours after harvest is a hard block, unless the farm is explicitly using a cold chain, which this schema does not yet have a field to represent, flagged as a real limitation. Without that distinction, this rule will incorrectly block legitimate cold-chain-delayed handling; treat this as provisional until cold chain status can be captured.",
+      "rule_id": "tomato_r_postharvest_block",
+      "operation_id": "post_harvest_handling",
+      "depends_on_operation_id": "harvest",
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": 3,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "NEW rule: aggregation logged more than 72 hours after harvest is a hard block, unless the farm is explicitly using a cold chain, which this schema does not yet have a field to represent, flagged as a real limitation. Without that distinction, this rule will incorrectly block legitimate cold-chain-delayed handling; treat this as provisional until cold chain status can be captured.",
       "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     },
     {
-      "rule_id": "tomato_r8", "operation_id": "pest_disease_control", "depends_on_operation_id": "transplanting",
-      "min_days_after_dependency": 0, "max_days_after_dependency": 90, "can_repeat": true, "allow_backdate": false,
-      "severity": "warning", "condition": "Tuta absoluta (tomato leafminer) is severe enough in Nigeria to warrant scouting from early growth through most of the fruiting period, not just a narrow window. A 2015 outbreak destroyed over 80% of tomato fields in affected regions and caused a roughly twentyfold spike in tomato prices nationally.",
+      "rule_id": "tomato_r8",
+      "operation_id": "pest_disease_control",
+      "depends_on_operation_id": "transplanting",
+      "min_days_after_dependency": 0,
+      "max_days_after_dependency": 90,
+      "can_repeat": true,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Tuta absoluta (tomato leafminer) is severe enough in Nigeria to warrant scouting from early growth through most of the fruiting period, not just a narrow window. A 2015 outbreak destroyed over 80% of tomato fields in affected regions and caused a roughly twentyfold spike in tomato prices nationally.",
       "source": "Biological Invasion of Tomato Leaf Miner, Tuta absoluta (Meyrick) in Nigeria: Problems and Management Strategies Optimization: A Review (over 80% yield loss recorded, Nigeria's tomato production area is 541,800 ha with smallholders managing 90% of it); Invasive Species Council evidence note on Tuta absoluta impacts in Africa (2015 Nigeria price crisis, government emergency declaration)"
     },
     {
-      "rule_id": "tomato_r9", "operation_id": "*", "depends_on_operation_id": null,
-      "min_days_after_dependency": null, "max_days_after_dependency": null, "can_repeat": false, "allow_backdate": false,
-      "severity": "block", "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
+      "rule_id": "tomato_r9",
+      "operation_id": "*",
+      "depends_on_operation_id": null,
+      "min_days_after_dependency": null,
+      "max_days_after_dependency": null,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "block",
+      "condition": "Global rule: no operation may be logged with a date earlier than the previous operation's logged date for the same farm/cycle (no backdating that would reorder the sequence)."
     },
     {
-      "rule_id": "tomato_r_seq_land_preparation_nursery_establishment", "operation_id": "nursery_establishment", "depends_on_operation_id": "land_preparation",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 60, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Land preparation must be logged at least 1 day before nursery establishment, and no more than 60 days before it.", "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- nursery_establishment could previously be logged with no land_preparation in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "tomato_r_seq_land_preparation_nursery_establishment",
+      "operation_id": "nursery_establishment",
+      "depends_on_operation_id": "land_preparation",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 60,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Land preparation must be logged at least 1 day before nursery establishment, and no more than 60 days before it.",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- nursery_establishment could previously be logged with no land_preparation in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (60 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     },
     {
-      "rule_id": "tomato_r_seq_first_fertilizer_weeding_1", "operation_id": "weeding_1", "depends_on_operation_id": "first_fertilizer",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 21, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "First fertilizer must be logged at least 1 day before weeding 1, and no more than 21 days before it.", "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding_1 could previously be logged with no first_fertilizer in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "tomato_r_seq_first_fertilizer_weeding_1",
+      "operation_id": "weeding_1",
+      "depends_on_operation_id": "first_fertilizer",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 21,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "First fertilizer must be logged at least 1 day before weeding 1, and no more than 21 days before it.",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- weeding_1 could previously be logged with no first_fertilizer in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (21 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     },
     {
-      "rule_id": "tomato_r_seq_weeding_1_second_fertilizer", "operation_id": "second_fertilizer", "depends_on_operation_id": "weeding_1",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 42, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Weeding 1 must be logged at least 1 day before second fertilizer, and no more than 42 days before it.", "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- second_fertilizer could previously be logged with no weeding_1 in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
+      "rule_id": "tomato_r_seq_weeding_1_second_fertilizer",
+      "operation_id": "second_fertilizer",
+      "depends_on_operation_id": "weeding_1",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 42,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Weeding 1 must be logged at least 1 day before second fertilizer, and no more than 42 days before it.",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- second_fertilizer could previously be logged with no weeding_1 in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. min=1 day so same-day submissions are also caught, consistent with every other sequencing fix in this knowledge base.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (42 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     },
     {
-      "rule_id": "tomato_r_seq_pest_disease_control_harvest", "operation_id": "harvest", "depends_on_operation_id": "pest_disease_control",
-      "min_days_after_dependency": 1, "max_days_after_dependency": 90, "required_dependency": false, "can_repeat": false, "allow_backdate": false,
-      "severity": "warning", "condition": "Pest disease control must be logged at least 1 day before harvest, and no more than 90 days before it (checked only when the earlier job is recorded).", "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- harvest could previously be logged with no pest_disease_control in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. CORRECTION made during implementation: this rule was initially written without required_dependency: false, and testing showed the engine's missing-dependency auto-block overrides a rule's stated severity to 'block' regardless -- meaning every tomato harvest would have been hard-blocked unless pest_disease_control was logged at least once, even in a low-pest-pressure season where control genuinely wasn't needed. Unlike the other 18 rules in this sweep (whose preceding steps are all workflow-required, so an unconditional block is appropriate), pest_disease_control is conditional in practice even though this file's workflow array marks it required: true. required_dependency: false means the engine skips this check entirely if pest_disease_control was never logged, rather than forcing it -- the timing check (within 90 days before harvest) still applies as a warning if it WAS logged.",
+      "rule_id": "tomato_r_seq_pest_disease_control_harvest",
+      "operation_id": "harvest",
+      "depends_on_operation_id": "pest_disease_control",
+      "min_days_after_dependency": 1,
+      "max_days_after_dependency": 90,
+      "required_dependency": false,
+      "can_repeat": false,
+      "allow_backdate": false,
+      "severity": "warning",
+      "condition": "Pest disease control must be logged at least 1 day before harvest, and no more than 90 days before it (checked only when the earlier job is recorded).",
+      "internal_note": "PLATFORM BUGFIX (second sweep): this dependency rule did not exist at all in the original file -- harvest could previously be logged with no pest_disease_control in its history whatsoever. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix generalized to every stage. It did not, until this pass. CORRECTION made during implementation: this rule was initially written without required_dependency: false, and testing showed the engine's missing-dependency auto-block overrides a rule's stated severity to 'block' regardless -- meaning every tomato harvest would have been hard-blocked unless pest_disease_control was logged at least once, even in a low-pest-pressure season where control genuinely wasn't needed. Unlike the other 18 rules in this sweep (whose preceding steps are all workflow-required, so an unconditional block is appropriate), pest_disease_control is conditional in practice even though this file's workflow array marks it required: true. required_dependency: false means the engine skips this check entirely if pest_disease_control was never logged, rather than forcing it -- the timing check (within 90 days before harvest) still applies as a warning if it WAS logged.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing. Max-day window (90 days) is a reasonable platform default matching similar transitions elsewhere in this file, not independently sourced from the Master Ruleset for this specific pair."
     }
   ],
-
   "soil_requirements": {
     "ph_min": 6.0,
     "ph_max": 6.8,
-    "texture": ["loam", "sandy loam"],
+    "texture": [
+      "loam",
+      "sandy loam"
+    ],
     "drainage": "well-drained -- tomato tolerates dry conditions with irrigation far better than waterlogging",
     "nitrogen_needs": "medium"
   },
-
   "weather_preferences": {
     "rainfall_mm_min_cycle": 400,
     "rainfall_mm_max_cycle": 600,
@@ -180,38 +476,97 @@
     "temp_c_max": 27,
     "notes": "Consistent moisture matters more than total rainfall -- commercial Nigerian tomato production increasingly relies on irrigation (including dry-season, drip-irrigated production) rather than purely rain-fed cultivation, per Farmsquare's guide. Waterlogging is poorly tolerated at any stage."
   },
-
   "diseases": [
-    { "name": "Bacterial Wilt", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Sudden wilting of the whole plant, often with no yellowing beforehand; a cut stem placed in water shows milky bacterial ooze.", "management": "No cure once infected -- remove and destroy affected plants. Crop rotation (avoid solanaceous crops on the same ground), resistant varieties, avoid working in fields when wet to reduce spread.", "confidence": 0.75, "source": "Cross-referenced from a Tuta absoluta control study (Eswatini) listing bacterial wilt (Ralstonia solanacearum) as a major tomato disease alongside the pest; general management practice, not a Nigeria-specific primary source" },
-    { "name": "Fusarium Wilt", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Yellowing and wilting, often starting on one side of the plant, progressing upward.", "management": "Resistant varieties, crop rotation, avoid overwatering (the fungus thrives in wet, poorly-drained soil).", "confidence": 0.7, "source": "Same source as Bacterial Wilt above (Fusarium oxysporum listed as a major tomato disease); not independently verified against a Nigeria-specific primary source" }
+    {
+      "name": "Bacterial Wilt",
+      "risk_stage_ids": [
+        "establishment",
+        "flowering",
+        "fruiting_harvest"
+      ],
+      "symptoms": "Sudden wilting of the whole plant, often with no yellowing beforehand; a cut stem placed in water shows milky bacterial ooze.",
+      "management": "No cure once infected -- remove and destroy affected plants. Crop rotation (avoid solanaceous crops on the same ground), resistant varieties, avoid working in fields when wet to reduce spread.",
+      "confidence": 0.75,
+      "source": "Cross-referenced from a Tuta absoluta control study (Eswatini) listing bacterial wilt (Ralstonia solanacearum) as a major tomato disease alongside the pest; general management practice, not a Nigeria-specific primary source"
+    },
+    {
+      "name": "Fusarium Wilt",
+      "risk_stage_ids": [
+        "establishment",
+        "flowering",
+        "fruiting_harvest"
+      ],
+      "symptoms": "Yellowing and wilting, often starting on one side of the plant, progressing upward.",
+      "management": "Resistant varieties, crop rotation, avoid overwatering (the fungus thrives in wet, poorly-drained soil).",
+      "confidence": 0.7,
+      "source": "Same source as Bacterial Wilt above (Fusarium oxysporum listed as a major tomato disease); not independently verified against a Nigeria-specific primary source"
+    }
   ],
-
   "pests": [
-    { "name": "Tuta absoluta (Tomato Leafminer)", "risk_stage_ids": ["establishment", "flowering", "fruiting_harvest"], "symptoms": "Larvae mine leaves, stems, and fruit; visible tunneling/blotching on leaves, damaged fruit.", "management": "Integrated Pest Management is the only reliable approach -- the pest has developed resistance to many chemical pesticides. Combines biopesticides, pheromone traps, biological control, and cultural practices (crop rotation, removing crop residue). Early detection matters enormously given how fast it spreads.", "confidence": 0.9, "source": "Multiple corroborating sources: a Nigeria-focused review documenting over 80% yield loss and the pest's 2014 introduction; an Invasive Species Council evidence note documenting Nigeria's 2015 price crisis and government emergency declaration; a 2025 peer-reviewed study (Frontiers in Plant Science) noting Tuta absoluta can cause up to 100% crop loss without intervention" }
+    {
+      "name": "Tuta absoluta (Tomato Leafminer)",
+      "risk_stage_ids": [
+        "establishment",
+        "flowering",
+        "fruiting_harvest"
+      ],
+      "symptoms": "Larvae mine leaves, stems, and fruit; visible tunneling/blotching on leaves, damaged fruit.",
+      "management": "Integrated Pest Management is the only reliable approach -- the pest has developed resistance to many chemical pesticides. Combines biopesticides, pheromone traps, biological control, and cultural practices (crop rotation, removing crop residue). Early detection matters enormously given how fast it spreads.",
+      "confidence": 0.9,
+      "source": "Multiple corroborating sources: a Nigeria-focused review documenting over 80% yield loss and the pest's 2014 introduction; an Invasive Species Council evidence note documenting Nigeria's 2015 price crisis and government emergency declaration; a 2025 peer-reviewed study (Frontiers in Plant Science) noting Tuta absoluta can cause up to 100% crop loss without intervention"
+    }
   ],
-
   "yield_model": {
-    "expected_yield_per_hectare": "not yet sourced",
+    "expected_yield_per_hectare": "4.53 (Nigeria national average, FAO 2024 estimate); normal range 2.0 - 9.06",
     "unit": "tonnes",
-    "factors": ["variety maturity class", "irrigation consistency", "Tuta absoluta pressure", "staking/pruning practice", "fertilizer timing (especially calcium at flowering)"],
+    "factors": [
+      "variety maturity class",
+      "irrigation consistency",
+      "Tuta absoluta pressure",
+      "staking/pruning practice",
+      "fertilizer timing (especially calcium at flowering)"
+    ],
     "confidence": 0.2,
-    "notes": "Deliberately left unsourced rather than filled with a guess. National-level figures exist (Nigeria produces roughly 1.5 million tonnes of tomato annually per one source), but a genuine per-hectare smallholder yield figure comparable to the maize/cassava/cocoa yield_model entries was not found in this pass and should not be assumed from the national total alone."
+    "notes": "Deliberately left unsourced rather than filled with a guess. National-level figures exist (Nigeria produces roughly 1.5 million tonnes of tomato annually per one source), but a genuine per-hectare smallholder yield figure comparable to the maize/cassava/cocoa yield_model entries was not found in this pass and should not be assumed from the national total alone. Earlier expected yield, kept as the record of what was replaced: not yet sourced."
   },
-
   "yield_validation": {
     "unit": "t/ha",
     "tiers": [
-      { "condition_type": "equals_zero", "severity": "block", "is_loss_event": true, "message": "Loss Event (Tuta wipeout or flooding)." },
-      { "condition_type": "less_than", "max": 2.0, "severity": "warning", "message": "Severe failure -- disease or pest-related." },
-      { "condition_type": "range", "min": 2.0, "max": 15.0, "severity": "pass", "message": "Standard open-field smallholder range." },
-      { "condition_type": "greater_than", "min": 15.0, "severity": "warning", "message": "Highly optimized GAP (hybrids, irrigation, staking)." },
-      { "condition_type": "greater_than", "min": 80.0, "severity": "block", "message": "Impossible open-field; only climate-controlled greenhouses reach this." }
+      {
+        "condition_type": "equals_zero",
+        "severity": "block",
+        "is_loss_event": true,
+        "message": "Loss Event (Tuta wipeout or flooding)."
+      },
+      {
+        "condition_type": "less_than",
+        "max": 2.0,
+        "severity": "warning",
+        "message": "Severe failure -- disease or pest-related."
+      },
+      {
+        "condition_type": "range",
+        "min": 2.0,
+        "max": 15.0,
+        "severity": "pass",
+        "message": "Standard open-field smallholder range."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 15.0,
+        "severity": "warning",
+        "message": "Highly optimized GAP (hybrids, irrigation, staking)."
+      },
+      {
+        "condition_type": "greater_than",
+        "min": 80.0,
+        "severity": "block",
+        "message": "Impossible open-field; only climate-controlled greenhouses reach this."
+      }
     ],
     "source": "AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026. Same caveat as maize's yield_validation: assumes reported area is trustworthy, which depends on GPS-polygon-anchored area tracking that AgTrail does not yet implement."
   },
-
   "regional_overrides": [],
-
   "version_history": [
     {
       "version": "1.0.0",
@@ -247,6 +602,55 @@
       "changed_by": "AgTrail Knowledge Base - platform bugfix, second sequencing sweep",
       "summary": "Added tomato_r_seq_land_preparation_nursery_establishment, tomato_r_seq_first_fertilizer_weeding_1, tomato_r_seq_weeding_1_second_fertilizer, tomato_r_seq_pest_disease_control_harvest. Found via a systematic audit of every consecutive REQUIRED-to-REQUIRED workflow step pair across all 20 crops, run after the user asked whether the land-prep sequencing fix (first sweep) generalized to every stage transition. It did not -- this file had one or more later-stage transitions where the next required step could be logged with no record of the preceding required step ever existing, the same bug class as the original land-prep gap. min=1 day so same-day submissions are also caught. Confirmed via scenario testing that the affected operation(s) now correctly require their dependency to exist first.",
       "source": "N/A -- internal platform bugfix, not new agronomic sourcing."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-27",
+      "changed_by": "AgTrail Knowledge Base - harvest estimate research",
+      "summary": "Added harvest_estimate: typical yield 4.53 t/ha (FAO national average, 2024, an FAO estimate), normal range 2.0 to 9.06 t/ha (ruleset low, best case capped at twice the typical) and its sources.",
+      "source": "FAOSTAT bulk download (Production: Crops and livestock products); AgTrail Master Agronomist & Validator Ruleset, Agrolinking Solutions Ltd., July 2026"
     }
-  ]
+  ],
+  "harvest_estimate": {
+    "as_of": "2026-10-27",
+    "per": "season",
+    "yield_basis": "fresh fruit",
+    "yield_t_per_ha": {
+      "typical": 4.53,
+      "normal_low": 2.0,
+      "normal_high": 9.06,
+      "national_recent_low": 3.56,
+      "national_recent_high": 4.53,
+      "ruleset_high": 15.0
+    },
+    "harvest_window": null,
+    "confidence": 0.4,
+    "method": "Typical is the FAO national average for Nigeria in 2024. The low end is the crop's normal low from the yield checks (the CEO's ruleset). The high end is that ruleset's best case, capped at twice the typical yield, so it stays close to what farms really get (CEO decision, 25 Oct 2026). The harvest window is the expected window in the crop's timing rules, where they give one. The range is what is normal for a farm, not a forecast for this one.",
+    "caveats": [
+      "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
+      "FAO flags the 2024 figure for this crop as its own estimate (flag E), not a figure reported by Nigeria. It is weaker evidence than the figures for maize or soybean.",
+      "Not a prediction for this farm: it does not know this season's rain, soil, seed or care.",
+      "The high end is capped at twice the typical yield (9.06 t/ha). The ruleset's own best case is 15.0 t/ha, which a well-run farm can reach but few farms do.",
+      "FAO's tomato figure moved between 3.4 and 7.6 t/ha over the last ten years and the 2024 figure is an FAO estimate, so it is the least settled of these numbers."
+    ],
+    "sources": [
+      {
+        "title": "FAOSTAT, Production: Crops and livestock products, Nigeria national yield (bulk download, Africa)",
+        "publisher": "FAO",
+        "url": "https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_Africa.zip",
+        "figure": "4.53 t/ha in 2024 (FAO estimate, flag E); 3.56 to 4.53 t/ha across 2020 to 2024",
+        "year": 2024,
+        "opened": "2026-10-27"
+      },
+      {
+        "title": "AgTrail Master Agronomist & Validator Ruleset, Tomato, yield validation",
+        "publisher": "Agrolinking Solutions Ltd. (CEO, acting as agronomist)",
+        "url": null,
+        "figure": "standard range 2.0 to 15.0 t/ha",
+        "year": 2026,
+        "opened": "2026-10-27"
+      }
+    ],
+    "timing_note": "The crop rules give the earliest sensible harvest (50 days after transplanting) but no latest date, so no harvest window is shown."
+  }
 }
