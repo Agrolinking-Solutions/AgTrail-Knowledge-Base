@@ -6,7 +6,7 @@ Every other crop answers "no current research recorded yet" and gets no figure.
 ## What each number is
 - **Typical** is Nigeria's national average yield for 2024 from FAOSTAT (FAO, Production: Crops and livestock products), read through Our World in Data. The 1961 to 2024 series was downloaded and the 2020 to 2024 low and high are stored beside it.
 - **Normal range** is the standard range the crop's yield checks already use: the CEO's ruleset (maize 0.8 to 5.0, rice 1.0 to 6.0, cassava 5 to 30, cocoa 0.1 to 1.5, groundnut 0.5 to 2.5, sorghum 0.5 to 2.5). The CEO's ruleset has no soybean section, so soybean uses 0.7 to 3.0, taken from IITA figures. The estimate and the yield validation therefore never disagree about what is normal.
-  **High end cap (CEO decision, 25 Oct 2026):** the high end is the ruleset's best case capped at twice the typical yield, so the range stays close to what farms really get. The ruleset figure is kept as `ruleset_high`. Cassava, for example, went from 30 to 11.68 t/ha.
+  **High end cap (CEO decision):** the high end is the ruleset's best case capped at 1.5 times the typical yield, so the range stays close to what farms really get. The ruleset figure is kept as `ruleset_high`. It was twice the typical yield from 25 to 28 Oct 2026; on 28 Oct the CEO said 1.5 times is right, and that cassava should come out at about 8 to 10 t/ha (it is now 8.76). Cassava went from 30 (the ruleset's best case) to 8.76 t/ha.
 - **Harvest window** is the expected window in the crop's own timing rules. Rice is counted from transplanting, the others from planting. Cocoa is perennial and has no window.
 
 ## What was opened and checked
@@ -66,3 +66,6 @@ Three more crops have an estimate: **yam 8.15 t/ha** (fresh tubers), **tomato 4.
 - **Dry onion:** FAO's national average is 2.7 t/ha (an estimate), below the CEO's lowest normal yield of 5 t/ha.
 - **Sweet potato (and OFSP):** FAO's national average is 2.7 t/ha, below the CEO's lowest normal yield of 4 t/ha for OFSP. A national sweet potato average is also not specific to orange-fleshed varieties.
 These stay "no current research recorded yet" until someone reconciles the two, for example with the World Bank farm survey.
+
+## Cap changed to 1.5 times (28 Oct 2026)
+CEO decision on the cap I had set at twice the typical yield: 1.5 times is right. New high ends (t/ha): maize 3.04, rice 3.0, cassava 8.76, soybean 1.53, cocoa 0.41, groundnut 1.88, sorghum 1.6, yam 12.23, tomato 6.79, pepper 10.0 (the ruleset's own best case is lower than 1.5 times, so it stays).

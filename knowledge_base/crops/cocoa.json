@@ -10,7 +10,7 @@
       "Nigeria - Southwest rainforest belt",
       "Nigeria - Cross River"
     ],
-    "current_version": "1.5.2"
+    "current_version": "1.5.3"
   },
   "growth_stages": [
     {
@@ -447,7 +447,7 @@
     }
   ],
   "yield_model": {
-    "expected_yield_per_hectare": "0.27 (Nigeria national average, FAO 2024); normal range 0.1 - 1.5",
+    "expected_yield_per_hectare": "0.27 (Nigeria national average, FAO 2024); normal range 0.1 - 0.41",
     "unit": "tonnes dry beans",
     "factors": [
       "tree age",
@@ -530,6 +530,13 @@
       "changed_by": "AgTrail Knowledge Base - soil research",
       "summary": "Added clay loam and sandy clay loam to the preferred textures: the most productive soils for cocoa per Yara's guide. No avoid list.",
       "source": "Yara, cocoa nutrition guide (Soils, liming and salinity in cocoa production)"
+    },
+    {
+      "version": "1.5.3",
+      "date": "2026-10-28",
+      "changed_by": "AgTrail Knowledge Base - harvest estimate cap 1.5x",
+      "summary": "The high end of the harvest estimate range was 0.54 t/ha (capped at twice the typical yield). Per CEO decision on 28 Oct 2026 it is now capped at 1.5 times the typical yield, 0.41 t/ha. The yield checks are unchanged; the ruleset best case stays as ruleset_high.",
+      "source": "CEO decision, 28 Oct 2026"
     }
   ],
   "yield_validation": {
@@ -576,19 +583,19 @@
     "yield_t_per_ha": {
       "typical": 0.27,
       "normal_low": 0.1,
-      "normal_high": 0.54,
+      "normal_high": 0.41,
       "national_recent_low": 0.27,
       "national_recent_high": 0.3,
       "ruleset_high": 1.5
     },
     "harvest_window": null,
     "confidence": 0.5,
-    "method": "Typical is the FAO national average for Nigeria in 2024. The low end is the crop's normal low from the yield checks (the CEO's ruleset; for soybean, the IITA-based range). The high end is that ruleset's best case, capped at twice the typical yield, so it stays close to what farms really get (CEO decision, 25 Oct 2026). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
+    "method": "Typical is the FAO national average for Nigeria in 2024. The low end is the crop's normal low from the yield checks (the CEO's ruleset; for soybean, the IITA-based range). The high end is that ruleset's best case, capped at 1.5 times the typical yield, so it stays close to what farms really get (CEO decision, 28 Oct 2026; it was twice the typical yield from 25 to 28 Oct). The harvest window is the expected window in the crop's timing rules. The range is what is normal for a farm, not a forecast for this one.",
     "caveats": [
       "National averages hide the spread between farms, so a single farm can be well outside the typical figure.",
       "FAO's national figures for Nigeria are compiled from national reports and FAO estimates and move little from year to year.",
       "Not a prediction for this farm: it does not know this season's rain, soil, seed or care.",
-      "The high end is capped at twice the typical yield (0.54 t/ha). The ruleset's own best case is 1.5 t/ha, which a well-run farm can reach but few farms do."
+      "The high end is capped at 1.5 times the typical yield (0.41 t/ha). The ruleset's own best case is 1.5 t/ha, which a well-run farm can reach but few farms do."
     ],
     "sources": [
       {
